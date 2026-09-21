@@ -1,0 +1,12 @@
+# Configuración para publicar en Render (https://render.com) — plan gratuito.
+# Render sí ejecuta Node y soporta WebSockets, que es lo que este juego necesita.
+services:
+  - type: web
+    name: wavelength
+    runtime: node
+    plan: free
+    buildCommand: npm install
+    startCommand: npm start
+    envVars:
+      - key: NODE_VERSION
+        value: "22"

@@ -1,0 +1,17 @@
+{
+  "name": "wavelength-publico",
+  "version": "1.0.0",
+  "description": "Wavelength virtual: pantalla principal + celulares en tiempo real",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "express": "^4.19.2",
+    "qrcode": "^1.5.4",
+    "ws": "^8.18.0"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}

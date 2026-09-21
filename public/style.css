@@ -1,0 +1,176 @@
+/* Wavelength virtual — estilos compartidos (pantalla + celular)
+   Paleta: sitio wavelength.zone (fondo #010625, azul #48C7FB) + caja del juego
+   (bandas coral / salmón / crema / lima / verde / celeste / mostaza, tapa turquesa, perilla roja). */
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&display=swap');
+
+:root {
+  --bg: #010625;
+  --bg-2: #0a1040;
+  --panel: #161a3d;
+  --panel-2: #2b2e4c;
+  --line: rgba(255, 255, 255, 0.12);
+  --white: #ffffff;
+  --muted: rgba(255, 255, 255, 0.62);
+  --blue: #48c7fb;
+  --sky: #5db5e8;
+  --coral: #e85a3a;
+  --salmon: #f6a79a;
+  --cream: #f3e3be;
+  --lime: #b5d97a;
+  --green: #4fa07c;
+  --forest: #3c6b4c;
+  --mustard: #e1a63e;
+  --mauve: #7b5c70;
+  --teal: #3fb3a5;      /* tapa del dispositivo */
+  --red: #d9362b;       /* perilla / flecha */
+  --w2: #f2c94c;        /* cuña 2 pts */
+  --w3: #f08a3e;        /* cuña 3 pts */
+  --w4: #e4402e;        /* cuña 4 pts */
+  --teamA: var(--sky);
+  --teamB: var(--coral);
+  --radius: 18px;
+  --font: 'Outfit', 'GT Walsheim', 'Segoe UI', system-ui, -apple-system, Arial, sans-serif;
+}
+
+* { box-sizing: border-box; }
+html, body { margin: 0; min-height: 100%; }
+body {
+  background: var(--bg);
+  color: var(--white);
+  font-family: var(--font);
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+  position: relative;
+}
+canvas.stars {
+  position: fixed; inset: 0; width: 100%; height: 100%;
+  z-index: 0; pointer-events: none;
+}
+.page { position: relative; z-index: 1; }
+
+.wordmark {
+  font-weight: 700;
+  letter-spacing: 0.32em;
+  text-transform: uppercase;
+  color: var(--white);
+  text-indent: 0.32em;
+}
+.tagline { color: var(--muted); font-weight: 500; }
+.accent { color: var(--blue); }
+
+/* ---------- componentes ---------- */
+.btn {
+  appearance: none; border: 0; cursor: pointer;
+  font: inherit; font-weight: 700; letter-spacing: 0.04em;
+  padding: 14px 26px; border-radius: 999px;
+  background: var(--blue); color: #021;
+  transition: transform .12s ease, filter .12s ease, opacity .2s;
+  touch-action: manipulation; user-select: none;
+}
+.btn:hover { filter: brightness(1.08); }
+.btn:active { transform: scale(.97); }
+.btn:disabled { opacity: .4; cursor: not-allowed; transform: none; }
+.btn.ghost { background: transparent; color: var(--white); border: 2px solid var(--line); }
+.btn.ghost:hover { border-color: rgba(255,255,255,.35); }
+.btn.coral { background: var(--coral); color: #fff; }
+.btn.red { background: var(--red); color: #fff; }
+.btn.lime { background: var(--lime); color: #12210a; }
+.btn.mustard { background: var(--mustard); color: #221500; }
+.btn.big { font-size: 1.25rem; padding: 18px 34px; }
+.btn.block { display: block; width: 100%; }
+
+.input {
+  width: 100%; font: inherit; font-weight: 600; color: var(--white);
+  background: var(--panel); border: 2px solid var(--line);
+  border-radius: 14px; padding: 14px 16px; outline: none;
+  transition: border-color .15s;
+}
+.input:focus { border-color: var(--blue); }
+.input::placeholder { color: rgba(255,255,255,.35); font-weight: 500; }
+select.input { appearance: none; }
+
+.card {
+  background: linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.02));
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 20px;
+  backdrop-filter: blur(6px);
+}
+
+.chip {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 6px 12px; border-radius: 999px;
+  background: rgba(255,255,255,.08); border: 1px solid var(--line);
+  font-weight: 600; font-size: .9rem;
+}
+.chip.off { opacity: .4; text-decoration: line-through; }
+.chip .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--lime); }
+.chip.off .dot { background: var(--coral); }
+
+.team-A { --team: var(--teamA); }
+.team-B { --team: var(--teamB); }
+.team-color { color: var(--team); }
+
+/* Bandas de la caja (motivo decorativo) */
+.bands {
+  height: 10px; width: 100%; border-radius: 999px; overflow: hidden;
+  background: linear-gradient(90deg,
+    var(--coral) 0 12%, var(--salmon) 12% 24%, var(--cream) 24% 36%,
+    var(--lime) 36% 48%, var(--green) 48% 60%, var(--forest) 60% 72%,
+    var(--sky) 72% 84%, var(--mustard) 84% 100%);
+}
+
+/* ---------- dial ---------- */
+.dial-wrap { position: relative; width: 100%; }
+.dial-wrap svg { width: 100%; height: auto; display: block; overflow: visible; }
+.dial-wrap.interactive svg { touch-action: none; cursor: grab; }
+.dial-wrap.interactive.dragging svg { cursor: grabbing; }
+.dial-cover {
+  transform-origin: 500px 520px;
+  transition: transform .9s cubic-bezier(.65, 0, .25, 1), opacity .3s .6s;
+}
+.dial-cover.open { transform: rotate(180deg); opacity: 0; }
+.dial-needle { transform-origin: 500px 520px; transition: transform .14s ease-out; }
+.dial-wrap.dragging .dial-needle { transition: none; }
+.dial-target { transform-origin: 500px 520px; }
+.dial-labels {
+  display: flex; justify-content: space-between; gap: 12px;
+  margin-top: 8px; font-weight: 700; font-size: 1.1rem; line-height: 1.15;
+}
+.dial-labels .l, .dial-labels .r { flex: 1; }
+.dial-labels .l { text-align: left; }
+.dial-labels .r { text-align: right; }
+.dial-labels .arrow { color: var(--blue); }
+
+/* ---------- utilidades ---------- */
+.hidden { display: none !important; }
+.row { display: flex; gap: 12px; align-items: center; flex-wrap: wrap; }
+.stack { display: flex; flex-direction: column; gap: 12px; }
+.center { text-align: center; }
+.muted { color: var(--muted); }
+.pill {
+  display: inline-block; padding: 4px 12px; border-radius: 999px;
+  background: rgba(255,255,255,.08); font-size: .85rem; font-weight: 600; letter-spacing: .06em;
+  text-transform: uppercase;
+}
+.clue {
+  display: inline-block; padding: 10px 22px; border-radius: 14px;
+  background: var(--cream); color: #1a1200; font-weight: 800; font-size: 1.6rem;
+}
+/* Cronómetro de la ronda */
+.timer {
+  display: inline-flex; align-items: center; gap: 8px;
+  font-weight: 800; font-variant-numeric: tabular-nums;
+  padding: 6px 16px; border-radius: 999px;
+  background: rgba(255,255,255,.08); border: 2px solid var(--line);
+  transition: color .2s, border-color .2s, background .2s;
+}
+.timer.low { color: var(--red); border-color: var(--red); background: rgba(217,54,43,.14); animation: pulse 1s ease-in-out infinite; }
+.timer.done { color: var(--muted); }
+
+.pulse { animation: pulse 1.6s ease-in-out infinite; }
+@keyframes pulse { 0%,100% { opacity: 1 } 50% { opacity: .55 } }
+.pop { animation: pop .5s cubic-bezier(.2,1.4,.4,1) both; }
+@keyframes pop { from { transform: scale(.6); opacity: 0 } to { transform: scale(1); opacity: 1 } }
+.fade-in { animation: fade .35s ease both; }
+@keyframes fade { from { opacity: 0; transform: translateY(8px) } to { opacity: 1; transform: none } }

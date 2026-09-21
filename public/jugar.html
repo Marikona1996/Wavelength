@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<meta name="theme-color" content="#010625">
+<title>Wavelength — Jugar</title>
+<link rel="stylesheet" href="style.css?v=3">
+<style>
+  body { overscroll-behavior: none; }
+  .page { min-height: 100vh; min-height: 100dvh; display: flex; flex-direction: column; padding: 16px; max-width: 560px; margin: 0 auto; }
+  .top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; }
+  .top .wordmark { font-size: 1rem; }
+  .me { font-weight: 700; font-size: .9rem; color: var(--team); }
+  .screen { flex: 1; display: flex; flex-direction: column; gap: 14px; }
+  h1 { font-size: 1.7rem; margin: 0; line-height: 1.15; }
+  h2 { font-size: 1.3rem; margin: 0; line-height: 1.2; }
+  .team-pick { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .team-pick button { padding: 22px 12px; font-size: 1.1rem; border-radius: 16px; border: 3px solid transparent; background: var(--panel); color: #fff; font-weight: 800; font-family: inherit; cursor: pointer; }
+  .team-pick button.sel { border-color: var(--team); background: color-mix(in srgb, var(--team) 22%, var(--panel)); }
+  .team-pick small { display: block; font-weight: 500; color: var(--muted); margin-top: 4px; }
+  .card-view { text-align: center; padding: 22px 16px; border: 2px dashed var(--line); }
+  .card-view .ends { display: flex; justify-content: space-between; align-items: center; gap: 10px; font-weight: 800; font-size: 1.15rem; }
+  .card-view .ends span:first-child { text-align: left; } .card-view .ends span:last-child { text-align: right; }
+  .vote { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .vote .btn { padding: 34px 10px; font-size: 1.35rem; border-radius: 20px; }
+  .vote .btn.sel { box-shadow: 0 0 0 4px #fff inset; }
+  .fine { display: flex; gap: 10px; justify-content: center; }
+  .fine .btn { padding: 12px 22px; font-size: 1.2rem; }
+  .big-msg { font-size: 1.3rem; font-weight: 700; text-align: center; }
+  .spacer { flex: 1; }
+  .status-line { color: var(--muted); font-weight: 600; text-align: center; }
+  .scoreline { display: flex; justify-content: space-between; gap: 10px; font-weight: 700; }
+  .scoreline span { flex: 1; text-align: center; padding: 8px; border-radius: 12px; background: var(--panel); border-top: 4px solid var(--team); }
+  .scoreline b { font-size: 1.4rem; display: block; }
+  .offline { position: fixed; top: 0; left: 0; right: 0; background: var(--coral); color: #fff; text-align: center; padding: 6px; font-weight: 700; z-index: 10; font-size: .85rem; }
+  .link { color: var(--muted); font-size: .85rem; text-align: center; text-decoration: underline; cursor: pointer; }
+  /* Tarjeta física de dos lados */
+  .deck { position: relative; height: 200px; perspective: 1100px; margin: 4px 0; }
+  .deck .stack { position: absolute; inset: 0; border-radius: 18px; background: #e9d9b0; border: 2px solid #d8c592; }
+  .deck .stack.s1 { transform: translate(6px, 8px) rotate(2deg); opacity: .7; }
+  .deck .stack.s2 { transform: translate(-5px, 5px) rotate(-1.5deg); opacity: .85; }
+  /* La animación de "sacar" va en un contenedor aparte para no pisar el giro de la tarjeta */
+  .deck .anim { position: absolute; inset: 0; animation: draw .55s cubic-bezier(.2,.9,.3,1.2) both; }
+  @keyframes draw { from { transform: translateY(-70px) rotate(-8deg); opacity: 0 } to { transform: none; opacity: 1 } }
+  .deck .anim.out { animation: none; transition: transform .35s, opacity .35s; transform: translateY(-70px) rotate(6deg); opacity: 0; }
+  .pcard { position: absolute; inset: 0; transform-style: preserve-3d; -webkit-transform-style: preserve-3d; transition: transform .6s cubic-bezier(.4,.2,.2,1); cursor: pointer; }
+  .pcard.flipped { transform: rotateY(180deg); }
+  .pcard .face { position: absolute; inset: 0; backface-visibility: hidden; -webkit-backface-visibility: hidden; border-radius: 18px; background: var(--cream); color: #1a1200; display: flex; flex-direction: column; justify-content: space-between; padding: 14px 16px; box-shadow: 0 14px 30px rgba(0,0,0,.45); }
+  .pcard .face.back { transform: rotateY(180deg); }
+  /* Refuerzo: la cara que no se ve tampoco se dibuja (evita fantasmas en iOS) */
+  .pcard.flipped .face.front, .pcard:not(.flipped) .face.back { visibility: hidden; transition: visibility 0s .3s; }
+  .pcard .face { transition: visibility 0s .3s; }
+  .pcard .face .stripe { height: 8px; border-radius: 999px; }
+  .pcard .face.front .stripe { background: linear-gradient(90deg, var(--coral), var(--salmon), var(--mustard)); }
+  .pcard .face.back .stripe { background: linear-gradient(90deg, var(--sky), var(--lime), var(--green)); }
+  .pcard .face .lbl { font-size: .7rem; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; color: #6b5d3a; margin-top: 6px; }
+  .pcard .face .ends { display: flex; align-items: center; justify-content: space-between; gap: 8px; font-weight: 800; font-size: 1.15rem; line-height: 1.15; flex: 1; }
+  .pcard .face .ends span:first-child { text-align: left; } .pcard .face .ends span:last-child { text-align: right; }
+  .pcard .face .ends .arrow { color: var(--coral); }
+  .pcard .face.back .ends .arrow { color: var(--sky); }
+  .pcard .face .tap { font-size: .75rem; color: #6b5d3a; text-align: center; font-weight: 600; }
+  .chosen-card { border-radius: 14px; background: var(--cream); color: #1a1200; padding: 12px 14px; display: flex; justify-content: space-between; align-items: center; gap: 8px; font-weight: 800; font-size: 1.1rem; }
+  .chosen-card .arrow { color: var(--coral); }
+  .steps { display: flex; gap: 6px; justify-content: center; }
+  .steps span { width: 8px; height: 8px; border-radius: 50%; background: rgba(255,255,255,.2); }
+  .steps span.on { background: var(--blue); }
+  .timer { font-size: 1.5rem; align-self: center; }
+</style>
+</head>
+<body>
+<div id="offline" class="offline hidden">Reconectando…</div>
+<div class="page">
+  <div class="top"><div class="wordmark" id="logoTap">Wavelength</div><div class="me" id="meTag"></div></div>
+  <button class="btn red hidden" id="secretRedraw" style="width:100%;margin:-6px 0 12px;padding:10px">Cambiar tarjeta (solo organizador)</button>
+  <div class="screen" id="screen"></div>
+</div>
+
+<script src="client.js?v=3"></script>
+<script src="dial.js?v=3"></script>
+<script>
+const $ = id => document.getElementById(id);
+const esc = s => String(s ?? '').replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+let S = null, view = '', dial = null, pickedTeam = 'A', lockArmed = false, sending = false, lastNeedleSent = 0;
+let localNeedleUntil = 0; // mientras arrastro, ignoro el valor del servidor
+// Botón oculto para cambiar la tarjeta: 3 toques rápidos en "WAVELENGTH" lo muestran (solo el organizador lo sabe)
+let logoTaps = 0, logoTimer;
+// Cronómetro: el servidor manda los milisegundos restantes; aquí solo se descuenta en pantalla.
+let timerEnd = null;
+function tickTimer() {
+  const el = $('timer');
+  if (!el) return;
+  if (timerEnd == null) { el.textContent = ''; return; }
+  const s = Math.max(0, Math.ceil((timerEnd - Date.now()) / 1000));
+  el.innerHTML = `⏱ <b>${s}</b>s`;
+  el.classList.toggle('low', s <= 10 && s > 0);
+  el.classList.toggle('done', s === 0);
+}
+setInterval(tickTimer, 200);
+$('logoTap').addEventListener('click', () => {
+  logoTaps++; clearTimeout(logoTimer); logoTimer = setTimeout(() => { logoTaps = 0; }, 1200);
+  if (logoTaps >= 3) { logoTaps = 0; $('secretRedraw').classList.toggle('hidden'); }
+});
+$('secretRedraw').addEventListener('click', () => {
+  const anim = $('pcardAnim'); if (anim) anim.classList.add('out');
+  setTimeout(() => game.send({ type: 'redraw' }), anim ? 320 : 0);
+  $('secretRedraw').classList.add('hidden');
+});
+
+const game = connectGame('player', {
+  onState: s => { S = s; timerEnd = s.remainingMs != null ? Date.now() + s.remainingMs : null; render(); tickTimer(); },
+  onOpen: () => $('offline').classList.add('hidden'),
+  onClose: () => $('offline').classList.remove('hidden'),
+  onKicked: () => { view = ''; render(); },
+});
+
+function screen(html, key) {
+  // Re-dibuja solo si cambia la "vista"; si no, actualiza en sitio.
+  if (key !== view) { $('screen').innerHTML = html; view = key; dial = null; lockArmed = false; return true; }
+  return false;
+}
+function mountDial(id, opts) {
+  if (!dial) dial = createDial($(id), opts);
+  return dial;
+}
+function scoreline() {
+  return `<div class="scoreline"><span class="team-A">${esc(S.teams.A.name)}<b>${S.teams.A.score}</b></span><span class="team-B">${esc(S.teams.B.name)}<b>${S.teams.B.score}</b></span></div>`;
+}
+const teamName = k => esc(S.teams[k].name);
+
+function render() {
+  if (!S) return;
+  const me = S.me;
+  $('meTag').className = 'me ' + (me ? `team-${me.team}` : '');
+  $('meTag').textContent = me ? `${me.name} · ${S.teams[me.team].name}` : '';
+
+  // ---- unirse ----
+  if (!me) {
+    if (screen(`
+      <h1 class="wordmark" style="font-size:1.6rem;text-align:center;margin-top:8px">Wavelength</h1>
+      <div class="bands"></div>
+      <div class="stack" style="margin-top:6px">
+        <input id="name" class="input" placeholder="Tu nombre" maxlength="24" autocomplete="off" value="${esc(localStorage.getItem('wl_name') || '')}">
+        <div class="team-pick">
+          <button class="team-A" id="pickA"></button>
+          <button class="team-B" id="pickB"></button>
+        </div>
+        <button class="btn big block" id="joinBtn">Entrar</button>
+      </div>`, 'join')) {
+      $('joinBtn').onclick = () => {
+        const name = $('name').value.trim();
+        if (!name) { $('name').focus(); return; }
+        localStorage.setItem('wl_name', name);
+        game.send({ type: 'join', name, team: pickedTeam, playerId: localStorage.getItem('wl_pid') });
+      };
+      $('name').addEventListener('keydown', e => { if (e.key === 'Enter') $('joinBtn').click(); });
+      $('pickA').onclick = () => { pickedTeam = 'A'; render(); };
+      $('pickB').onclick = () => { pickedTeam = 'B'; render(); };
+    }
+    const cA = S.players.filter(p => p.team === 'A').length, cB = S.players.filter(p => p.team === 'B').length;
+    $('pickA').innerHTML = `${teamName('A')}<small>${cA} jugador${cA === 1 ? '' : 'es'}</small>`;
+    $('pickB').innerHTML = `${teamName('B')}<small>${cB} jugador${cB === 1 ? '' : 'es'}</small>`;
+    $('pickA').classList.toggle('sel', pickedTeam === 'A');
+    $('pickB').classList.toggle('sel', pickedTeam === 'B');
+    return;
+  }
+
+  const myTeam = me.team, otherTeam = myTeam === 'A' ? 'B' : 'A';
+  const isPsychic = me.id === S.psychicId;
+  const active = S.turnTeam === myTeam;
+  const psychic = S.players.find(p => p.id === S.psychicId);
+  const soloTeam = S.players.filter(p => p.team === S.turnTeam && p.connected).length <= 1;
+
+  // ---- lobby ----
+  if (S.phase === 'lobby') {
+    if (screen(`
+      <div class="card center stack">
+        <div class="pill">Sala abierta</div>
+        <h2>¡Listo, <span class="team-${myTeam} team-color">${esc(me.name)}</span>!</h2>
+        <p class="muted" style="margin:0">Estás en <b class="team-${myTeam} team-color">${teamName(myTeam)}</b>. Esperando a que empiece el juego en la pantalla…</p>
+        <div class="pulse" style="font-size:2rem">🔮</div>
+      </div>
+      <div class="card">
+        <div class="muted" style="font-size:.85rem;margin-bottom:8px">Jugadores conectados (en ese orden serán psíquicos)</div>
+        <div id="lobbyRoster" class="stack" style="gap:6px"></div>
+      </div>
+      <div class="spacer"></div>
+      <div class="row" style="justify-content:center;gap:18px">
+        <span class="link" id="switchTeam">Cambiar de equipo</span>
+        <span class="link" id="leave">Salir</span>
+      </div>`, 'lobby')) {
+      $('switchTeam').onclick = () => game.send({ type: 'join', name: me.name, team: otherTeam });
+      $('leave').onclick = () => { game.send({ type: 'leave' }); localStorage.removeItem('wl_pid'); };
+    }
+    $('lobbyRoster').innerHTML = ['A', 'B'].map(k =>
+      `<div><b class="team-${k} team-color">${teamName(k)}:</b> ${S.players.filter(p => p.team === k).map((p, i) => (i + 1) + '. ' + esc(p.name)).join(' · ') || '<span class="muted">—</span>'}</div>`).join('');
+    return;
+  }
+
+  // ---- fin ----
+  if (S.phase === 'finished') {
+    const A = S.teams.A.score, B = S.teams.B.score;
+    const win = A === B ? null : (A > B ? 'A' : 'B');
+    screen(`
+      <div class="card center stack">
+        <div class="pill">Fin del juego</div>
+        <h1>${win ? `¡Ganó <span class="team-${win} team-color">${teamName(win)}</span>!` : '¡Empate!'}</h1>
+        ${scoreline()}
+        <p class="muted">${win === myTeam ? '🎉 ¡Felicitaciones!' : win ? 'La próxima es de ustedes.' : ''}</p>
+      </div>
+      <div class="spacer"></div>
+      <div class="status-line">Esperando a la pantalla para jugar de nuevo…</div>`, 'finished');
+    return;
+  }
+
+  const head = `<div class="row" style="justify-content:space-between"><span class="pill">Ronda ${S.round} · Meta ${S.settings.points} pts</span><span class="muted" style="font-weight:600">Turno: <b class="team-${S.turnTeam} team-color">${teamName(S.turnTeam)}</b></span></div>`;
+  const card = S.card || { izquierda: '', derecha: '' };
+
+  // ---- psíquico: saca tarjeta, elige lado, ve el objetivo, escribe la pista ----
+  if (S.phase === 'psychic') {
+    if (isPsychic) {
+      if (!S.side) {
+        // Paso 1: tarjeta física de dos lados
+        const sides = S.cardSides || { lado1: { izquierda: '', derecha: '' }, lado2: { izquierda: '', derecha: '' } };
+        const face = (k, cls, lbl) => `<div class="face ${cls}"><div class="stripe"></div><div class="lbl">${lbl}</div><div class="ends"><span><span class="arrow">◀</span> ${esc(sides[k].izquierda)}</span><span>${esc(sides[k].derecha)} <span class="arrow">▶</span></span></div><div class="tap">Toca la tarjeta para ver el otro lado</div></div>`;
+        const fresh = screen(`
+          ${head}
+          <div class="card center" style="padding:14px"><div class="pill">🔮 Eres el psíquico</div><h2 style="margin-top:8px">Saca una tarjeta y elige un lado</h2><p class="muted" style="margin:6px 0 0;font-size:.9rem">Tiene dos lados. Elige el que quieras usar; después verás el objetivo. Cada tarjeta sale una sola vez.</p></div>
+          <div class="deck"><div class="stack s1"></div><div class="stack s2"></div><div class="anim" id="pcardAnim"><div class="pcard" id="pcard">${face('lado1', 'front', 'Lado 1')}${face('lado2', 'back', 'Lado 2')}</div></div></div>
+          <div class="steps"><span class="on"></span><span></span><span></span></div>
+          <button class="btn big block" id="useSide">Usar este lado</button>
+          <button class="btn ghost block" id="flip">Voltear tarjeta</button>`, 'psychic-pick-' + sides.lado1.izquierda + '|' + sides.lado2.izquierda);
+        if (fresh) {
+          const pc = $('pcard');
+          const flip = () => pc.classList.toggle('flipped');
+          pc.onclick = flip; $('flip').onclick = flip;
+          $('useSide').onclick = () => game.send({ type: 'chooseSide', side: pc.classList.contains('flipped') ? 'lado2' : 'lado1' });
+        }
+        return;
+      }
+      // Paso 2: lado elegido, se abre la tapa y se ve el objetivo
+      const c = S.cardSides ? S.cardSides[S.side] : { izquierda: '', derecha: '' };
+      const fresh = screen(`
+        ${head}
+        <div class="chosen-card"><span><span class="arrow">◀</span> ${esc(c.izquierda)}</span><span>${esc(c.derecha)} <span class="arrow">▶</span></span></div>
+        <div id="dialP"></div>
+        <div class="steps"><span class="on"></span><span class="on"></span><span></span></div>
+        <p class="muted center" style="margin:0;font-size:.9rem">Solo tú ves el objetivo. Piensa una pista que ubique ese punto entre los dos extremos. Al iniciar, el objetivo se oculta hasta el final de la ronda.</p>
+        <input id="clue" class="input" placeholder="Escribe aquí tu palabra o frase" maxlength="200" autocomplete="off">
+        <button class="btn big block" id="begin">¡Iniciar ronda!</button>`, 'psychic-target');
+      if (fresh) {
+        $('begin').onclick = () => game.send({ type: 'beginGuess', clue: $('clue').value });
+        const d = mountDial('dialP', { wedge: S.wedge });
+        $('dialP').querySelector('.dial-labels').style.display = 'none';
+        d.set({ needle: 90, target: S.target, covered: true, left: c.izquierda, right: c.derecha });
+        setTimeout(() => d.set({ covered: false }), 80);
+      }
+      return;
+    }
+    screen(`
+      ${head}
+      <div class="card center stack">
+        <div style="font-size:2.4rem" class="pulse">🔮</div>
+        <h2><span class="team-${S.turnTeam} team-color">${esc(psychic?.name || '…')}</span> ${S.side ? 'está pensando su pista' : 'está sacando una tarjeta'}</h2>
+        <p class="muted" style="margin:0">${active ? 'Prepárate: en un momento tu equipo mueve la flecha.' : 'Después le toca votar a ' + teamName(myTeam) + '.'}</p>
+      </div>
+      ${scoreline()}`, 'psychic-wait-' + !!S.side);
+    return;
+  }
+
+  // ---- adivinando ----
+  if (S.phase === 'guessing') {
+    const canMove = active && (!isPsychic || soloTeam);
+    if (canMove) {
+      if (screen(`
+        ${head}
+        ${S.clue ? `<div class="center"><span class="clue">${esc(S.clue)}</span></div>` : `<div class="status-line">Pista de ${esc(psychic?.name || 'el psíquico')}: escucha bien</div>`}
+        <div id="dialG"></div>
+        <div class="fine">
+          <button class="btn ghost" id="minus">◀ −1</button>
+          <button class="btn ghost" id="plus">+1 ▶</button>
+        </div>
+        <span class="timer" id="timer"></span>
+        <p class="muted center" style="margin:0;font-size:.85rem">Cualquiera del equipo puede mover la flecha desde su celular; todos ven la misma en la pantalla. Cuando estén de acuerdo, cualquiera da "listos". <b>Si se acaba el tiempo, la flecha se queda donde esté.</b></p>
+        <button class="btn big block red" id="lock">¡Estamos listos!</button>`, 'guess-me')) {
+        const sendNeedle = a => { game.send({ type: 'needle', angle: a }); };
+        mountDial('dialG', {
+          interactive: true, wedge: S.wedge,
+          onChange: a => { localNeedleUntil = Date.now() + 400; const now = Date.now(); if (now - lastNeedleSent > 40) { lastNeedleSent = now; sendNeedle(a); } },
+          onEnd: a => { localNeedleUntil = Date.now() + 400; sendNeedle(a); },
+        });
+        $('minus').onclick = () => { const a = Math.max(0, dial.get().needle - 1); dial.set({ needle: a }); localNeedleUntil = Date.now() + 400; sendNeedle(a); };
+        $('plus').onclick = () => { const a = Math.min(180, dial.get().needle + 1); dial.set({ needle: a }); localNeedleUntil = Date.now() + 400; sendNeedle(a); };
+        $('lock').onclick = () => {
+          if (!lockArmed) { lockArmed = true; $('lock').textContent = '¿Seguro? Toca de nuevo para confirmar'; $('lock').classList.replace('red', 'mustard'); setTimeout(() => { if ($('lock')) { lockArmed = false; $('lock').textContent = '¡Estamos listos!'; $('lock').classList.replace('mustard', 'red'); } }, 3000); return; }
+          game.send({ type: 'lock' });
+        };
+      }
+      const patch = { target: null, covered: true, left: card.izquierda, right: card.derecha };
+      if (Date.now() > localNeedleUntil) patch.needle = S.needle;
+      dial.set(patch);
+      return;
+    }
+    // psíquico en silencio / equipo rival mirando
+    if (screen(`
+      ${head}
+      ${isPsychic ? `<div class="card center"><div style="font-size:2rem">🤫</div><h2>Silencio, psíquico</h2><p class="muted" style="margin:6px 0 0">Tu equipo está adivinando. Sin gestos ni pistas extra.</p></div>` :
+        `<div class="card center"><h2><span class="team-${S.turnTeam} team-color">${teamName(S.turnTeam)}</span> está moviendo la flecha</h2><p class="muted" style="margin:6px 0 0">Cuando bloqueen, te toca votar: ¿izquierda o derecha?</p></div>`}
+      ${S.clue ? `<div class="center"><span class="clue">${esc(S.clue)}</span></div>` : ''}
+      <span class="timer" id="timer"></span>
+      <div id="dialW"></div>`, isPsychic ? 'guess-psychic' : 'guess-watch')) {}
+    mountDial('dialW', { wedge: S.wedge }).set({ needle: S.needle, target: null, covered: true, left: card.izquierda, right: card.derecha });
+    return;
+  }
+
+  // ---- contra-votación ----
+  if (S.phase === 'counter') {
+    if (!active) {
+      if (screen(`
+        ${head}
+        <div class="card center"><h2>¿Dónde está el objetivo?</h2><p class="muted" style="margin:6px 0 0">${S.lockedBy ? '🔒 Bloqueó <b>' + esc(S.lockedBy) + '</b>. ' : ''}Respecto a la flecha de <span class="team-${S.turnTeam} team-color">${teamName(S.turnTeam)}</span>. Si aciertan, +1 punto.<br><b>Pónganse de acuerdo y que una sola persona conteste</b> — la primera respuesta cuenta por todo el equipo.</p></div>
+        <div id="dialV"></div>
+        <div class="vote">
+          <button class="btn mustard" id="vIzq">◀ Izquierda</button>
+          <button class="btn mustard" id="vDer">Derecha ▶</button>
+        </div>
+        <div class="status-line">La primera respuesta decide.</div>`, 'vote')) {
+        $('vIzq').onclick = () => game.send({ type: 'vote', side: 'izq' });
+        $('vDer').onclick = () => game.send({ type: 'vote', side: 'der' });
+      }
+      mountDial('dialV', { wedge: S.wedge }).set({ needle: S.needle, target: null, covered: true, left: card.izquierda, right: card.derecha });
+      return;
+    }
+    screen(`
+      ${head}
+      <div class="card center"><div style="font-size:2rem" class="pulse">🔒</div><h2>Respuesta bloqueada</h2><p class="muted" style="margin:6px 0 0">${S.lockedBy ? 'Bloqueó <b>' + esc(S.lockedBy) + '</b>.<br>' : ''}<span class="team-${otherTeam} team-color">${teamName(otherTeam)}</span> está decidiendo izquierda o derecha…</p></div>
+      <div id="dialL"></div>`, 'counter-wait');
+    mountDial('dialL', { wedge: S.wedge }).set({ needle: S.needle, target: null, covered: true, left: card.izquierda, right: card.derecha });
+    return;
+  }
+
+  // ---- revelación ----
+  if (S.phase === 'reveal') {
+    const r = S.result, t = S.turnTeam;
+    const oth = t === 'A' ? 'B' : 'A';
+    const mine = r.points[myTeam];
+    const fresh = screen(`
+      ${head}
+      <div class="card center stack" style="gap:6px">
+        <h1 class="pop">${r.wedge ? `${r.wedge} punto${r.wedge > 1 ? 's' : ''} para <span class="team-${t} team-color">${teamName(t)}</span>` : `<span class="team-${t} team-color">${teamName(t)}</span> no sumó`}</h1>
+        <div class="muted" style="font-weight:600">${r.wedge === 4 ? '🎯 Centro exacto, el rival no suma.' : r.counterCorrect ? `<span class="team-${oth} team-color">${teamName(oth)}</span> acertó: +1` : `<span class="team-${oth} team-color">${teamName(oth)}</span> falló (estaba a la ${r.correctSide === 'izq' ? 'izquierda' : 'derecha'}).`}</div>
+        <div style="font-size:1.05rem;font-weight:700;margin-top:4px">${mine ? `Tu equipo: +${mine} 🎉` : 'Tu equipo: 0 esta vez'}</div>
+        <div class="muted" style="font-size:.8rem">${r.lockedBy ? '🔒 ' + esc(r.lockedBy) : ''}${r.lockedBy && r.counterBy ? ' · ' : ''}${r.counterBy ? '🗣 ' + esc(r.counterBy) + ': ' + (S.counterChoice === 'izq' ? '◀ izquierda' : 'derecha ▶') : ''}</div>
+      </div>
+      <div id="dialR"></div>
+      ${scoreline()}
+      ${isPsychic ? `<button class="btn big block" id="next">${S.reached ? 'Ver resultados' : 'Siguiente ronda ▶'}</button>`
+        : '<div class="status-line">Espera: la siguiente ronda la inicia el psíquico.</div>'}`, 'reveal');
+    if (fresh && isPsychic) $('next').onclick = () => game.send({ type: 'next' });
+    const d = mountDial('dialR', { wedge: S.wedge });
+    if (fresh) {
+      d.set({ needle: r.needle, target: r.target, covered: true, left: card.izquierda, right: card.derecha });
+      setTimeout(() => d.set({ covered: false }), 60);
+    } else {
+      d.set({ needle: r.needle, target: r.target, covered: false, left: card.izquierda, right: card.derecha });
+    }
+    return;
+  }
+}
+</script>
+</body>
+</html>

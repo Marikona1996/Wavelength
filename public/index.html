@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Wavelength — Pantalla</title>
+<link rel="stylesheet" href="style.css?v=3">
+<style>
+  .page { min-height: 100vh; display: flex; flex-direction: column; }
+  .topbar {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 18px 32px; border-bottom: 1px solid var(--line);
+  }
+  .topbar .wordmark { font-size: 1.5rem; }
+  .topbar .info { display: flex; gap: 12px; align-items: center; color: var(--muted); font-weight: 600; }
+  main { flex: 1; padding: 24px 32px 32px; }
+
+  /* Lobby */
+  .lobby { max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: 1.2fr 1fr; gap: 28px; }
+  .lobby h1 { margin: 0 0 4px; font-size: 3.4rem; letter-spacing: .3em; text-indent: .3em; }
+  .lobby .tagline { font-size: 1.15rem; margin-bottom: 26px; }
+  .field label { display: block; font-weight: 600; color: var(--muted); margin: 0 0 6px 4px; font-size: .9rem; text-transform: uppercase; letter-spacing: .08em; }
+  .teams-form { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  .team-box { border-top: 5px solid var(--team); }
+  .team-box h3 { margin: 0 0 10px; font-size: 1.3rem; color: var(--team); }
+  .roster { display: flex; flex-wrap: wrap; gap: 8px; min-height: 40px; }
+  .roster .empty { color: var(--muted); font-weight: 500; }
+  .deck-pick { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-top: 18px; }
+  .deck-pick button { text-align: left; font: inherit; color: #fff; cursor: pointer; background: var(--panel); border: 3px solid transparent; border-radius: 16px; padding: 14px 16px; transition: border-color .15s, transform .15s; }
+  .deck-pick button:hover { transform: translateY(-2px); }
+  .deck-pick button.sel { border-color: var(--blue); background: color-mix(in srgb, var(--blue) 14%, var(--panel)); }
+  .deck-pick .dn { font-weight: 800; font-size: 1.15rem; display: flex; align-items: center; gap: 8px; }
+  .deck-pick .dc { color: var(--muted); font-size: .85rem; margin-top: 4px; line-height: 1.3; }
+  .deck-pick .dk { display: inline-block; margin-top: 8px; font-size: .75rem; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; color: var(--blue); }
+  .deck-pick .badge { font-size: 1.2rem; }
+  .join-box { text-align: center; }
+  .join-box img { width: 220px; height: 220px; border-radius: 16px; background: #fff; padding: 6px; }
+  .join-box .url { font-size: 1.5rem; font-weight: 800; color: var(--blue); word-break: break-all; margin: 14px 0 4px; }
+
+  /* Juego */
+  .game { max-width: 1400px; margin: 0 auto; display: grid; grid-template-columns: 260px 1fr 260px; gap: 28px; align-items: start; }
+  .score { text-align: center; border-top: 6px solid var(--team); transition: box-shadow .3s, transform .3s; }
+  .score.active { box-shadow: 0 0 0 3px var(--team), 0 18px 50px rgba(0,0,0,.4); transform: translateY(-4px); }
+  .score h2 { margin: 0; font-size: 1.35rem; color: var(--team); }
+  .score .pts { font-size: 5rem; font-weight: 800; line-height: 1; margin: 10px 0 6px; }
+  .score .roster { justify-content: center; }
+  .score .turn-tag { display: block; margin-top: 8px; font-size: .8rem; letter-spacing: .1em; text-transform: uppercase; color: var(--team); font-weight: 700; min-height: 1em; }
+  .stage { text-align: center; }
+  .stage .status { min-height: 92px; margin-bottom: 8px; }
+  .stage .status h2 { margin: 0 0 6px; font-size: 2rem; }
+  .stage .status p { margin: 0; color: var(--muted); font-size: 1.15rem; font-weight: 500; }
+  .stage .dial-labels { font-size: 1.45rem; padding: 0 12px; }
+  .stage .clue { max-width: 100%; white-space: pre-wrap; overflow-wrap: anywhere; }
+  /* El dial nunca debe empujar los extremos fuera de la pantalla (TVs poco altas) */
+  .stage .dial-wrap { max-width: min(100%, 68vh); margin: 0 auto; }
+  .stage .dial-labels .l, .stage .dial-labels .r { overflow-wrap: anywhere; }
+  .stage .timer { font-size: 2.2rem; padding: 6px 22px; margin-top: 10px; }
+  .controls { margin-top: 18px; display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+  .votebars { display: flex; gap: 14px; justify-content: center; margin: 10px 0 0; }
+  .votebars .vb { min-width: 150px; padding: 10px 18px; border-radius: 12px; background: var(--panel); font-weight: 700; font-size: 1.2rem; }
+  .votebars .vb b { display: block; font-size: 2rem; }
+  .result-line { font-size: 1.35rem; font-weight: 600; margin: 4px 0; }
+  .hint { color: var(--muted); font-size: .85rem; margin-top: 10px; }
+  .footer-tools { position: fixed; right: 16px; bottom: 12px; display: flex; gap: 8px; opacity: .55; }
+  .footer-tools:hover { opacity: 1; }
+  .footer-tools .btn { padding: 8px 14px; font-size: .8rem; }
+
+  /* Final */
+  .final { max-width: 900px; margin: 40px auto 60px; text-align: center; }
+  .final h1 { font-size: 3rem; margin: 6px 0; }
+  .final .winner { font-size: 1.4rem; color: var(--muted); }
+  .final .scores { display: flex; gap: 20px; justify-content: center; margin: 28px 0; }
+  .final .scores .score { min-width: 260px; }
+  .final table { width: 100%; border-collapse: collapse; margin-top: 10px; font-weight: 500; }
+  .final td, .final th { padding: 8px 10px; border-bottom: 1px solid var(--line); text-align: left; }
+  .final th { color: var(--muted); font-size: .8rem; text-transform: uppercase; letter-spacing: .08em; }
+
+  .offline { position: fixed; top: 0; left: 0; right: 0; background: var(--coral); color: #fff; text-align: center; padding: 6px; font-weight: 700; z-index: 10; }
+  /* Pantallas poco altas (TV 720p, laptops): todo debe caber sin scroll */
+  @media (max-height: 820px) {
+    main { padding: 12px 24px 16px; }
+    .stage .status { min-height: 64px; margin-bottom: 4px; }
+    .stage .status h2 { font-size: 1.6rem; }
+    .stage .status p { font-size: 1rem; }
+    .stage .dial-wrap { max-width: min(100%, 74vh); }
+    .stage .dial-labels { font-size: 1.15rem; }
+    .stage .timer { font-size: 1.6rem; padding: 4px 16px; margin-top: 6px; }
+    .clue { font-size: 1.25rem; padding: 6px 16px; }
+    .controls { margin-top: 10px; }
+    .score .pts { font-size: 3.4rem; }
+    .hint { margin-top: 6px; }
+  }
+  @media (max-width: 1000px) {
+    .lobby, .game { grid-template-columns: 1fr; }
+    .lobby h1 { font-size: 2.2rem; }
+  }
+</style>
+</head>
+<body>
+<div id="offline" class="offline hidden">Reconectando con el servidor…</div>
+<div class="page">
+  <header class="topbar">
+    <div class="wordmark">Wavelength</div>
+    <div class="info" id="topInfo"></div>
+  </header>
+  <main>
+    <!-- LOBBY -->
+    <section id="lobby" class="lobby hidden">
+      <div>
+        <h1 class="wordmark">Wavelength</h1>
+        <div class="tagline">Un juego de <span class="accent">leer la mente</span> de tu equipo.</div>
+        <div class="bands" style="margin-bottom:24px"></div>
+        <div class="teams-form">
+          <div class="card team-box team-A">
+            <div class="field"><label>Equipo 1</label><input id="teamA" class="input" placeholder="Nombre del equipo A" maxlength="30"></div>
+            <h3 id="teamAName" style="margin-top:14px">Equipo A</h3>
+            <div class="roster" id="rosterA"><span class="empty">Nadie todavía…</span></div>
+          </div>
+          <div class="card team-box team-B">
+            <div class="field"><label>Equipo 2</label><input id="teamB" class="input" placeholder="Nombre del equipo B" maxlength="30"></div>
+            <h3 id="teamBName" style="margin-top:14px">Equipo B</h3>
+            <div class="roster" id="rosterB"><span class="empty">Nadie todavía…</span></div>
+          </div>
+        </div>
+        <div class="field" style="margin-top:18px"><label>Tipo de tarjetas</label><div class="deck-pick" id="deckPick"></div></div>
+        <div class="row" style="margin-top:18px; gap:18px">
+          <div class="field" style="width:220px"><label>Jugar hasta (puntos)</label>
+            <select id="points" class="input">
+              <option>5</option><option>8</option><option selected>10</option><option>12</option><option>15</option><option>20</option><option>25</option><option>30</option>
+            </select>
+          </div>
+          <div style="flex:1"></div>
+          <button id="startBtn" class="btn big" disabled>Comenzar juego</button>
+        </div>
+        <div class="hint" id="startHint">Se necesita al menos 1 jugador conectado en cada equipo (ideal 2 o más). El psíquico rota en el orden en que entraron (los números) y <b>todos pasan antes de que termine el juego</b>. Empieza el equipo del primero en conectarse. Gana quien llegue a la meta, una vez que todos hayan sido psíquicos.</div>
+      </div>
+      <div class="card join-box">
+        <div class="pill">Entra desde tu celular</div>
+        <div style="margin-top:14px"><img id="qr" alt="QR para unirse" src="/api/qr.svg"></div>
+        <div class="url" id="joinUrl">…</div>
+        <div class="muted">Misma red WiFi · escanea el QR o escribe la dirección</div>
+      </div>
+    </section>
+
+    <!-- JUEGO -->
+    <section id="game" class="game hidden">
+      <div class="card score team-A" id="scoreA">
+        <h2 id="gTeamA">Equipo A</h2>
+        <div class="pts" id="ptsA">0</div>
+        <div class="roster" id="gRosterA"></div>
+        <span class="turn-tag" id="tagA"></span>
+      </div>
+      <div class="stage">
+        <div class="status fade-in" id="status"></div>
+        <div id="dialHost"></div>
+        <div class="controls" id="controls"></div>
+        <div class="hint" id="stageHint"></div>
+      </div>
+      <div class="card score team-B" id="scoreB">
+        <h2 id="gTeamB">Equipo B</h2>
+        <div class="pts" id="ptsB">0</div>
+        <div class="roster" id="gRosterB"></div>
+        <span class="turn-tag" id="tagB"></span>
+      </div>
+    </section>
+
+    <!-- FINAL -->
+    <section id="final" class="final hidden">
+      <div class="pill">Fin del juego</div>
+      <h1 id="finalTitle">¡Ganó …!</h1>
+      <div class="winner" id="finalSub"></div>
+      <div class="scores" id="finalScores"></div>
+      <div class="bands"></div>
+      <div class="card" style="margin-top:20px; text-align:left">
+        <table id="historyTable"><thead><tr><th>Ronda</th><th>Equipo</th><th>Tarjeta</th><th>Cuña</th><th>Rival</th></tr></thead><tbody></tbody></table>
+      </div>
+      <div class="controls"><button class="btn big" id="againBtn">Jugar de nuevo</button></div>
+    </section>
+  </main>
+</div>
+<div class="footer-tools">
+  <button class="btn mustard" id="repeatBtn" title="Vuelve a empezar esta ronda con el mismo psíquico y otra tarjeta (por si alguien se desconectó)">↻ Repetir ronda</button>
+  <button class="btn ghost" id="skipBtn" title="Pasa al siguiente psíquico del mismo equipo con otra tarjeta">Saltar turno</button>
+  <button class="btn ghost" id="resetBtn">Reiniciar juego</button>
+</div>
+
+<script src="client.js?v=3"></script>
+<script src="dial.js?v=3"></script>
+<script>
+const $ = id => document.getElementById(id);
+let S = null, dial = null, lastPhase = null, lastTurn = -1;
+// Cronómetro: el servidor manda los milisegundos restantes; aquí solo se descuenta en pantalla.
+let timerEnd = null;
+function tickTimer() {
+  const el = $('timer');
+  if (!el) return;
+  if (timerEnd == null) { el.textContent = ''; return; }
+  const s = Math.max(0, Math.ceil((timerEnd - Date.now()) / 1000));
+  el.innerHTML = `⏱ <b>${s}</b>s`;
+  el.classList.toggle('low', s <= 10 && s > 0);
+  el.classList.toggle('done', s === 0);
+}
+setInterval(tickTimer, 200);
+const esc = s => String(s ?? '').replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+
+const game = connectGame('host', {
+  onState: s => { S = s; render(); },
+  onOpen: () => $('offline').classList.add('hidden'),
+  onClose: () => $('offline').classList.remove('hidden'),
+});
+
+function show(id) {
+  for (const sec of ['lobby', 'game', 'final']) $(sec).classList.toggle('hidden', sec !== id);
+}
+function rosterHTML(players, team, psychicId, withKick) {
+  const list = players.filter(p => p.team === team);
+  if (!list.length) return '<span class="empty">Nadie todavía…</span>';
+  return list.map((p, i) =>
+    `<span class="chip ${p.connected ? '' : 'off'}"><span class="dot"></span><span class="muted" style="font-size:.75rem">${i + 1}.</span> ${p.id === psychicId ? '🔮 ' : ''}${esc(p.name)}${withKick ? ` <a href="#" data-kick="${p.id}" title="Quitar" style="color:var(--muted);text-decoration:none">✕</a>` : ''}</span>`
+  ).join('');
+}
+
+function render() {
+  if (!S) return;
+  const A = S.teams.A, B = S.teams.B;
+  $('topInfo').innerHTML = S.phase === 'lobby' ? `<span class="pill">Sala abierta</span>` :
+    S.phase === 'finished' ? `<span class="pill">Juego terminado</span>` :
+    `<span class="pill">Ronda ${S.round}</span> <span class="pill">Meta: ${S.settings.points} pts</span> <span>Turno de <b class="team-${S.turnTeam} team-color">${esc(S.teams[S.turnTeam].name)}</b></span>`;
+
+  $('skipBtn').classList.toggle('hidden', !['psychic', 'guessing', 'counter'].includes(S.phase));
+  $('repeatBtn').classList.toggle('hidden', !['psychic', 'guessing', 'counter', 'reveal'].includes(S.phase));
+  $('resetBtn').classList.toggle('hidden', S.phase === 'lobby' || S.phase === 'finished');
+  if (S.phase === 'lobby') {
+    show('lobby');
+    if (document.activeElement !== $('teamA') && A.name !== 'Equipo A') $('teamA').value = A.name;
+    if (document.activeElement !== $('teamB') && B.name !== 'Equipo B') $('teamB').value = B.name;
+    if (document.activeElement !== $('points')) $('points').value = String(S.settings.points);
+    $('teamAName').textContent = A.name; $('teamBName').textContent = B.name;
+    $('rosterA').innerHTML = rosterHTML(S.players, 'A', null, true);
+    $('rosterB').innerHTML = rosterHTML(S.players, 'B', null, true);
+    // Si la pantalla se abrió por IP o por un dominio (publicado en internet),
+    // esa misma dirección es la que deben usar los celulares.
+    const propia = /^(localhost|127\.0\.0\.1|\[::1\])$/.test(location.hostname) ? null : location.origin + '/jugar';
+    $('joinUrl').textContent = (propia || S.joinUrl).replace(/^https?:\/\//, '');
+    const icons = { '01_basicas': '🃏', '02_spicy': '🌶️' };
+    $('deckPick').innerHTML = (S.decks || []).map(d =>
+      `<button type="button" data-deck="${d.id}" class="${S.settings.deck === d.id ? 'sel' : ''}"><div class="dn"><span class="badge">${icons[d.id] || '🗂️'}</span>${esc(d.nombre)}</div><div class="dc">${esc(d.descripcion)}</div><span class="dk">${d.tarjetas} tarjetas · ${d.tarjetas * 2} lados</span></button>`
+    ).join('') || '<span class="muted">No hay mazos en la carpeta mazos/</span>';
+    const okA = S.players.some(p => p.team === 'A' && p.connected), okB = S.players.some(p => p.team === 'B' && p.connected);
+    $('startBtn').disabled = !(okA && okB);
+    return;
+  }
+  if (S.phase === 'finished') { show('final'); renderFinal(); return; }
+
+  show('game');
+  if (!dial) dial = createDial($('dialHost'), { wedge: S.wedge });
+  $('gTeamA').textContent = A.name; $('gTeamB').textContent = B.name;
+  animateNumber($('ptsA'), A.score); animateNumber($('ptsB'), B.score);
+  $('gRosterA').innerHTML = rosterHTML(S.players, 'A', S.psychicId);
+  $('gRosterB').innerHTML = rosterHTML(S.players, 'B', S.psychicId);
+  $('scoreA').classList.toggle('active', S.turnTeam === 'A');
+  $('scoreB').classList.toggle('active', S.turnTeam === 'B');
+  $('tagA').textContent = S.turnTeam === 'A' ? 'Adivinando' : (S.phase === 'counter' ? 'Decidiendo' : '');
+  $('tagB').textContent = S.turnTeam === 'B' ? 'Adivinando' : (S.phase === 'counter' ? 'Decidiendo' : '');
+
+  const covered = S.phase !== 'reveal';
+  dial.set({ needle: S.needle, target: S.target, covered, left: S.card?.izquierda, right: S.card?.derecha, wedge: S.wedge });
+
+  const t = S.teams[S.turnTeam], o = S.teams[S.turnTeam === 'A' ? 'B' : 'A'];
+  const psychic = S.players.find(p => p.id === S.psychicId);
+  const tc = `class="team-${S.turnTeam} team-color"`, oc = `class="team-${S.turnTeam === 'A' ? 'B' : 'A'} team-color"`;
+  let status = '', controls = '', hint = '';
+
+  if (S.phase === 'psychic') {
+    status = `<h2>🔮 <span ${tc}>${esc(psychic?.name || '…')}</span> ${S.side ? 'está pensando su pista' : 'está sacando una tarjeta'}</h2><p class="pulse">Cuando tenga su pista, iniciará la ronda…</p>`;
+  } else if (S.phase === 'guessing') {
+    status = `<h2><span ${tc}>${esc(t.name)}</span> mueve la flecha</h2>` +
+      (S.clue ? `<div class="clue pop">${esc(S.clue)}</div>` : `<p>Pista de ${esc(psychic?.name || 'el psíquico')}: ¡escuchen bien!</p>`) +
+      `<div><span class="timer" id="timer">⏱ <b>--</b></span></div>`;
+    hint = `Tienen ${S.guessSeconds} segundos. Al acabarse el tiempo, la flecha se queda donde esté.`;
+  } else if (S.phase === 'counter') {
+    status = `<h2><span ${oc}>${esc(o.name)}</span>: ¿el objetivo está a la izquierda o a la derecha?</h2>` +
+      (S.lockedBy ? `<p>🔒 Flecha bloqueada por <b>${esc(S.lockedBy)}</b></p>` : '') +
+      `<p class="pulse">Que <b>una sola persona</b> del equipo conteste desde su celular.</p>`;
+    controls = `<button class="btn ghost" data-force="izq" title="Registrar la respuesta del rival desde la pantalla">◀ Dicen izquierda</button><button class="btn ghost" data-force="der" title="Registrar la respuesta del rival desde la pantalla">Dicen derecha ▶</button>`;
+    hint = 'La primera respuesta decide. Si no tienen el celular a mano, regístrala aquí.';
+  } else if (S.phase === 'reveal') {
+    const r = S.result;
+    const w = r.wedge;
+    status = `<h2 class="pop">${w ? `¡${w} punto${w > 1 ? 's' : ''} para <span ${tc}>${esc(t.name)}</span>!` : `<span ${tc}>${esc(t.name)}</span> no sumó puntos`}</h2>` +
+      `<div class="result-line">${w === 4 ? `🎯 ¡Centro exacto! <span ${oc}>${esc(o.name)}</span> no puede sumar.` :
+        r.counterCorrect ? `<span ${oc}>${esc(o.name)}</span> acertó (${r.correctSide === 'izq' ? 'izquierda' : 'derecha'}): <b>+1</b>` :
+        `<span ${oc}>${esc(o.name)}</span> falló: el objetivo estaba a la ${r.correctSide === 'izq' ? 'izquierda' : 'derecha'}.`}</div>` +
+      (S.clue ? `<div class="clue" style="font-size:1.1rem;padding:6px 14px;margin-top:6px">${esc(S.clue)}</div>` : '') +
+      `<div class="hint" style="margin-top:6px">${r.lockedBy ? '🔒 Bloqueó <b>' + esc(r.lockedBy) + '</b>' : ''}${r.lockedBy && r.counterBy ? ' · ' : ''}${r.counterBy ? '🗣 <b>' + esc(r.counterBy) + '</b> dijo ' + (r.correctSide === 'izq' ? (r.counterCorrect ? 'izquierda' : 'derecha') : (r.counterCorrect ? 'derecha' : 'izquierda')) : ''}</div>`;
+    const last = S.reached;
+    if (last) status += `<div class="result-line" style="margin-top:8px">🏆 ¡<span class="team-${S.teams.A.score >= S.teams.B.score ? 'A' : 'B'} team-color">${esc(S.teams.A.score >= S.teams.B.score ? S.teams.A.name : S.teams.B.name)}</span> llegó a ${S.settings.points} puntos!</div>`;
+    controls = `<button class="btn big" id="nextBtn">${last ? 'Ver resultados finales' : 'Siguiente ronda ▶'}</button>`;
+    hint = S.metaAlcanzada && !S.reached
+      ? `Ya se alcanzó la meta, pero el juego sigue hasta que todos hayan sido psíquicos (faltan ${S.faltanPsiquicos}).`
+      : 'También puedes presionar Enter o Espacio.';
+  }
+  timerEnd = S.remainingMs != null ? Date.now() + S.remainingMs : null;
+  if (S.phase !== lastPhase || S.turn !== lastTurn) { $('status').classList.remove('fade-in'); void $('status').offsetWidth; $('status').classList.add('fade-in'); }
+  lastPhase = S.phase; lastTurn = S.turn;
+  $('status').innerHTML = status; $('controls').innerHTML = controls; $('stageHint').textContent = hint;
+  tickTimer();
+  $('skipBtn').classList.toggle('hidden', !['psychic', 'guessing', 'counter'].includes(S.phase));
+}
+
+function renderFinal() {
+  const A = S.teams.A, B = S.teams.B;
+  const tie = A.score === B.score;
+  const win = A.score > B.score ? 'A' : 'B';
+  $('finalTitle').innerHTML = tie ? '¡Empate!' : `¡Ganó <span class="team-${win} team-color">${esc(S.teams[win].name)}</span>!`;
+  $('finalSub').textContent = tie ? `${A.score} a ${B.score}` : `${S.teams[win].score} a ${S.teams[win === 'A' ? 'B' : 'A'].score}`;
+  $('finalScores').innerHTML = ['A', 'B'].map(k => `<div class="card score team-${k} ${!tie && win === k ? 'active' : ''}"><h2>${esc(S.teams[k].name)}</h2><div class="pts">${S.teams[k].score}</div></div>`).join('');
+  $('historyTable').querySelector('tbody').innerHTML = S.history.map(h =>
+    `<tr><td>${h.round}</td><td class="team-${h.team} team-color">${esc(S.teams[h.team].name)}</td><td>${esc(h.card.izquierda)} ↔ ${esc(h.card.derecha)}</td><td>${h.wedge} pts</td><td>${h.wedge === 4 ? '—' : h.counterCorrect ? '+1' : '0'}</td></tr>`
+  ).join('');
+}
+
+function animateNumber(el, v) {
+  if (el.textContent !== String(v)) { el.textContent = v; el.classList.remove('pop'); void el.offsetWidth; el.classList.add('pop'); }
+}
+
+// ----- eventos -----
+let setupTimer;
+function pushSetup() {
+  clearTimeout(setupTimer);
+  setupTimer = setTimeout(() => game.send({ type: 'setup', teamA: $('teamA').value || 'Equipo A', teamB: $('teamB').value || 'Equipo B', points: $('points').value }), 250);
+}
+$('teamA').addEventListener('input', pushSetup);
+$('teamB').addEventListener('input', pushSetup);
+$('points').addEventListener('change', pushSetup);
+$('startBtn').addEventListener('click', () => { pushSetup(); setTimeout(() => game.send({ type: 'start' }), 300); });
+$('againBtn').addEventListener('click', () => game.send({ type: 'reset' }));
+$('resetBtn').addEventListener('click', () => { if (confirm('¿Volver a la pantalla de inicio? Se pierden los puntajes (los jugadores se mantienen).')) game.send({ type: 'reset' }); });
+$('skipBtn').addEventListener('click', () => { if (confirm('¿Saltar este turno? Se saca otra tarjeta y pasa al siguiente psíquico del mismo equipo.')) game.send({ type: 'skipTurn' }); });
+$('repeatBtn').addEventListener('click', () => {
+  const yaHuboPuntos = S && S.phase === 'reveal';
+  const aviso = '¿Repetir esta ronda?\n\nLa juega OTRA VEZ la misma persona, con una tarjeta nueva.' +
+    (yaHuboPuntos ? '\nSe quitan los puntos que se acaban de dar.' : '');
+  if (confirm(aviso)) game.send({ type: 'repeatTurn' });
+});
+document.addEventListener('click', e => {
+  if (e.target.id === 'nextBtn') game.send({ type: 'next' });
+  const dk = e.target.closest('[data-deck]');
+  if (dk) game.send({ type: 'setup', deck: dk.dataset.deck });
+  const f = e.target.closest('[data-force]');
+  if (f && confirm(`¿Registrar que el equipo rival dijo "${f.dataset.force === 'izq' ? 'izquierda' : 'derecha'}"?`)) game.send({ type: 'forceCounter', side: f.dataset.force });
+  const k = e.target.closest('[data-kick]');
+  if (k) { e.preventDefault(); game.send({ type: 'kick', playerId: k.dataset.kick }); }
+});
+document.addEventListener('keydown', e => {
+  if ((e.key === 'Enter' || e.key === ' ') && S && S.phase === 'reveal' && !/INPUT|SELECT/.test(document.activeElement.tagName)) { e.preventDefault(); game.send({ type: 'next' }); }
+});
+</script>
+</body>
+</html>

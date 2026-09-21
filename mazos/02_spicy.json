@@ -1,0 +1,806 @@
+{
+  "nombre": "Spicy",
+  "descripcion": "Solo para adultos: citas, ligue, cama y cosas que no le contarías a tu mamá.",
+  "tarjetas": [
+    {
+      "lado1": { "izquierda": "Sexy", "derecha": "Nada sexy" },
+      "lado2": { "izquierda": "Turn-on", "derecha": "Turn-off" }
+    },
+    {
+      "lado1": { "izquierda": "Red flag", "derecha": "Green flag" },
+      "lado2": { "izquierda": "Buena primera cita", "derecha": "Pésima primera cita" }
+    },
+    {
+      "lado1": { "izquierda": "Buen lugar para un beso", "derecha": "Mal lugar para un beso" },
+      "lado2": { "izquierda": "Mal lugar para tener sexo", "derecha": "Buen lugar para tener sexo" }
+    },
+    {
+      "lado1": { "izquierda": "Ick total", "derecha": "Crush total" },
+      "lado2": { "izquierda": "Cosa que se dice en la primera cita", "derecha": "Cosa que se dice en la boda" }
+    },
+    {
+      "lado1": { "izquierda": "Ligue de una noche", "derecha": "Relación seria" },
+      "lado2": { "izquierda": "Pareja de Tinder", "derecha": "Pareja de toda la vida" }
+    },
+    {
+      "lado1": { "izquierda": "Amor a primera vista", "derecha": "Amor que tarda en llegar" },
+      "lado2": { "izquierda": "Cita barata", "derecha": "Cita cara" }
+    },
+    {
+      "lado1": { "izquierda": "Cita aburrida", "derecha": "Cita inolvidable" },
+      "lado2": { "izquierda": "Regalo romántico", "derecha": "Regalo de amigos" }
+    },
+    {
+      "lado1": { "izquierda": "Piropo tierno", "derecha": "Piropo vulgar" },
+      "lado2": { "izquierda": "Mensaje de buenos días", "derecha": "Mensaje de las 3 a.m." }
+    },
+    {
+      "lado1": { "izquierda": "Texto para tu ex", "derecha": "Texto para tu crush" },
+      "lado2": { "izquierda": "Cosa que le mandas a tu crush", "derecha": "Cosa que jamás le mandarías" }
+    },
+    {
+      "lado1": { "izquierda": "Foto para Instagram", "derecha": "Foto para el chat privado" },
+      "lado2": { "izquierda": "Pose inocente", "derecha": "Pose provocativa" }
+    },
+    {
+      "lado1": { "izquierda": "Ropa para una cita", "derecha": "Ropa para dormir" },
+      "lado2": { "izquierda": "Ropa interior de lunes", "derecha": "Ropa interior de sábado" }
+    },
+    {
+      "lado1": { "izquierda": "Ropa para conquistar", "derecha": "Ropa para que te dejen" },
+      "lado2": { "izquierda": "Prenda que quitas primero", "derecha": "Prenda que quitas al final" }
+    },
+    {
+      "lado1": { "izquierda": "Cosa que haces borracho", "derecha": "Cosa que haces sobrio" },
+      "lado2": { "izquierda": "Cosa que se hace en el baño de un bar", "derecha": "Cosa que se hace en el baño de casa" }
+    },
+    {
+      "lado1": { "izquierda": "Cosa que esconderías de tu mamá", "derecha": "Cosa que le contarías a tu mamá" },
+      "lado2": { "izquierda": "Cosa que le contarías a tus amigas", "derecha": "Cosa que te llevas a la tumba" }
+    },
+    {
+      "lado1": { "izquierda": "Cosa que se perdona en una relación", "derecha": "Cosa que no se perdona" },
+      "lado2": { "izquierda": "Cosa que haces en la primera semana", "derecha": "Cosa que haces después de un año" }
+    },
+    {
+      "lado1": { "izquierda": "Cosa que haces en la luna de miel", "derecha": "Cosa que haces en el aniversario 20" },
+      "lado2": { "izquierda": "Fantasía común", "derecha": "Fantasía rara" }
+    },
+    {
+      "lado1": { "izquierda": "Fantasía realizable", "derecha": "Fantasía imposible" },
+      "lado2": { "izquierda": "Fetiche suave", "derecha": "Fetiche extremo" }
+    },
+    {
+      "lado1": { "izquierda": "Kink que confesarías", "derecha": "Kink que jamás confesarías" },
+      "lado2": { "izquierda": "Juguete inocente", "derecha": "Juguete para adultos" }
+    },
+    {
+      "lado1": { "izquierda": "Cosa que compras en la farmacia sin pena", "derecha": "Cosa que compras con pena" },
+      "lado2": { "izquierda": "Compra en la sex shop discreta", "derecha": "Compra en la sex shop escandalosa" }
+    },
+    {
+      "lado1": { "izquierda": "Olor que enamora", "derecha": "Olor que espanta" },
+      "lado2": { "izquierda": "Perfume de día", "derecha": "Perfume de noche" }
+    },
+    {
+      "lado1": { "izquierda": "Parte del cuerpo aburrida", "derecha": "Parte del cuerpo sexy" },
+      "lado2": { "izquierda": "Parte del cuerpo que muestras", "derecha": "Parte del cuerpo que escondes" }
+    },
+    {
+      "lado1": { "izquierda": "Tatuaje sexy", "derecha": "Tatuaje que arruina el momento" },
+      "lado2": { "izquierda": "Vello aceptable", "derecha": "Vello inaceptable" }
+    },
+    {
+      "lado1": { "izquierda": "Look de recién levantado", "derecha": "Look de salir de fiesta" },
+      "lado2": { "izquierda": "Look de cita", "derecha": "Look de walk of shame" }
+    },
+    {
+      "lado1": { "izquierda": "Mal sonido en la cama", "derecha": "Buen sonido en la cama" },
+      "lado2": { "izquierda": "Cosa que se dice en la cama", "derecha": "Cosa que nunca se dice en la cama" }
+    },
+    {
+      "lado1": { "izquierda": "Frase que arruina el momento", "derecha": "Frase que enciende el momento" },
+      "lado2": { "izquierda": "Frase de telenovela", "derecha": "Frase de película para adultos" }
+    },
+    {
+      "lado1": { "izquierda": "Apodo cursi de pareja", "derecha": "Apodo cachondo de pareja" },
+      "lado2": { "izquierda": "Nombre de pila sexy", "derecha": "Nombre de pila que baja la libido" }
+    },
+    {
+      "lado1": { "izquierda": "Canción para el romance", "derecha": "Canción para el after" },
+      "lado2": { "izquierda": "Canción para bailar pegadito", "derecha": "Canción para bailar solo" }
+    },
+    {
+      "lado1": { "izquierda": "Playlist de amor", "derecha": "Playlist de despecho" },
+      "lado2": { "izquierda": "Película para ver con tu crush", "derecha": "Película para ver con tus papás" }
+    },
+    {
+      "lado1": { "izquierda": "Escena de película tierna", "derecha": "Escena de película subida de tono" },
+      "lado2": { "izquierda": "Serie para ver en pareja", "derecha": "Serie para ver solo" }
+    },
+    {
+      "lado1": { "izquierda": "Libro romántico", "derecha": "Libro erótico" },
+      "lado2": { "izquierda": "Personaje de ficción con el que saldrías", "derecha": "Personaje de ficción que bloquearías" }
+    },
+    {
+      "lado1": { "izquierda": "Famoso con el que tendrías una noche", "derecha": "Famoso con el que te casarías" },
+      "lado2": { "izquierda": "Famoso guapo", "derecha": "Famoso feo" }
+    },
+    {
+      "lado1": { "izquierda": "Famoso con buena voz", "derecha": "Famoso con buen cuerpo" },
+      "lado2": { "izquierda": "Villano sexy", "derecha": "Héroe aburrido" }
+    },
+    {
+      "lado1": { "izquierda": "Profesión sexy", "derecha": "Profesión nada sexy" },
+      "lado2": { "izquierda": "Uniforme sexy", "derecha": "Uniforme ridículo" }
+    },
+    {
+      "lado1": { "izquierda": "Hobby atractivo", "derecha": "Hobby que da ick" },
+      "lado2": { "izquierda": "Habilidad que enamora", "derecha": "Habilidad que espanta" }
+    },
+    {
+      "lado1": { "izquierda": "Talento útil en una cita", "derecha": "Talento inútil en una cita" },
+      "lado2": { "izquierda": "Deporte sexy", "derecha": "Deporte que baja la libido" }
+    },
+    {
+      "lado1": { "izquierda": "Ejercicio que se ve sexy", "derecha": "Ejercicio que se ve ridículo" },
+      "lado2": { "izquierda": "Comida sexy", "derecha": "Comida antisexy" }
+    },
+    {
+      "lado1": { "izquierda": "Comida para una cita", "derecha": "Comida que arruina la cita" },
+      "lado2": { "izquierda": "Comida afrodisíaca", "derecha": "Comida que mata la pasión" }
+    },
+    {
+      "lado1": { "izquierda": "Comida para comer con las manos", "derecha": "Comida para comer con cubiertos" },
+      "lado2": { "izquierda": "Fruta inocente", "derecha": "Fruta sugerente" }
+    },
+    {
+      "lado1": { "izquierda": "Postre para compartir", "derecha": "Postre para no compartir" },
+      "lado2": { "izquierda": "Bebida de primera cita", "derecha": "Bebida de última cita" }
+    },
+    {
+      "lado1": { "izquierda": "Trago para enamorar", "derecha": "Trago para olvidar" },
+      "lado2": { "izquierda": "Cerveza de amigos", "derecha": "Vino de pareja" }
+    },
+    {
+      "lado1": { "izquierda": "Peda tranquila", "derecha": "Peda de perder la dignidad" },
+      "lado2": { "izquierda": "Resaca leve", "derecha": "Resaca de arrepentimiento" }
+    },
+    {
+      "lado1": { "izquierda": "Fiesta de sofá", "derecha": "Fiesta de baño de espuma" },
+      "lado2": { "izquierda": "Fiesta con ropa", "derecha": "Fiesta sin ropa" }
+    },
+    {
+      "lado1": { "izquierda": "Antro para ligar", "derecha": "Antro para bailar" },
+      "lado2": { "izquierda": "Lugar para ligar", "derecha": "Lugar para que te rechacen" }
+    },
+    {
+      "lado1": { "izquierda": "App para ligar", "derecha": "App para casarse" },
+      "lado2": { "izquierda": "Perfil de app atractivo", "derecha": "Perfil de app que da miedo" }
+    },
+    {
+      "lado1": { "izquierda": "Foto de perfil que atrae", "derecha": "Foto de perfil que espanta" },
+      "lado2": { "izquierda": "Bio de app honesta", "derecha": "Bio de app mentirosa" }
+    },
+    {
+      "lado1": { "izquierda": "Primer mensaje bueno", "derecha": "Primer mensaje pésimo" },
+      "lado2": { "izquierda": "Match que respondes", "derecha": "Match que ignoras" }
+    },
+    {
+      "lado1": { "izquierda": "Ghosting justificado", "derecha": "Ghosting cruel" },
+      "lado2": { "izquierda": "Excusa creíble para cancelar una cita", "derecha": "Excusa terrible para cancelar" }
+    },
+    {
+      "lado1": { "izquierda": "Pretexto para irte de una cita", "derecha": "Pretexto para quedarte" },
+      "lado2": { "izquierda": "Cosa que haces para llamar la atención", "derecha": "Cosa que haces para que te dejen en paz" }
+    },
+    {
+      "lado1": { "izquierda": "Coqueteo sutil", "derecha": "Coqueteo descarado" },
+      "lado2": { "izquierda": "Coqueteo tierno", "derecha": "Coqueteo incómodo" }
+    },
+    {
+      "lado1": { "izquierda": "Mirada inocente", "derecha": "Mirada de deseo" },
+      "lado2": { "izquierda": "Toque inocente", "derecha": "Toque intencional" }
+    },
+    {
+      "lado1": { "izquierda": "Abrazo de amigos", "derecha": "Abrazo de algo más" },
+      "lado2": { "izquierda": "Beso de mejilla", "derecha": "Beso de película" }
+    },
+    {
+      "lado1": { "izquierda": "Beso torpe", "derecha": "Beso perfecto" },
+      "lado2": { "izquierda": "Mordida tierna", "derecha": "Mordida salvaje" }
+    },
+    {
+      "lado1": { "izquierda": "Caricia suave", "derecha": "Caricia atrevida" },
+      "lado2": { "izquierda": "Cosquillas", "derecha": "Nalgada" }
+    },
+    {
+      "lado1": { "izquierda": "Susurro tierno", "derecha": "Susurro sucio" },
+      "lado2": { "izquierda": "Voz normal", "derecha": "Voz de cama" }
+    },
+    {
+      "lado1": { "izquierda": "Rutina de skincare", "derecha": "Rutina de seducción" },
+      "lado2": { "izquierda": "Cosa que haces antes de una cita", "derecha": "Cosa que haces después" }
+    },
+    {
+      "lado1": { "izquierda": "Cosa que preparas antes de una noche especial", "derecha": "Cosa que improvisas" },
+      "lado2": { "izquierda": "Preliminar corto", "derecha": "Preliminar eterno" }
+    },
+    {
+      "lado1": { "izquierda": "Rapidín", "derecha": "Noche completa" },
+      "lado2": { "izquierda": "Sexo de mañana", "derecha": "Sexo de madrugada" }
+    },
+    {
+      "lado1": { "izquierda": "Sexo aburrido", "derecha": "Sexo memorable" },
+      "lado2": { "izquierda": "Sexo con amor", "derecha": "Sexo casual" }
+    },
+    {
+      "lado1": { "izquierda": "Posición fácil", "derecha": "Posición para gimnastas" },
+      "lado2": { "izquierda": "Posición común", "derecha": "Posición rara" }
+    },
+    {
+      "lado1": { "izquierda": "Posición romántica", "derecha": "Posición atrevida" },
+      "lado2": { "izquierda": "Lugar cómodo", "derecha": "Lugar incómodo pero emocionante" }
+    },
+    {
+      "lado1": { "izquierda": "Escenario seguro", "derecha": "Escenario de riesgo" },
+      "lado2": { "izquierda": "Sitio para hacerlo en casa", "derecha": "Sitio para hacerlo fuera de casa" }
+    },
+    {
+      "lado1": { "izquierda": "Cosa que haces con la luz prendida", "derecha": "Cosa que haces con la luz apagada" },
+      "lado2": { "izquierda": "Cosa que haces con música", "derecha": "Cosa que haces en silencio" }
+    },
+    {
+      "lado1": { "izquierda": "Cosa que haces en la ducha", "derecha": "Cosa que haces en la cama" },
+      "lado2": { "izquierda": "Cosa que haces con hielo", "derecha": "Cosa que haces con chocolate" }
+    },
+    {
+      "lado1": { "izquierda": "Cosa que compras para una noche romántica", "derecha": "Cosa que compras para una noche salvaje" },
+      "lado2": { "izquierda": "Sorpresa tierna", "derecha": "Sorpresa picante" }
+    },
+    {
+      "lado1": { "izquierda": "Detalle romántico", "derecha": "Detalle atrevido" },
+      "lado2": { "izquierda": "Nota tierna", "derecha": "Nota sucia" }
+    },
+    {
+      "lado1": { "izquierda": "Sexting inocente", "derecha": "Sexting explícito" },
+      "lado2": { "izquierda": "Selfie decente", "derecha": "Selfie que no se puede enviar" }
+    },
+    {
+      "lado1": { "izquierda": "Nudes con confianza", "derecha": "Nudes con arrepentimiento" },
+      "lado2": { "izquierda": "Historia de Instagram inocente", "derecha": "Historia de Instagram provocativa" }
+    },
+    {
+      "lado1": { "izquierda": "Cosa que publicas", "derecha": "Cosa que solo envías por privado" },
+      "lado2": { "izquierda": "Cosa que buscas en incógnito", "derecha": "Cosa que buscas sin pena" }
+    },
+    {
+      "lado1": { "izquierda": "Búsqueda de Google inocente", "derecha": "Búsqueda de Google vergonzosa" },
+      "lado2": { "izquierda": "Cosa que ves solo", "derecha": "Cosa que ves en pareja" }
+    },
+    {
+      "lado1": { "izquierda": "Género de contenido para adultos común", "derecha": "Género de contenido para adultos raro" },
+      "lado2": { "izquierda": "Vergüenza leve", "derecha": "Vergüenza para mudarse de país" }
+    },
+    {
+      "lado1": { "izquierda": "Confesión ligera", "derecha": "Confesión escandalosa" },
+      "lado2": { "izquierda": "Secreto de pareja pequeño", "derecha": "Secreto de pareja que rompe la relación" }
+    },
+    {
+      "lado1": { "izquierda": "Mentira blanca en una relación", "derecha": "Mentira grave en una relación" },
+      "lado2": { "izquierda": "Cosa que perdonas en la cama", "derecha": "Cosa que no perdonas en la cama" }
+    },
+    {
+      "lado1": { "izquierda": "Error de principiante", "derecha": "Error imperdonable" },
+      "lado2": { "izquierda": "Momento incómodo en la cama", "derecha": "Momento incómodo en la cena" }
+    },
+    {
+      "lado1": { "izquierda": "Situación embarazosa leve", "derecha": "Situación embarazosa épica" },
+      "lado2": { "izquierda": "Interrupción tolerable", "derecha": "Interrupción que arruina todo" }
+    },
+    {
+      "lado1": { "izquierda": "Cosa que se rompe en la cama", "derecha": "Cosa que se rompe en el corazón" },
+      "lado2": { "izquierda": "Cosa que se pierde en una noche loca", "derecha": "Cosa que se encuentra en una noche loca" }
+    },
+    {
+      "lado1": { "izquierda": "Recuerdo de una noche que cuentas", "derecha": "Recuerdo que niegas" },
+      "lado2": { "izquierda": "Amigo con derechos", "derecha": "Amigo sin derechos" }
+    },
+    {
+      "lado1": { "izquierda": "Ex tóxico", "derecha": "Ex que extrañas" },
+      "lado2": { "izquierda": "Ex que bloqueas", "derecha": "Ex que stalkeas" }
+    },
+    {
+      "lado1": { "izquierda": "Cosa que haces cuando te dejan", "derecha": "Cosa que haces cuando dejas a alguien" },
+      "lado2": { "izquierda": "Canción para llorar a un ex", "derecha": "Canción para superar a un ex" }
+    },
+    {
+      "lado1": { "izquierda": "Venganza de ex leve", "derecha": "Venganza de ex de película" },
+      "lado2": { "izquierda": "Regalo de ex que conservas", "derecha": "Regalo de ex que quemas" }
+    },
+    {
+      "lado1": { "izquierda": "Relación abierta", "derecha": "Relación monógama" },
+      "lado2": { "izquierda": "Celos justificados", "derecha": "Celos ridículos" }
+    },
+    {
+      "lado1": { "izquierda": "Comportamiento posesivo", "derecha": "Comportamiento relajado" },
+      "lado2": { "izquierda": "Pareja aburrida", "derecha": "Pareja intensa" }
+    },
+    {
+      "lado1": { "izquierda": "Pareja que da cariño", "derecha": "Pareja que da problemas" },
+      "lado2": { "izquierda": "Pareja pública", "derecha": "Pareja secreta" }
+    },
+    {
+      "lado1": { "izquierda": "Amante ideal", "derecha": "Amante desastroso" },
+      "lado2": { "izquierda": "Cualidad importante en la cama", "derecha": "Cualidad que no importa" }
+    },
+    {
+      "lado1": { "izquierda": "Defecto perdonable en la cama", "derecha": "Defecto imperdonable" },
+      "lado2": { "izquierda": "Cosa sexy en un hombre", "derecha": "Cosa sexy en una mujer" }
+    },
+    {
+      "lado1": { "izquierda": "Cosa que las mujeres fingen", "derecha": "Cosa que los hombres fingen" },
+      "lado2": { "izquierda": "Cosa que se finge en la cama", "derecha": "Cosa que no se puede fingir" }
+    },
+    {
+      "lado1": { "izquierda": "Cumplido en la cama", "derecha": "Crítica en la cama" },
+      "lado2": { "izquierda": "Reseña de 5 estrellas", "derecha": "Reseña de 1 estrella" }
+    },
+    {
+      "lado1": { "izquierda": "Talla que importa", "derecha": "Talla que no importa" },
+      "lado2": { "izquierda": "Cosa que dura poco", "derecha": "Cosa que dura mucho" }
+    },
+    {
+      "lado1": { "izquierda": "Cosa que se hace rápido", "derecha": "Cosa que se disfruta lento" },
+      "lado2": { "izquierda": "Cosa inocente que suena sucia", "derecha": "Cosa sucia que suena inocente" }
+    },
+    {
+      "lado1": { "izquierda": "Palabra decente que suena sucia", "derecha": "Palabra sucia que suena decente" },
+      "lado2": { "izquierda": "Nombre de lugar que suena sucio", "derecha": "Nombre de lugar que suena elegante" }
+    },
+    {
+      "lado1": { "izquierda": "Objeto cotidiano inocente", "derecha": "Objeto cotidiano con doble uso" },
+      "lado2": { "izquierda": "Verdura inocente", "derecha": "Verdura sugerente" }
+    },
+    {
+      "lado1": { "izquierda": "Postura de yoga inocente", "derecha": "Postura de yoga sugerente" },
+      "lado2": { "izquierda": "Actividad tierna en pareja", "derecha": "Actividad atrevida en pareja" }
+    },
+    {
+      "lado1": { "izquierda": "Baile decente", "derecha": "Baile prohibido" },
+      "lado2": { "izquierda": "Movimiento de cadera sutil", "derecha": "Movimiento de cadera escandaloso" }
+    },
+    {
+      "lado1": { "izquierda": "Reto de fiesta inocente", "derecha": "Reto de fiesta sin límites" },
+      "lado2": { "izquierda": "Verdad o reto suave", "derecha": "Verdad o reto extremo" }
+    },
+    {
+      "lado1": { "izquierda": "Juego de mesa para la familia", "derecha": "Juego de mesa para la despedida de soltero" },
+      "lado2": { "izquierda": "Despedida de soltera tranquila", "derecha": "Despedida de soltera legendaria" }
+    },
+    {
+      "lado1": { "izquierda": "Boda decente", "derecha": "Boda escandalosa" },
+      "lado2": { "izquierda": "Luna de miel relajada", "derecha": "Luna de miel intensa" }
+    },
+    {
+      "lado1": { "izquierda": "Vacaciones con la familia", "derecha": "Vacaciones con la pareja" },
+      "lado2": { "izquierda": "Hotel para descansar", "derecha": "Hotel para no descansar" }
+    },
+    {
+      "lado1": { "izquierda": "Motel de paso", "derecha": "Suite de lujo" },
+      "lado2": { "izquierda": "Playa nudista", "derecha": "Playa familiar" }
+    },
+    {
+      "lado1": { "izquierda": "Bikini", "derecha": "Traje de neopreno" },
+      "lado2": { "izquierda": "Pijama de franela", "derecha": "Lencería" }
+    },
+    {
+      "lado1": { "izquierda": "Bata de baño", "derecha": "Sábana de seda" },
+      "lado2": { "izquierda": "Cosa que hueles en un motel", "derecha": "Cosa que hueles en un spa" }
+    },
+    {
+      "lado1": { "izquierda": "Masaje relajante", "derecha": "Masaje con final feliz" },
+      "lado2": { "izquierda": "Spa de pareja", "derecha": "Spa de amigas" }
+    },
+    {
+      "lado1": { "izquierda": "Sauna", "derecha": "Jacuzzi" },
+      "lado2": { "izquierda": "Cosa que haces en un jacuzzi", "derecha": "Cosa que haces en una alberca pública" }
+    },
+    {
+      "lado1": { "izquierda": "Escapada de fin de semana", "derecha": "Escapada de una hora" },
+      "lado2": { "izquierda": "Cosa que haces en el coche", "derecha": "Cosa que haces en el asiento trasero" }
+    },
+    {
+      "lado1": { "izquierda": "Cosa que pasa en un elevador", "derecha": "Cosa que pasa en la escalera de emergencia" },
+      "lado2": { "izquierda": "Cosa que pasa en la oficina", "derecha": "Cosa que pasa en la fiesta de la oficina" }
+    },
+    {
+      "lado1": { "izquierda": "Romance de oficina discreto", "derecha": "Romance de oficina escandaloso" },
+      "lado2": { "izquierda": "Cosa que se dice en RH", "derecha": "Cosa que se dice en el after de la oficina" }
+    },
+    {
+      "lado1": { "izquierda": "Jefe sexy", "derecha": "Jefe que da miedo" },
+      "lado2": { "izquierda": "Compañero de trabajo con el que saldrías", "derecha": "Compañero que evitarías" }
+    },
+    {
+      "lado1": { "izquierda": "Fantasía de oficina", "derecha": "Fantasía de vacaciones" },
+      "lado2": { "izquierda": "Fantasía con uniforme", "derecha": "Fantasía sin uniforme" }
+    },
+    {
+      "lado1": { "izquierda": "Personaje de disfraz sexy", "derecha": "Personaje de disfraz ridículo" },
+      "lado2": { "izquierda": "Disfraz de Halloween inocente", "derecha": "Disfraz de Halloween provocativo" }
+    },
+    {
+      "lado1": { "izquierda": "Máscara de fiesta", "derecha": "Venda en los ojos" },
+      "lado2": { "izquierda": "Accesorio inocente", "derecha": "Accesorio para adultos" }
+    },
+    {
+      "lado1": { "izquierda": "Cosa que compras en Amazon sin pena", "derecha": "Cosa que compras en Amazon con nombre falso" },
+      "lado2": { "izquierda": "Paquete que abres frente a todos", "derecha": "Paquete que abres a solas" }
+    },
+    {
+      "lado1": { "izquierda": "Cosa que guardas en el cajón de arriba", "derecha": "Cosa que guardas en el cajón de abajo" },
+      "lado2": { "izquierda": "Cosa que se esconde cuando llega visita", "derecha": "Cosa que se presume cuando llega visita" }
+    },
+    {
+      "lado1": { "izquierda": "Cosa que tu roomie no debe ver", "derecha": "Cosa que tu roomie ya vio" },
+      "lado2": { "izquierda": "Ruido de la casa normal", "derecha": "Ruido de la casa sospechoso" }
+    },
+    {
+      "lado1": { "izquierda": "Vecino discreto", "derecha": "Vecino que oye todo" },
+      "lado2": { "izquierda": "Cosa que se hace en silencio", "derecha": "Cosa que se hace a gritos" }
+    },
+    {
+      "lado1": { "izquierda": "Cosa que se hace con las cortinas abiertas", "derecha": "Cosa que se hace con las cortinas cerradas" },
+      "lado2": { "izquierda": "Timidez encantadora", "derecha": "Timidez frustrante" }
+    },
+    {
+      "lado1": { "izquierda": "Confianza sexy", "derecha": "Confianza arrogante" },
+      "lado2": { "izquierda": "Actitud tierna", "derecha": "Actitud dominante" }
+    },
+    {
+      "lado1": { "izquierda": "Dominante", "derecha": "Sumiso" },
+      "lado2": { "izquierda": "Cosa que pides con pena", "derecha": "Cosa que pides sin filtro" }
+    },
+    {
+      "lado1": { "izquierda": "Petición razonable", "derecha": "Petición que asusta" },
+      "lado2": { "izquierda": "Límite sano", "derecha": "Límite exagerado" }
+    },
+    {
+      "lado1": { "izquierda": "Consentimiento claro", "derecha": "Señal confusa" },
+      "lado2": { "izquierda": "Cosa que se pregunta antes", "derecha": "Cosa que se pregunta después" }
+    },
+    {
+      "lado1": { "izquierda": "Cosa que se dice al terminar", "derecha": "Cosa que se piensa al terminar" },
+      "lado2": { "izquierda": "Cosa que haces después del sexo", "derecha": "Cosa que haces antes del sexo" }
+    },
+    {
+      "lado1": { "izquierda": "Abrazo post sexo", "derecha": "Huida post sexo" },
+      "lado2": { "izquierda": "Desayuno después de la noche", "derecha": "Café para irse rápido" }
+    },
+    {
+      "lado1": { "izquierda": "Walk of shame corto", "derecha": "Walk of shame de otra colonia" },
+      "lado2": { "izquierda": "Cosa que te llevas a casa", "derecha": "Cosa que dejas en su casa" }
+    },
+    {
+      "lado1": { "izquierda": "Mensaje después de la noche", "derecha": "Silencio después de la noche" },
+      "lado2": { "izquierda": "Segunda cita garantizada", "derecha": "Adiós para siempre" }
+    },
+    {
+      "lado1": { "izquierda": "Historia para contar a tus amigas", "derecha": "Historia para llevar a la tumba" },
+      "lado2": { "izquierda": "Detalle que cuentas en terapia", "derecha": "Detalle que no cuentas ni en terapia" }
+    },
+    {
+      "lado1": { "izquierda": "Placer inocente", "derecha": "Placer culposo" },
+      "lado2": { "izquierda": "Placer rápido", "derecha": "Placer lento" }
+    },
+    {
+      "lado1": { "izquierda": "Placer barato", "derecha": "Placer caro" },
+      "lado2": { "izquierda": "Cosa que se disfruta solo", "derecha": "Cosa que se disfruta acompañado" }
+    },
+    {
+      "lado1": { "izquierda": "Cosa que mejora con alcohol", "derecha": "Cosa que empeora con alcohol" },
+      "lado2": { "izquierda": "Cosa que mejora con la edad", "derecha": "Cosa que empeora con la edad" }
+    },
+    {
+      "lado1": { "izquierda": "Cosa que haces a los 20", "derecha": "Cosa que haces a los 50" },
+      "lado2": { "izquierda": "Cosa que hacían tus papás", "derecha": "Cosa que jamás imaginarías de tus papás" }
+    },
+    {
+      "lado1": { "izquierda": "Consejo de mamá sobre el amor", "derecha": "Consejo de amiga sobre el amor" },
+      "lado2": { "izquierda": "Consejo sexual útil", "derecha": "Consejo sexual pésimo" }
+    },
+    {
+      "lado1": { "izquierda": "Mito sexual creíble", "derecha": "Mito sexual ridículo" },
+      "lado2": { "izquierda": "Educación sexual buena", "derecha": "Educación sexual de telenovela" }
+    },
+    {
+      "lado1": { "izquierda": "Cosa que aprendiste en la secundaria", "derecha": "Cosa que aprendiste en una fiesta" },
+      "lado2": { "izquierda": "Cosa que aprendiste de una película", "derecha": "Cosa que aprendiste de la experiencia" }
+    },
+    {
+      "lado1": { "izquierda": "Nivel de experiencia principiante", "derecha": "Nivel de experiencia experto" },
+      "lado2": { "izquierda": "Primera vez inolvidable", "derecha": "Primera vez para olvidar" }
+    },
+    {
+      "lado1": { "izquierda": "Edad para el primer beso", "derecha": "Edad para el primer amor" },
+      "lado2": { "izquierda": "Chiste sucio bueno", "derecha": "Chiste sucio malo" }
+    },
+    {
+      "lado1": { "izquierda": "Albur ligero", "derecha": "Albur pesado" },
+      "lado2": { "izquierda": "Doble sentido sutil", "derecha": "Doble sentido obvio" }
+    },
+    {
+      "lado1": { "izquierda": "Broma coqueta", "derecha": "Broma incómoda" },
+      "lado2": { "izquierda": "Comentario atrevido aceptable", "derecha": "Comentario atrevido inaceptable" }
+    },
+    {
+      "lado1": { "izquierda": "Cosa que dices en voz baja", "derecha": "Cosa que gritas en el antro" },
+      "lado2": { "izquierda": "Cosa que se dice en confianza", "derecha": "Cosa que se dice en el grupo de WhatsApp" }
+    },
+    {
+      "lado1": { "izquierda": "Grupo de amigas decente", "derecha": "Grupo de amigas sin filtro" },
+      "lado2": { "izquierda": "Chisme de pareja inocente", "derecha": "Chisme de pareja escandaloso" }
+    },
+    {
+      "lado1": { "izquierda": "Rumor creíble", "derecha": "Rumor imposible" },
+      "lado2": { "izquierda": "Reputación de santo", "derecha": "Reputación de fiesta" }
+    },
+    {
+      "lado1": { "izquierda": "Vida sexual tranquila", "derecha": "Vida sexual de leyenda" },
+      "lado2": { "izquierda": "Número de parejas bajo", "derecha": "Número de parejas alto" }
+    },
+    {
+      "lado1": { "izquierda": "Body count que cuentas", "derecha": "Body count que ajustas" },
+      "lado2": { "izquierda": "Verdad sobre tu pasado", "derecha": "Mentira sobre tu pasado" }
+    },
+    {
+      "lado1": { "izquierda": "Cosa que ocultas en la primera cita", "derecha": "Cosa que revelas en la primera cita" },
+      "lado2": { "izquierda": "Deal breaker menor", "derecha": "Deal breaker definitivo" }
+    },
+    {
+      "lado1": { "izquierda": "Cualidad que buscas para una noche", "derecha": "Cualidad que buscas para toda la vida" },
+      "lado2": { "izquierda": "Cosa que quieres en una cita", "derecha": "Cosa que quieres en una relación" }
+    },
+    {
+      "lado1": { "izquierda": "Cosa que quieres en la cama", "derecha": "Cosa que quieres en el sofá" },
+      "lado2": { "izquierda": "Cosa que se pide con cariño", "derecha": "Cosa que se pide con desesperación" }
+    },
+    {
+      "lado1": { "izquierda": "Cosa que gritas", "derecha": "Cosa que gimes" },
+      "lado2": { "izquierda": "Sonido tierno", "derecha": "Sonido salvaje" }
+    },
+    {
+      "lado1": { "izquierda": "Palabra romántica", "derecha": "Palabra sucia" },
+      "lado2": { "izquierda": "Palabra que enciende", "derecha": "Palabra que apaga" }
+    },
+    {
+      "lado1": { "izquierda": "Nombre que susurras", "derecha": "Nombre que gritas" },
+      "lado2": { "izquierda": "Cosa que se muerde", "derecha": "Cosa que se lame" }
+    },
+    {
+      "lado1": { "izquierda": "Cosa dulce en la piel", "derecha": "Cosa salada en la piel" },
+      "lado2": { "izquierda": "Miel", "derecha": "Chocolate" }
+    },
+    {
+      "lado1": { "izquierda": "Fresa con crema", "derecha": "Chile con limón" },
+      "lado2": { "izquierda": "Cosa caliente", "derecha": "Cosa fría" }
+    },
+    {
+      "lado1": { "izquierda": "Cosa suave", "derecha": "Cosa dura" },
+      "lado2": { "izquierda": "Cosa lenta", "derecha": "Cosa rápida" }
+    },
+    {
+      "lado1": { "izquierda": "Cosa húmeda", "derecha": "Cosa seca" },
+      "lado2": { "izquierda": "Cosa apretada", "derecha": "Cosa suelta" }
+    },
+    {
+      "lado1": { "izquierda": "Cosa que entra fácil", "derecha": "Cosa que cuesta trabajo" },
+      "lado2": { "izquierda": "Cosa que se infla", "derecha": "Cosa que se desinfla" }
+    },
+    {
+      "lado1": { "izquierda": "Cosa que vibra", "derecha": "Cosa que está quieta" },
+      "lado2": { "izquierda": "Cosa que se enciende", "derecha": "Cosa que se apaga" }
+    },
+    {
+      "lado1": { "izquierda": "Cosa que crece", "derecha": "Cosa que se encoge" },
+      "lado2": { "izquierda": "Cosa que dura 2 minutos", "derecha": "Cosa que dura 2 horas" }
+    },
+    {
+      "lado1": { "izquierda": "Récord personal orgulloso", "derecha": "Récord personal vergonzoso" },
+      "lado2": { "izquierda": "Logro sexual real", "derecha": "Logro sexual inventado" }
+    },
+    {
+      "lado1": { "izquierda": "Cosa que presumes", "derecha": "Cosa que niegas" },
+      "lado2": { "izquierda": "Cosa que te da orgullo", "derecha": "Cosa que te da pena" }
+    },
+    {
+      "lado1": { "izquierda": "Cosa que se hace en Cancún", "derecha": "Cosa que se hace en casa de la abuela" },
+      "lado2": { "izquierda": "Cosa que pasa en Las Vegas", "derecha": "Cosa que pasa en un pueblito" }
+    },
+    {
+      "lado1": { "izquierda": "Cosa que pasa en el carnaval", "derecha": "Cosa que pasa en misa" },
+      "lado2": { "izquierda": "Cosa que pasa en un festival", "derecha": "Cosa que pasa en una boda" }
+    },
+    {
+      "lado1": { "izquierda": "Cosa que pasa en el after", "derecha": "Cosa que pasa en el brunch" },
+      "lado2": { "izquierda": "Cosa de viernes", "derecha": "Cosa de domingo" }
+    },
+    {
+      "lado1": { "izquierda": "Cosa de vacaciones", "derecha": "Cosa de día laboral" },
+      "lado2": { "izquierda": "Cosa de invierno", "derecha": "Cosa de verano" }
+    },
+    {
+      "lado1": { "izquierda": "Cosa de lluvia", "derecha": "Cosa de calor" },
+      "lado2": { "izquierda": "Cosa de madrugada", "derecha": "Cosa de mediodía" }
+    },
+    {
+      "lado1": { "izquierda": "Cosa que haces con las luces de Navidad", "derecha": "Cosa que haces con velas" },
+      "lado2": { "izquierda": "Cosa que haces en San Valentín", "derecha": "Cosa que haces el 15 de febrero" }
+    },
+    {
+      "lado1": { "izquierda": "Regalo de San Valentín tierno", "derecha": "Regalo de San Valentín atrevido" },
+      "lado2": { "izquierda": "Cita de aniversario tradicional", "derecha": "Cita de aniversario sin límites" }
+    },
+    {
+      "lado1": { "izquierda": "Cosa que se promete en el altar", "derecha": "Cosa que se promete en la cama" },
+      "lado2": { "izquierda": "Cosa que se jura borracho", "derecha": "Cosa que se cumple sobrio" }
+    },
+    {
+      "lado1": { "izquierda": "Promesa de amor creíble", "derecha": "Promesa de amor imposible" },
+      "lado2": { "izquierda": "Frase de amor sincera", "derecha": "Frase de amor para ligar" }
+    },
+    {
+      "lado1": { "izquierda": "Declaración de amor pública", "derecha": "Declaración de amor privada" },
+      "lado2": { "izquierda": "Propuesta de matrimonio tradicional", "derecha": "Propuesta de matrimonio loca" }
+    },
+    {
+      "lado1": { "izquierda": "Anillo discreto", "derecha": "Anillo escandaloso" },
+      "lado2": { "izquierda": "Noche de bodas tranquila", "derecha": "Noche de bodas salvaje" }
+    },
+    {
+      "lado1": { "izquierda": "Cosa que haces con tu esposo", "derecha": "Cosa que haces con tu amante" },
+      "lado2": { "izquierda": "Infidelidad emocional", "derecha": "Infidelidad física" }
+    },
+    {
+      "lado1": { "izquierda": "Coqueteo perdonable", "derecha": "Coqueteo imperdonable" },
+      "lado2": { "izquierda": "Like inocente", "derecha": "Like sospechoso" }
+    },
+    {
+      "lado1": { "izquierda": "Mensaje de amigo", "derecha": "Mensaje de algo más" },
+      "lado2": { "izquierda": "Foto de amigos", "derecha": "Foto de pareja" }
+    },
+    {
+      "lado1": { "izquierda": "Seguidor normal", "derecha": "Seguidor obsesionado" },
+      "lado2": { "izquierda": "Stalkeo ligero", "derecha": "Stalkeo profesional" }
+    },
+    {
+      "lado1": { "izquierda": "Cosa que revisas en el celular de tu pareja", "derecha": "Cosa que jamás revisarías" },
+      "lado2": { "izquierda": "Contraseña compartida", "derecha": "Contraseña secreta" }
+    },
+    {
+      "lado1": { "izquierda": "Cosa que tu pareja puede saber", "derecha": "Cosa que tu pareja nunca sabrá" },
+      "lado2": { "izquierda": "Confianza sana", "derecha": "Confianza ciega" }
+    },
+    {
+      "lado1": { "izquierda": "Amor tranquilo", "derecha": "Amor tóxico" },
+      "lado2": { "izquierda": "Amor de película", "derecha": "Amor de la vida real" }
+    },
+    {
+      "lado1": { "izquierda": "Cosa que haces por amor", "derecha": "Cosa que haces por deseo" },
+      "lado2": { "izquierda": "Cosa que haces por placer", "derecha": "Cosa que haces por compromiso" }
+    },
+    {
+      "lado1": { "izquierda": "Cosa que haces por curiosidad", "derecha": "Cosa que haces por costumbre" },
+      "lado2": { "izquierda": "Curiosidad sana", "derecha": "Curiosidad peligrosa" }
+    },
+    {
+      "lado1": { "izquierda": "Experimento inocente", "derecha": "Experimento arriesgado" },
+      "lado2": { "izquierda": "Cosa que pruebas una vez", "derecha": "Cosa que repites siempre" }
+    },
+    {
+      "lado1": { "izquierda": "Cosa que te gustó más de lo esperado", "derecha": "Cosa que te decepcionó" },
+      "lado2": { "izquierda": "Cosa que sobreestimas", "derecha": "Cosa que subestimas" }
+    },
+    {
+      "lado1": { "izquierda": "Cosa sobrevalorada en la cama", "derecha": "Cosa subestimada en la cama" },
+      "lado2": { "izquierda": "Cosa sobrevalorada en el romance", "derecha": "Cosa subestimada en el romance" }
+    },
+    {
+      "lado1": { "izquierda": "Cliché romántico lindo", "derecha": "Cliché romántico insoportable" },
+      "lado2": { "izquierda": "Escena de comedia romántica realista", "derecha": "Escena de comedia romántica imposible" }
+    },
+    {
+      "lado1": { "izquierda": "Final de película romántico", "derecha": "Final de película realista" },
+      "lado2": { "izquierda": "Novio de película", "derecha": "Novio de la vida real" }
+    },
+    {
+      "lado1": { "izquierda": "Novia perfecta", "derecha": "Novia de pesadilla" },
+      "lado2": { "izquierda": "Suegro tolerable", "derecha": "Suegro insoportable" }
+    },
+    {
+      "lado1": { "izquierda": "Cosa que haces frente a los suegros", "derecha": "Cosa que jamás harías frente a los suegros" },
+      "lado2": { "izquierda": "Cosa que haces en casa de tus papás", "derecha": "Cosa que haces en tu casa" }
+    },
+    {
+      "lado1": { "izquierda": "Cosa que haces cuando no hay nadie en casa", "derecha": "Cosa que haces con la casa llena" },
+      "lado2": { "izquierda": "Momento perfecto para un beso", "derecha": "Peor momento para un beso" }
+    },
+    {
+      "lado1": { "izquierda": "Momento perfecto para decir te amo", "derecha": "Peor momento para decir te amo" },
+      "lado2": { "izquierda": "Momento perfecto para desnudarse", "derecha": "Peor momento para desnudarse" }
+    },
+    {
+      "lado1": { "izquierda": "Cosa que haces en la primera hora de conocer a alguien", "derecha": "Cosa que haces después de años" },
+      "lado2": { "izquierda": "Cosa que aceptas en la primera cita", "derecha": "Cosa que rechazas en la primera cita" }
+    },
+    {
+      "lado1": { "izquierda": "Invitación decente", "derecha": "Invitación indecente" },
+      "lado2": { "izquierda": "Propuesta que aceptas", "derecha": "Propuesta que rechazas" }
+    },
+    {
+      "lado1": { "izquierda": "Cosa que haces por un millón de pesos", "derecha": "Cosa que no haces ni por un millón" },
+      "lado2": { "izquierda": "Cosa que haces por amor", "derecha": "Cosa que no haces ni por amor" }
+    },
+    {
+      "lado1": { "izquierda": "Cosa que haces por un reto", "derecha": "Cosa que no haces ni por un reto" },
+      "lado2": { "izquierda": "Cosa que haces por venganza", "derecha": "Cosa que haces por diversión" }
+    },
+    {
+      "lado1": { "izquierda": "Cosa que haces con vergüenza", "derecha": "Cosa que haces con orgullo" },
+      "lado2": { "izquierda": "Cosa que haces con miedo", "derecha": "Cosa que haces con ganas" }
+    },
+    {
+      "lado1": { "izquierda": "Cosa que haces con prisa", "derecha": "Cosa que haces con calma" },
+      "lado2": { "izquierda": "Cosa que haces con ternura", "derecha": "Cosa que haces con fuerza" }
+    },
+    {
+      "lado1": { "izquierda": "Cosa que se hace con la boca", "derecha": "Cosa que se hace con las manos" },
+      "lado2": { "izquierda": "Cosa que haces con los ojos abiertos", "derecha": "Cosa que haces con los ojos cerrados" }
+    },
+    {
+      "lado1": { "izquierda": "Cosa que se hace de pie", "derecha": "Cosa que se hace acostado" },
+      "lado2": { "izquierda": "Cosa que se hace en la cocina", "derecha": "Cosa que se hace en la recámara" }
+    },
+    {
+      "lado1": { "izquierda": "Cosa que se hace en la mesa", "derecha": "Cosa que se hace debajo de la mesa" },
+      "lado2": { "izquierda": "Cosa que se hace en el cine", "derecha": "Cosa que se hace en la última fila del cine" }
+    },
+    {
+      "lado1": { "izquierda": "Cosa que se hace en la playa de día", "derecha": "Cosa que se hace en la playa de noche" },
+      "lado2": { "izquierda": "Cosa que se hace en el gym", "derecha": "Cosa que se hace en el vestidor del gym" }
+    },
+    {
+      "lado1": { "izquierda": "Cosa que se hace en la alberca", "derecha": "Cosa que se hace en el jacuzzi" },
+      "lado2": { "izquierda": "Cosa que se hace en un avión", "derecha": "Cosa que se hace en el baño del avión" }
+    },
+    {
+      "lado1": { "izquierda": "Regalo que abres frente a la familia", "derecha": "Regalo que abres cuando se van" },
+      "lado2": { "izquierda": "Cosa que dices en la primera cita", "derecha": "Cosa que dices en la cama" }
+    },
+    {
+      "lado1": { "izquierda": "Cumplido que aceptas", "derecha": "Cumplido que te hace sospechar" },
+      "lado2": { "izquierda": "Cosa que aprendes en una relación", "derecha": "Cosa que aprendes de soltero" }
+    },
+    {
+      "lado1": { "izquierda": "Cosa que extrañas de estar soltero", "derecha": "Cosa que extrañas de tener pareja" },
+      "lado2": { "izquierda": "Cosa que haces cuando tu pareja viaja", "derecha": "Cosa que haces cuando regresa" }
+    },
+    {
+      "lado1": { "izquierda": "Rutina de pareja aburrida", "derecha": "Rutina de pareja envidiable" },
+      "lado2": { "izquierda": "Cosa que quieres probar", "derecha": "Cosa que jamás volverías a probar" }
+    },
+    {
+      "lado1": { "izquierda": "Cosa que le pides a un amante", "derecha": "Cosa que le pides a un esposo" },
+      "lado2": { "izquierda": "Habilidad en la cama sobrevalorada", "derecha": "Habilidad en la cama subestimada" }
+    },
+    {
+      "lado1": { "izquierda": "Cosa que se disfruta con vino", "derecha": "Cosa que se disfruta con tequila" },
+      "lado2": { "izquierda": "Cosa que se dice con dos copas", "derecha": "Cosa que se dice con seis copas" }
+    },
+    {
+      "lado1": { "izquierda": "Cosa que pasa en la despedida de soltero", "derecha": "Cosa que pasa en la boda" },
+      "lado2": { "izquierda": "Historia de la peda que cuentas en la boda", "derecha": "Historia de la peda que jamás se cuenta" }
+    }
+  ]
+}

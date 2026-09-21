@@ -1,0 +1,906 @@
+{
+  "nombre": "Básicas",
+  "descripcion": "Extremos clásicos para todo público: frío/caliente, barato/caro, buena idea/mala idea…",
+  "tarjetas": [
+    {
+      "lado1": { "izquierda": "Frío", "derecha": "Caliente" },
+      "lado2": { "izquierda": "Feo", "derecha": "Hermoso" }
+    },
+    {
+      "lado1": { "izquierda": "Barato", "derecha": "Caro" },
+      "lado2": { "izquierda": "Subestimado", "derecha": "Sobrevalorado" }
+    },
+    {
+      "lado1": { "izquierda": "Mal superpoder", "derecha": "Buen superpoder" },
+      "lado2": { "izquierda": "Peligroso", "derecha": "Seguro" }
+    },
+    {
+      "lado1": { "izquierda": "Aburrido", "derecha": "Divertido" },
+      "lado2": { "izquierda": "Fácil", "derecha": "Difícil" }
+    },
+    {
+      "lado1": { "izquierda": "Comida de desayuno", "derecha": "Comida de cena" },
+      "lado2": { "izquierda": "Sabe mal", "derecha": "Sabe bien" }
+    },
+    {
+      "lado1": { "izquierda": "Mal hábito", "derecha": "Buen hábito" },
+      "lado2": { "izquierda": "Villano", "derecha": "Héroe" }
+    },
+    {
+      "lado1": { "izquierda": "Pequeño", "derecha": "Grande" },
+      "lado2": { "izquierda": "Silencioso", "derecha": "Ruidoso" }
+    },
+    {
+      "lado1": { "izquierda": "Suave", "derecha": "Duro" },
+      "lado2": { "izquierda": "Lento", "derecha": "Rápido" }
+    },
+    {
+      "lado1": { "izquierda": "Habilidad inútil", "derecha": "Habilidad útil" },
+      "lado2": { "izquierda": "Desconocido", "derecha": "Famoso" }
+    },
+    {
+      "lado1": { "izquierda": "Triste", "derecha": "Feliz" },
+      "lado2": { "izquierda": "Poco ético", "derecha": "Ético" }
+    },
+    {
+      "lado1": { "izquierda": "Huele mal", "derecha": "Huele bien" },
+      "lado2": { "izquierda": "Dulce", "derecha": "Salado" }
+    },
+    {
+      "lado1": { "izquierda": "Trabajo fácil", "derecha": "Trabajo difícil" },
+      "lado2": { "izquierda": "Nerd", "derecha": "Cool" }
+    },
+    {
+      "lado1": { "izquierda": "Introvertido", "derecha": "Extrovertido" },
+      "lado2": { "izquierda": "Antiguo", "derecha": "Moderno" }
+    },
+    {
+      "lado1": { "izquierda": "Blando", "derecha": "Crujiente" },
+      "lado2": { "izquierda": "Innecesario", "derecha": "Necesario" }
+    },
+    {
+      "lado1": { "izquierda": "Para niños", "derecha": "Para adultos" },
+      "lado2": { "izquierda": "Mal regalo", "derecha": "Buen regalo" }
+    },
+    {
+      "lado1": { "izquierda": "Película mala", "derecha": "Película buena" },
+      "lado2": { "izquierda": "Realista", "derecha": "Fantasioso" }
+    },
+    {
+      "lado1": { "izquierda": "Común", "derecha": "Raro" },
+      "lado2": { "izquierda": "Poco saludable", "derecha": "Saludable" }
+    },
+    {
+      "lado1": { "izquierda": "Bajo mantenimiento", "derecha": "Alto mantenimiento" },
+      "lado2": { "izquierda": "Normal", "derecha": "Extraño" }
+    },
+    {
+      "lado1": { "izquierda": "Un lujo", "derecha": "Una necesidad" },
+      "lado2": { "izquierda": "Mala excusa para llegar tarde", "derecha": "Buena excusa para llegar tarde" }
+    },
+    {
+      "lado1": { "izquierda": "Tarea aburrida", "derecha": "Tarea divertida" },
+      "lado2": { "izquierda": "Sin importancia", "derecha": "Muy importante" }
+    },
+    {
+      "lado1": { "izquierda": "Mal nombre para un perro", "derecha": "Buen nombre para un perro" },
+      "lado2": { "izquierda": "Poco esfuerzo", "derecha": "Mucho esfuerzo" }
+    },
+    {
+      "lado1": { "izquierda": "Placer culposo", "derecha": "Placer sin culpa" },
+      "lado2": { "izquierda": "Fracaso", "derecha": "Éxito" }
+    },
+    {
+      "lado1": { "izquierda": "Seco", "derecha": "Mojado" },
+      "lado2": { "izquierda": "Temporal", "derecha": "Permanente" }
+    },
+    {
+      "lado1": { "izquierda": "Oscuro", "derecha": "Brillante" },
+      "lado2": { "izquierda": "Mala idea", "derecha": "Buena idea" }
+    },
+    {
+      "lado1": { "izquierda": "Inofensivo", "derecha": "Letal" },
+      "lado2": { "izquierda": "Tradicional", "derecha": "Innovador" }
+    },
+    {
+      "lado1": { "izquierda": "Redondo", "derecha": "Puntiagudo" },
+      "lado2": { "izquierda": "Mala forma de morir", "derecha": "Buena forma de morir" }
+    },
+    {
+      "lado1": { "izquierda": "Ropa informal", "derecha": "Ropa formal" },
+      "lado2": { "izquierda": "Deporte fácil", "derecha": "Deporte difícil" }
+    },
+    {
+      "lado1": { "izquierda": "Ciudad chica", "derecha": "Ciudad grande" },
+      "lado2": { "izquierda": "Mal lugar para dormir", "derecha": "Buen lugar para dormir" }
+    },
+    {
+      "lado1": { "izquierda": "Mala mascota", "derecha": "Buena mascota" },
+      "lado2": { "izquierda": "Canción para llorar", "derecha": "Canción para bailar" }
+    },
+    {
+      "lado1": { "izquierda": "Pasado de moda", "derecha": "De moda" },
+      "lado2": { "izquierda": "Colonia tranquila", "derecha": "Colonia movida" }
+    },
+    {
+      "lado1": { "izquierda": "Ligero", "derecha": "Pesado" },
+      "lado2": { "izquierda": "Corto", "derecha": "Largo" }
+    },
+    {
+      "lado1": { "izquierda": "Barato de mantener", "derecha": "Caro de mantener" },
+      "lado2": { "izquierda": "Sobrio", "derecha": "Extravagante" }
+    },
+    {
+      "lado1": { "izquierda": "Plano", "derecha": "Montañoso" },
+      "lado2": { "izquierda": "Simple", "derecha": "Complicado" }
+    },
+    {
+      "lado1": { "izquierda": "Frágil", "derecha": "Resistente" },
+      "lado2": { "izquierda": "Áspero", "derecha": "Liso" }
+    },
+    {
+      "lado1": { "izquierda": "Amargo", "derecha": "Dulce" },
+      "lado2": { "izquierda": "Picante", "derecha": "Sin picante" }
+    },
+    {
+      "lado1": { "izquierda": "Casero", "derecha": "Industrial" },
+      "lado2": { "izquierda": "Viejo", "derecha": "Nuevo" }
+    },
+    {
+      "lado1": { "izquierda": "Rígido", "derecha": "Flexible" },
+      "lado2": { "izquierda": "Sucio", "derecha": "Limpio" }
+    },
+    {
+      "lado1": { "izquierda": "Vacío", "derecha": "Lleno" },
+      "lado2": { "izquierda": "Tranquilo", "derecha": "Estresante" }
+    },
+    {
+      "lado1": { "izquierda": "Cómodo", "derecha": "Incómodo" },
+      "lado2": { "izquierda": "Feo de ver", "derecha": "Bonito de ver" }
+    },
+    {
+      "lado1": { "izquierda": "Fácil de pronunciar", "derecha": "Difícil de pronunciar" },
+      "lado2": { "izquierda": "Fácil de aprender", "derecha": "Difícil de aprender" }
+    },
+    {
+      "lado1": { "izquierda": "Fácil de cocinar", "derecha": "Difícil de cocinar" },
+      "lado2": { "izquierda": "Fácil de limpiar", "derecha": "Difícil de limpiar" }
+    },
+    {
+      "lado1": { "izquierda": "Fácil de encontrar", "derecha": "Difícil de encontrar" },
+      "lado2": { "izquierda": "Fácil de olvidar", "derecha": "Imposible de olvidar" }
+    },
+    {
+      "lado1": { "izquierda": "Frío de ver", "derecha": "Cálido de ver" },
+      "lado2": { "izquierda": "Habilidad rara", "derecha": "Habilidad común" }
+    },
+    {
+      "lado1": { "izquierda": "Emoción negativa", "derecha": "Emoción positiva" },
+      "lado2": { "izquierda": "Mala primera impresión", "derecha": "Buena primera impresión" }
+    },
+    {
+      "lado1": { "izquierda": "Mal invento", "derecha": "Buen invento" },
+      "lado2": { "izquierda": "Mal libro", "derecha": "Buen libro" }
+    },
+    {
+      "lado1": { "izquierda": "Mal olor", "derecha": "Buen olor" },
+      "lado2": { "izquierda": "Mal sonido", "derecha": "Buen sonido" }
+    },
+    {
+      "lado1": { "izquierda": "Mal sabor", "derecha": "Buen sabor" },
+      "lado2": { "izquierda": "Mala serie", "derecha": "Buena serie" }
+    },
+    {
+      "lado1": { "izquierda": "Mala canción", "derecha": "Buena canción" },
+      "lado2": { "izquierda": "Mal actor", "derecha": "Buen actor" }
+    },
+    {
+      "lado1": { "izquierda": "Mal chiste", "derecha": "Buen chiste" },
+      "lado2": { "izquierda": "Mal consejo", "derecha": "Buen consejo" }
+    },
+    {
+      "lado1": { "izquierda": "Mal plan de fin de semana", "derecha": "Buen plan de fin de semana" },
+      "lado2": { "izquierda": "Mal lugar para una cita", "derecha": "Buen lugar para una cita" }
+    },
+    {
+      "lado1": { "izquierda": "Mal lugar para vacacionar", "derecha": "Buen lugar para vacacionar" },
+      "lado2": { "izquierda": "Mal lugar para vivir", "derecha": "Buen lugar para vivir" }
+    },
+    {
+      "lado1": { "izquierda": "Mal lugar para trabajar", "derecha": "Buen lugar para trabajar" },
+      "lado2": { "izquierda": "Mal momento para reír", "derecha": "Buen momento para reír" }
+    },
+    {
+      "lado1": { "izquierda": "Mal momento para llorar", "derecha": "Buen momento para llorar" },
+      "lado2": { "izquierda": "Mal nombre para un bebé", "derecha": "Buen nombre para un bebé" }
+    },
+    {
+      "lado1": { "izquierda": "Mal nombre para una banda", "derecha": "Buen nombre para una banda" },
+      "lado2": { "izquierda": "Mal nombre para un barco", "derecha": "Buen nombre para un barco" }
+    },
+    {
+      "lado1": { "izquierda": "Mal tema para una primera cita", "derecha": "Buen tema para una primera cita" },
+      "lado2": { "izquierda": "Mal tema para la sobremesa", "derecha": "Buen tema para la sobremesa" }
+    },
+    {
+      "lado1": { "izquierda": "Mal topping de pizza", "derecha": "Buen topping de pizza" },
+      "lado2": { "izquierda": "Mal ingrediente para un taco", "derecha": "Buen ingrediente para un taco" }
+    },
+    {
+      "lado1": { "izquierda": "Mal sabor de helado", "derecha": "Buen sabor de helado" },
+      "lado2": { "izquierda": "Mal sabor de papas", "derecha": "Buen sabor de papas" }
+    },
+    {
+      "lado1": { "izquierda": "Mala bebida para la mañana", "derecha": "Buena bebida para la mañana" },
+      "lado2": { "izquierda": "Mala bebida para la noche", "derecha": "Buena bebida para la noche" }
+    },
+    {
+      "lado1": { "izquierda": "Mal disfraz de Halloween", "derecha": "Buen disfraz de Halloween" },
+      "lado2": { "izquierda": "Mal regalo de cumpleaños", "derecha": "Buen regalo de cumpleaños" }
+    },
+    {
+      "lado1": { "izquierda": "Mal regalo de Navidad", "derecha": "Buen regalo de Navidad" },
+      "lado2": { "izquierda": "Mal regalo para tu mamá", "derecha": "Buen regalo para tu mamá" }
+    },
+    {
+      "lado1": { "izquierda": "Mal regalo para tu jefe", "derecha": "Buen regalo para tu jefe" },
+      "lado2": { "izquierda": "Mal souvenir", "derecha": "Buen souvenir" }
+    },
+    {
+      "lado1": { "izquierda": "Mal auto", "derecha": "Buen auto" },
+      "lado2": { "izquierda": "Mal deporte para ver", "derecha": "Buen deporte para ver" }
+    },
+    {
+      "lado1": { "izquierda": "Mal deporte para practicar", "derecha": "Buen deporte para practicar" },
+      "lado2": { "izquierda": "Mal pasatiempo", "derecha": "Buen pasatiempo" }
+    },
+    {
+      "lado1": { "izquierda": "Mal ejercicio", "derecha": "Buen ejercicio" },
+      "lado2": { "izquierda": "Mal hábito matutino", "derecha": "Buen hábito matutino" }
+    },
+    {
+      "lado1": { "izquierda": "Mala app", "derecha": "Buena app" },
+      "lado2": { "izquierda": "Mala red social", "derecha": "Buena red social" }
+    },
+    {
+      "lado1": { "izquierda": "Mal emoji", "derecha": "Buen emoji" },
+      "lado2": { "izquierda": "Mala contraseña", "derecha": "Buena contraseña" }
+    },
+    {
+      "lado1": { "izquierda": "Mala mascota para un departamento", "derecha": "Buena mascota para un departamento" },
+      "lado2": { "izquierda": "Mal vecino", "derecha": "Buen vecino" }
+    },
+    {
+      "lado1": { "izquierda": "Mal compañero de cuarto", "derecha": "Buen compañero de cuarto" },
+      "lado2": { "izquierda": "Mal compañero de viaje", "derecha": "Buen compañero de viaje" }
+    },
+    {
+      "lado1": { "izquierda": "Mal jefe", "derecha": "Buen jefe" },
+      "lado2": { "izquierda": "Mal maestro", "derecha": "Buen maestro" }
+    },
+    {
+      "lado1": { "izquierda": "Mal padre", "derecha": "Buen padre" },
+      "lado2": { "izquierda": "Mal amigo", "derecha": "Buen amigo" }
+    },
+    {
+      "lado1": { "izquierda": "Mal invitado", "derecha": "Buen invitado" },
+      "lado2": { "izquierda": "Mal anfitrión", "derecha": "Buen anfitrión" }
+    },
+    {
+      "lado1": { "izquierda": "Mal conductor", "derecha": "Buen conductor" },
+      "lado2": { "izquierda": "Mal cocinero", "derecha": "Buen cocinero" }
+    },
+    {
+      "lado1": { "izquierda": "Mal bailarín", "derecha": "Buen bailarín" },
+      "lado2": { "izquierda": "Mal cantante", "derecha": "Buen cantante" }
+    },
+    {
+      "lado1": { "izquierda": "Mal perdedor", "derecha": "Buen perdedor" },
+      "lado2": { "izquierda": "Mal ganador", "derecha": "Buen ganador" }
+    },
+    {
+      "lado1": { "izquierda": "Mal presidente", "derecha": "Buen presidente" },
+      "lado2": { "izquierda": "Mal villano de película", "derecha": "Buen villano de película" }
+    },
+    {
+      "lado1": { "izquierda": "Mal final de película", "derecha": "Buen final de película" },
+      "lado2": { "izquierda": "Mal título de película", "derecha": "Buen título de película" }
+    },
+    {
+      "lado1": { "izquierda": "Mal personaje de caricatura", "derecha": "Buen personaje de caricatura" },
+      "lado2": { "izquierda": "Mal personaje de Disney", "derecha": "Buen personaje de Disney" }
+    },
+    {
+      "lado1": { "izquierda": "Mal superhéroe", "derecha": "Buen superhéroe" },
+      "lado2": { "izquierda": "Mal animal para tener de mascota", "derecha": "Buen animal para tener de mascota" }
+    },
+    {
+      "lado1": { "izquierda": "Mal animal para pelear", "derecha": "Buen animal para pelear" },
+      "lado2": { "izquierda": "Animal lento", "derecha": "Animal rápido" }
+    },
+    {
+      "lado1": { "izquierda": "Animal feo", "derecha": "Animal bonito" },
+      "lado2": { "izquierda": "Animal peligroso", "derecha": "Animal inofensivo" }
+    },
+    {
+      "lado1": { "izquierda": "Animal inteligente", "derecha": "Animal tonto" },
+      "lado2": { "izquierda": "Animal chiquito", "derecha": "Animal enorme" }
+    },
+    {
+      "lado1": { "izquierda": "Animal que da miedo", "derecha": "Animal que da ternura" },
+      "lado2": { "izquierda": "Animal ruidoso", "derecha": "Animal silencioso" }
+    },
+    {
+      "lado1": { "izquierda": "Animal de tierra", "derecha": "Animal de agua" },
+      "lado2": { "izquierda": "Animal doméstico", "derecha": "Animal salvaje" }
+    },
+    {
+      "lado1": { "izquierda": "Comida para el antojo", "derecha": "Comida para la dieta" },
+      "lado2": { "izquierda": "Comida de lunes", "derecha": "Comida de domingo" }
+    },
+    {
+      "lado1": { "izquierda": "Comida de fiesta", "derecha": "Comida de hospital" },
+      "lado2": { "izquierda": "Comida de niño", "derecha": "Comida de adulto" }
+    },
+    {
+      "lado1": { "izquierda": "Comida de la abuela", "derecha": "Comida de restaurante" },
+      "lado2": { "izquierda": "Comida de la calle", "derecha": "Comida gourmet" }
+    },
+    {
+      "lado1": { "izquierda": "Comida rápida", "derecha": "Comida lenta" },
+      "lado2": { "izquierda": "Comida ligera", "derecha": "Comida pesada" }
+    },
+    {
+      "lado1": { "izquierda": "Comida de verano", "derecha": "Comida de invierno" },
+      "lado2": { "izquierda": "Comida barata", "derecha": "Comida cara" }
+    },
+    {
+      "lado1": { "izquierda": "Fruta fea", "derecha": "Fruta bonita" },
+      "lado2": { "izquierda": "Fruta ácida", "derecha": "Fruta dulce" }
+    },
+    {
+      "lado1": { "izquierda": "Verdura que odian los niños", "derecha": "Verdura que aman los niños" },
+      "lado2": { "izquierda": "Postre sencillo", "derecha": "Postre elaborado" }
+    },
+    {
+      "lado1": { "izquierda": "Bebida de día", "derecha": "Bebida de noche" },
+      "lado2": { "izquierda": "Bebida barata", "derecha": "Bebida cara" }
+    },
+    {
+      "lado1": { "izquierda": "Ciudad fría", "derecha": "Ciudad calurosa" },
+      "lado2": { "izquierda": "Ciudad aburrida", "derecha": "Ciudad emocionante" }
+    },
+    {
+      "lado1": { "izquierda": "Ciudad barata", "derecha": "Ciudad cara" },
+      "lado2": { "izquierda": "Ciudad segura", "derecha": "Ciudad peligrosa" }
+    },
+    {
+      "lado1": { "izquierda": "Ciudad limpia", "derecha": "Ciudad sucia" },
+      "lado2": { "izquierda": "País pequeño", "derecha": "País grande" }
+    },
+    {
+      "lado1": { "izquierda": "País tranquilo", "derecha": "País caótico" },
+      "lado2": { "izquierda": "Destino de playa", "derecha": "Destino de montaña" }
+    },
+    {
+      "lado1": { "izquierda": "Destino romántico", "derecha": "Destino familiar" },
+      "lado2": { "izquierda": "Destino barato", "derecha": "Destino de lujo" }
+    },
+    {
+      "lado1": { "izquierda": "Destino cercano", "derecha": "Destino lejano" },
+      "lado2": { "izquierda": "Viaje corto", "derecha": "Viaje largo" }
+    },
+    {
+      "lado1": { "izquierda": "Viaje relajante", "derecha": "Viaje agotador" },
+      "lado2": { "izquierda": "Trabajo aburrido", "derecha": "Trabajo emocionante" }
+    },
+    {
+      "lado1": { "izquierda": "Trabajo mal pagado", "derecha": "Trabajo bien pagado" },
+      "lado2": { "izquierda": "Trabajo peligroso", "derecha": "Trabajo seguro" }
+    },
+    {
+      "lado1": { "izquierda": "Trabajo de oficina", "derecha": "Trabajo al aire libre" },
+      "lado2": { "izquierda": "Trabajo solitario", "derecha": "Trabajo en equipo" }
+    },
+    {
+      "lado1": { "izquierda": "Trabajo temporal", "derecha": "Trabajo de por vida" },
+      "lado2": { "izquierda": "Trabajo que nadie quiere", "derecha": "Trabajo que todos quieren" }
+    },
+    {
+      "lado1": { "izquierda": "Profesión respetada", "derecha": "Profesión ignorada" },
+      "lado2": { "izquierda": "Profesión antigua", "derecha": "Profesión nueva" }
+    },
+    {
+      "lado1": { "izquierda": "Profesión creativa", "derecha": "Profesión técnica" },
+      "lado2": { "izquierda": "Materia fácil", "derecha": "Materia difícil" }
+    },
+    {
+      "lado1": { "izquierda": "Materia aburrida", "derecha": "Materia interesante" },
+      "lado2": { "izquierda": "Materia inútil", "derecha": "Materia útil" }
+    },
+    {
+      "lado1": { "izquierda": "Palabra corta", "derecha": "Palabra larga" },
+      "lado2": { "izquierda": "Palabra fea", "derecha": "Palabra bonita" }
+    },
+    {
+      "lado1": { "izquierda": "Palabra común", "derecha": "Palabra rara" },
+      "lado2": { "izquierda": "Palabra fácil de escribir", "derecha": "Palabra difícil de escribir" }
+    },
+    {
+      "lado1": { "izquierda": "Nombre común", "derecha": "Nombre raro" },
+      "lado2": { "izquierda": "Nombre antiguo", "derecha": "Nombre moderno" }
+    },
+    {
+      "lado1": { "izquierda": "Nombre corto", "derecha": "Nombre largo" },
+      "lado2": { "izquierda": "Apellido común", "derecha": "Apellido raro" }
+    },
+    {
+      "lado1": { "izquierda": "Color frío", "derecha": "Color cálido" },
+      "lado2": { "izquierda": "Color triste", "derecha": "Color alegre" }
+    },
+    {
+      "lado1": { "izquierda": "Color de niño", "derecha": "Color de adulto" },
+      "lado2": { "izquierda": "Color apagado", "derecha": "Color brillante" }
+    },
+    {
+      "lado1": { "izquierda": "Número chico", "derecha": "Número grande" },
+      "lado2": { "izquierda": "Número de la suerte", "derecha": "Número de la mala suerte" }
+    },
+    {
+      "lado1": { "izquierda": "Forma simple", "derecha": "Forma compleja" },
+      "lado2": { "izquierda": "Olor de mañana", "derecha": "Olor de noche" }
+    },
+    {
+      "lado1": { "izquierda": "Olor artificial", "derecha": "Olor natural" },
+      "lado2": { "izquierda": "Textura suave", "derecha": "Textura rugosa" }
+    },
+    {
+      "lado1": { "izquierda": "Sonido relajante", "derecha": "Sonido molesto" },
+      "lado2": { "izquierda": "Sonido grave", "derecha": "Sonido agudo" }
+    },
+    {
+      "lado1": { "izquierda": "Sonido natural", "derecha": "Sonido artificial" },
+      "lado2": { "izquierda": "Género musical viejo", "derecha": "Género musical nuevo" }
+    },
+    {
+      "lado1": { "izquierda": "Música para estudiar", "derecha": "Música para la fiesta" },
+      "lado2": { "izquierda": "Música para llorar", "derecha": "Música para correr" }
+    },
+    {
+      "lado1": { "izquierda": "Música para el coche", "derecha": "Música para dormir" },
+      "lado2": { "izquierda": "Instrumento fácil", "derecha": "Instrumento difícil" }
+    },
+    {
+      "lado1": { "izquierda": "Instrumento chico", "derecha": "Instrumento grande" },
+      "lado2": { "izquierda": "Instrumento cool", "derecha": "Instrumento nerd" }
+    },
+    {
+      "lado1": { "izquierda": "Canción vieja", "derecha": "Canción nueva" },
+      "lado2": { "izquierda": "Canción triste", "derecha": "Canción alegre" }
+    },
+    {
+      "lado1": { "izquierda": "Canción de amor", "derecha": "Canción de desamor" },
+      "lado2": { "izquierda": "Artista sobrevalorado", "derecha": "Artista subestimado" }
+    },
+    {
+      "lado1": { "izquierda": "Película para llorar", "derecha": "Película para reír" },
+      "lado2": { "izquierda": "Película para niños", "derecha": "Película para adultos" }
+    },
+    {
+      "lado1": { "izquierda": "Película corta", "derecha": "Película larga" },
+      "lado2": { "izquierda": "Película de bajo presupuesto", "derecha": "Película de alto presupuesto" }
+    },
+    {
+      "lado1": { "izquierda": "Película para ver solo", "derecha": "Película para ver acompañado" },
+      "lado2": { "izquierda": "Película de miedo", "derecha": "Película tranquila" }
+    },
+    {
+      "lado1": { "izquierda": "Película de romance", "derecha": "Película de acción" },
+      "lado2": { "izquierda": "Serie corta", "derecha": "Serie eterna" }
+    },
+    {
+      "lado1": { "izquierda": "Serie para maratonear", "derecha": "Serie para ver de a poco" },
+      "lado2": { "izquierda": "Personaje bueno", "derecha": "Personaje malo" }
+    },
+    {
+      "lado1": { "izquierda": "Personaje tonto", "derecha": "Personaje inteligente" },
+      "lado2": { "izquierda": "Personaje feo", "derecha": "Personaje guapo" }
+    },
+    {
+      "lado1": { "izquierda": "Personaje aburrido", "derecha": "Personaje divertido" },
+      "lado2": { "izquierda": "Personaje querido", "derecha": "Personaje odiado" }
+    },
+    {
+      "lado1": { "izquierda": "Libro corto", "derecha": "Libro largo" },
+      "lado2": { "izquierda": "Libro fácil", "derecha": "Libro difícil" }
+    },
+    {
+      "lado1": { "izquierda": "Libro para la playa", "derecha": "Libro para la escuela" },
+      "lado2": { "izquierda": "Videojuego fácil", "derecha": "Videojuego difícil" }
+    },
+    {
+      "lado1": { "izquierda": "Videojuego viejo", "derecha": "Videojuego nuevo" },
+      "lado2": { "izquierda": "Juego de mesa simple", "derecha": "Juego de mesa complejo" }
+    },
+    {
+      "lado1": { "izquierda": "Juego para dos", "derecha": "Juego para muchos" },
+      "lado2": { "izquierda": "Deporte lento", "derecha": "Deporte rápido" }
+    },
+    {
+      "lado1": { "izquierda": "Deporte individual", "derecha": "Deporte en equipo" },
+      "lado2": { "izquierda": "Deporte de contacto", "derecha": "Deporte sin contacto" }
+    },
+    {
+      "lado1": { "izquierda": "Deporte barato", "derecha": "Deporte caro" },
+      "lado2": { "izquierda": "Deporte popular", "derecha": "Deporte desconocido" }
+    },
+    {
+      "lado1": { "izquierda": "Deporte de verano", "derecha": "Deporte de invierno" },
+      "lado2": { "izquierda": "Deporte peligroso", "derecha": "Deporte seguro" }
+    },
+    {
+      "lado1": { "izquierda": "Ejercicio ligero", "derecha": "Ejercicio pesado" },
+      "lado2": { "izquierda": "Ejercicio aburrido", "derecha": "Ejercicio divertido" }
+    },
+    {
+      "lado1": { "izquierda": "Ropa cómoda", "derecha": "Ropa incómoda" },
+      "lado2": { "izquierda": "Ropa de verano", "derecha": "Ropa de invierno" }
+    },
+    {
+      "lado1": { "izquierda": "Ropa barata", "derecha": "Ropa cara" },
+      "lado2": { "izquierda": "Ropa de casa", "derecha": "Ropa de fiesta" }
+    },
+    {
+      "lado1": { "izquierda": "Ropa que pasa de moda", "derecha": "Ropa que nunca pasa de moda" },
+      "lado2": { "izquierda": "Zapato cómodo", "derecha": "Zapato incómodo" }
+    },
+    {
+      "lado1": { "izquierda": "Accesorio inútil", "derecha": "Accesorio útil" },
+      "lado2": { "izquierda": "Peinado feo", "derecha": "Peinado bonito" }
+    },
+    {
+      "lado1": { "izquierda": "Peinado fácil", "derecha": "Peinado difícil" },
+      "lado2": { "izquierda": "Tatuaje pequeño", "derecha": "Tatuaje grande" }
+    },
+    {
+      "lado1": { "izquierda": "Aparato inútil", "derecha": "Aparato útil" },
+      "lado2": { "izquierda": "Aparato viejo", "derecha": "Aparato nuevo" }
+    },
+    {
+      "lado1": { "izquierda": "Tecnología sobrevalorada", "derecha": "Tecnología subestimada" },
+      "lado2": { "izquierda": "Invento antiguo", "derecha": "Invento reciente" }
+    },
+    {
+      "lado1": { "izquierda": "Invento inútil", "derecha": "Invento que cambió el mundo" },
+      "lado2": { "izquierda": "App inútil", "derecha": "App útil" }
+    },
+    {
+      "lado1": { "izquierda": "App adictiva", "derecha": "App aburrida" },
+      "lado2": { "izquierda": "Red social para viejos", "derecha": "Red social para jóvenes" }
+    },
+    {
+      "lado1": { "izquierda": "Celular barato", "derecha": "Celular caro" },
+      "lado2": { "izquierda": "Marca barata", "derecha": "Marca cara" }
+    },
+    {
+      "lado1": { "izquierda": "Marca desconocida", "derecha": "Marca famosa" },
+      "lado2": { "izquierda": "Marca odiada", "derecha": "Marca amada" }
+    },
+    {
+      "lado1": { "izquierda": "Producto inútil", "derecha": "Producto esencial" },
+      "lado2": { "izquierda": "Compra impulsiva", "derecha": "Compra planeada" }
+    },
+    {
+      "lado1": { "izquierda": "Compra chica", "derecha": "Compra grande" },
+      "lado2": { "izquierda": "Gasto innecesario", "derecha": "Gasto necesario" }
+    },
+    {
+      "lado1": { "izquierda": "Regalo barato", "derecha": "Regalo caro" },
+      "lado2": { "izquierda": "Regalo personal", "derecha": "Regalo genérico" }
+    },
+    {
+      "lado1": { "izquierda": "Regalo útil", "derecha": "Regalo inútil" },
+      "lado2": { "izquierda": "Fiesta pequeña", "derecha": "Fiesta enorme" }
+    },
+    {
+      "lado1": { "izquierda": "Fiesta tranquila", "derecha": "Fiesta loca" },
+      "lado2": { "izquierda": "Fiesta de día", "derecha": "Fiesta de noche" }
+    },
+    {
+      "lado1": { "izquierda": "Fiesta formal", "derecha": "Fiesta informal" },
+      "lado2": { "izquierda": "Reunión corta", "derecha": "Reunión eterna" }
+    },
+    {
+      "lado1": { "izquierda": "Reunión aburrida", "derecha": "Reunión divertida" },
+      "lado2": { "izquierda": "Plan barato", "derecha": "Plan caro" }
+    },
+    {
+      "lado1": { "izquierda": "Plan de día", "derecha": "Plan de noche" },
+      "lado2": { "izquierda": "Plan relajado", "derecha": "Plan intenso" }
+    },
+    {
+      "lado1": { "izquierda": "Plan de verano", "derecha": "Plan de invierno" },
+      "lado2": { "izquierda": "Plan para uno", "derecha": "Plan para muchos" }
+    },
+    {
+      "lado1": { "izquierda": "Plan de lluvia", "derecha": "Plan de sol" },
+      "lado2": { "izquierda": "Lugar frío", "derecha": "Lugar caliente" }
+    },
+    {
+      "lado1": { "izquierda": "Lugar ruidoso", "derecha": "Lugar silencioso" },
+      "lado2": { "izquierda": "Lugar lleno", "derecha": "Lugar vacío" }
+    },
+    {
+      "lado1": { "izquierda": "Lugar oscuro", "derecha": "Lugar iluminado" },
+      "lado2": { "izquierda": "Lugar público", "derecha": "Lugar privado" }
+    },
+    {
+      "lado1": { "izquierda": "Lugar para pensar", "derecha": "Lugar para distraerse" },
+      "lado2": { "izquierda": "Lugar para dormir", "derecha": "Lugar para despertarse" }
+    },
+    {
+      "lado1": { "izquierda": "Clima feo", "derecha": "Clima bonito" },
+      "lado2": { "izquierda": "Clima para quedarse en casa", "derecha": "Clima para salir" }
+    },
+    {
+      "lado1": { "izquierda": "Estación fría", "derecha": "Estación calurosa" },
+      "lado2": { "izquierda": "Mes aburrido", "derecha": "Mes emocionante" }
+    },
+    {
+      "lado1": { "izquierda": "Día de la semana odiado", "derecha": "Día de la semana amado" },
+      "lado2": { "izquierda": "Hora de dormir", "derecha": "Hora de despertar" }
+    },
+    {
+      "lado1": { "izquierda": "Hora para comer", "derecha": "Hora para no comer" },
+      "lado2": { "izquierda": "Momento aburrido", "derecha": "Momento emocionante" }
+    },
+    {
+      "lado1": { "izquierda": "Momento triste", "derecha": "Momento feliz" },
+      "lado2": { "izquierda": "Momento para hablar", "derecha": "Momento para callar" }
+    },
+    {
+      "lado1": { "izquierda": "Momento incómodo", "derecha": "Momento cómodo" },
+      "lado2": { "izquierda": "Miedo racional", "derecha": "Miedo irracional" }
+    },
+    {
+      "lado1": { "izquierda": "Miedo chico", "derecha": "Miedo enorme" },
+      "lado2": { "izquierda": "Fobia común", "derecha": "Fobia rara" }
+    },
+    {
+      "lado1": { "izquierda": "Sueño alcanzable", "derecha": "Sueño imposible" },
+      "lado2": { "izquierda": "Meta a corto plazo", "derecha": "Meta a largo plazo" }
+    },
+    {
+      "lado1": { "izquierda": "Hábito fácil de dejar", "derecha": "Hábito difícil de dejar" },
+      "lado2": { "izquierda": "Vicio inofensivo", "derecha": "Vicio peligroso" }
+    },
+    {
+      "lado1": { "izquierda": "Adicción ligera", "derecha": "Adicción fuerte" },
+      "lado2": { "izquierda": "Talento común", "derecha": "Talento raro" }
+    },
+    {
+      "lado1": { "izquierda": "Talento inútil", "derecha": "Talento valioso" },
+      "lado2": { "izquierda": "Virtud", "derecha": "Defecto" }
+    },
+    {
+      "lado1": { "izquierda": "Cualidad de amigo", "derecha": "Defecto de amigo" },
+      "lado2": { "izquierda": "Rasgo de introvertido", "derecha": "Rasgo de extrovertido" }
+    },
+    {
+      "lado1": { "izquierda": "Rasgo de niño", "derecha": "Rasgo de adulto" },
+      "lado2": { "izquierda": "Rasgo de perro", "derecha": "Rasgo de gato" }
+    },
+    {
+      "lado1": { "izquierda": "Emoción tranquila", "derecha": "Emoción intensa" },
+      "lado2": { "izquierda": "Emoción de mañana", "derecha": "Emoción de noche" }
+    },
+    {
+      "lado1": { "izquierda": "Sentimiento pasajero", "derecha": "Sentimiento permanente" },
+      "lado2": { "izquierda": "Excusa creíble", "derecha": "Excusa increíble" }
+    },
+    {
+      "lado1": { "izquierda": "Mentira piadosa", "derecha": "Mentira grave" },
+      "lado2": { "izquierda": "Secreto pequeño", "derecha": "Secreto enorme" }
+    },
+    {
+      "lado1": { "izquierda": "Chisme aburrido", "derecha": "Chisme jugoso" },
+      "lado2": { "izquierda": "Pregunta fácil", "derecha": "Pregunta difícil" }
+    },
+    {
+      "lado1": { "izquierda": "Pregunta tonta", "derecha": "Pregunta inteligente" },
+      "lado2": { "izquierda": "Respuesta corta", "derecha": "Respuesta larga" }
+    },
+    {
+      "lado1": { "izquierda": "Discusión trivial", "derecha": "Discusión importante" },
+      "lado2": { "izquierda": "Opinión popular", "derecha": "Opinión impopular" }
+    },
+    {
+      "lado1": { "izquierda": "Tema aburrido", "derecha": "Tema fascinante" },
+      "lado2": { "izquierda": "Tema seguro", "derecha": "Tema polémico" }
+    },
+    {
+      "lado1": { "izquierda": "Tema para la cena familiar", "derecha": "Tema prohibido en la cena familiar" },
+      "lado2": { "izquierda": "Verdad incómoda", "derecha": "Verdad cómoda" }
+    },
+    {
+      "lado1": { "izquierda": "Tradición tonta", "derecha": "Tradición importante" },
+      "lado2": { "izquierda": "Costumbre vieja", "derecha": "Costumbre nueva" }
+    },
+    {
+      "lado1": { "izquierda": "Regla estúpida", "derecha": "Regla necesaria" },
+      "lado2": { "izquierda": "Ley obvia", "derecha": "Ley extraña" }
+    },
+    {
+      "lado1": { "izquierda": "Norma social flexible", "derecha": "Norma social estricta" },
+      "lado2": { "izquierda": "Modales importantes", "derecha": "Modales exagerados" }
+    },
+    {
+      "lado1": { "izquierda": "Habilidad de supervivencia", "derecha": "Habilidad de oficina" },
+      "lado2": { "izquierda": "Habilidad manual", "derecha": "Habilidad mental" }
+    },
+    {
+      "lado1": { "izquierda": "Habilidad social", "derecha": "Habilidad técnica" },
+      "lado2": { "izquierda": "Herramienta simple", "derecha": "Herramienta compleja" }
+    },
+    {
+      "lado1": { "izquierda": "Herramienta antigua", "derecha": "Herramienta moderna" },
+      "lado2": { "izquierda": "Mueble cómodo", "derecha": "Mueble incómodo" }
+    },
+    {
+      "lado1": { "izquierda": "Mueble barato", "derecha": "Mueble caro" },
+      "lado2": { "izquierda": "Casa pequeña", "derecha": "Casa enorme" }
+    },
+    {
+      "lado1": { "izquierda": "Casa vieja", "derecha": "Casa nueva" },
+      "lado2": { "izquierda": "Cuarto de la casa aburrido", "derecha": "Cuarto de la casa divertido" }
+    },
+    {
+      "lado1": { "izquierda": "Electrodoméstico inútil", "derecha": "Electrodoméstico esencial" },
+      "lado2": { "izquierda": "Utensilio de cocina raro", "derecha": "Utensilio de cocina común" }
+    },
+    {
+      "lado1": { "izquierda": "Planta fácil de cuidar", "derecha": "Planta difícil de cuidar" },
+      "lado2": { "izquierda": "Planta fea", "derecha": "Planta bonita" }
+    },
+    {
+      "lado1": { "izquierda": "Flor común", "derecha": "Flor rara" },
+      "lado2": { "izquierda": "Árbol pequeño", "derecha": "Árbol gigante" }
+    },
+    {
+      "lado1": { "izquierda": "Insecto inofensivo", "derecha": "Insecto peligroso" },
+      "lado2": { "izquierda": "Insecto feo", "derecha": "Insecto bonito" }
+    },
+    {
+      "lado1": { "izquierda": "Reptil tierno", "derecha": "Reptil aterrador" },
+      "lado2": { "izquierda": "Ave lenta", "derecha": "Ave rápida" }
+    },
+    {
+      "lado1": { "izquierda": "Pez pequeño", "derecha": "Pez enorme" },
+      "lado2": { "izquierda": "Dinosaurio lento", "derecha": "Dinosaurio rápido" }
+    },
+    {
+      "lado1": { "izquierda": "Criatura mítica amigable", "derecha": "Criatura mítica temible" },
+      "lado2": { "izquierda": "Superpoder inútil", "derecha": "Superpoder poderoso" }
+    },
+    {
+      "lado1": { "izquierda": "Superpoder discreto", "derecha": "Superpoder llamativo" },
+      "lado2": { "izquierda": "Arma antigua", "derecha": "Arma moderna" }
+    },
+    {
+      "lado1": { "izquierda": "Vehículo lento", "derecha": "Vehículo rápido" },
+      "lado2": { "izquierda": "Vehículo barato", "derecha": "Vehículo caro" }
+    },
+    {
+      "lado1": { "izquierda": "Vehículo seguro", "derecha": "Vehículo peligroso" },
+      "lado2": { "izquierda": "Transporte cómodo", "derecha": "Transporte incómodo" }
+    },
+    {
+      "lado1": { "izquierda": "Camino corto", "derecha": "Camino largo" },
+      "lado2": { "izquierda": "Edificio bajo", "derecha": "Edificio alto" }
+    },
+    {
+      "lado1": { "izquierda": "Edificio feo", "derecha": "Edificio hermoso" },
+      "lado2": { "izquierda": "Monumento aburrido", "derecha": "Monumento impresionante" }
+    },
+    {
+      "lado1": { "izquierda": "Museo aburrido", "derecha": "Museo interesante" },
+      "lado2": { "izquierda": "Obra de arte fea", "derecha": "Obra de arte hermosa" }
+    },
+    {
+      "lado1": { "izquierda": "Estilo de arte antiguo", "derecha": "Estilo de arte moderno" },
+      "lado2": { "izquierda": "Época aburrida de la historia", "derecha": "Época emocionante de la historia" }
+    },
+    {
+      "lado1": { "izquierda": "Personaje histórico bueno", "derecha": "Personaje histórico malo" },
+      "lado2": { "izquierda": "Personaje histórico famoso", "derecha": "Personaje histórico olvidado" }
+    },
+    {
+      "lado1": { "izquierda": "Inventor famoso", "derecha": "Inventor desconocido" },
+      "lado2": { "izquierda": "Científico famoso", "derecha": "Científico desconocido" }
+    },
+    {
+      "lado1": { "izquierda": "Descubrimiento pequeño", "derecha": "Descubrimiento enorme" },
+      "lado2": { "izquierda": "Planeta cercano", "derecha": "Planeta lejano" }
+    },
+    {
+      "lado1": { "izquierda": "Planeta chico", "derecha": "Planeta grande" },
+      "lado2": { "izquierda": "Fenómeno natural bonito", "derecha": "Fenómeno natural aterrador" }
+    },
+    {
+      "lado1": { "izquierda": "Desastre natural leve", "derecha": "Desastre natural grave" },
+      "lado2": { "izquierda": "Elemento químico común", "derecha": "Elemento químico raro" }
+    },
+    {
+      "lado1": { "izquierda": "Materia fácil de la escuela", "derecha": "Materia difícil de la escuela" },
+      "lado2": { "izquierda": "Teoría creíble", "derecha": "Teoría conspirativa" }
+    },
+    {
+      "lado1": { "izquierda": "Mito", "derecha": "Realidad" },
+      "lado2": { "izquierda": "Superstición tonta", "derecha": "Superstición seria" }
+    },
+    {
+      "lado1": { "izquierda": "Religión antigua", "derecha": "Religión reciente" },
+      "lado2": { "izquierda": "Idioma fácil", "derecha": "Idioma difícil" }
+    },
+    {
+      "lado1": { "izquierda": "Idioma bonito", "derecha": "Idioma feo" },
+      "lado2": { "izquierda": "Acento sexy", "derecha": "Acento chistoso" }
+    },
+    {
+      "lado1": { "izquierda": "Sonido del idioma suave", "derecha": "Sonido del idioma áspero" },
+      "lado2": { "izquierda": "Palabra en español fea", "derecha": "Palabra en español bonita" }
+    },
+    {
+      "lado1": { "izquierda": "Modismo mexicano viejo", "derecha": "Modismo mexicano nuevo" },
+      "lado2": { "izquierda": "Frase de abuela", "derecha": "Frase de adolescente" }
+    },
+    {
+      "lado1": { "izquierda": "Insulto suave", "derecha": "Insulto fuerte" },
+      "lado2": { "izquierda": "Apodo tierno", "derecha": "Apodo cruel" }
+    },
+    {
+      "lado1": { "izquierda": "Cumplido sincero", "derecha": "Cumplido falso" },
+      "lado2": { "izquierda": "Halago pequeño", "derecha": "Halago exagerado" }
+    },
+    {
+      "lado1": { "izquierda": "Piropo feo", "derecha": "Piropo bonito" },
+      "lado2": { "izquierda": "Gesto grosero", "derecha": "Gesto amable" }
+    },
+    {
+      "lado1": { "izquierda": "Saludo formal", "derecha": "Saludo informal" },
+      "lado2": { "izquierda": "Despedida corta", "derecha": "Despedida eterna" }
+    },
+    {
+      "lado1": { "izquierda": "Mensaje de texto corto", "derecha": "Mensaje de texto largo" },
+      "lado2": { "izquierda": "Emoji de enojo", "derecha": "Emoji de amor" }
+    },
+    {
+      "lado1": { "izquierda": "Selfie fea", "derecha": "Selfie bonita" },
+      "lado2": { "izquierda": "Foto natural", "derecha": "Foto posada" }
+    },
+    {
+      "lado1": { "izquierda": "Filtro sutil", "derecha": "Filtro exagerado" },
+      "lado2": { "izquierda": "Pose natural", "derecha": "Pose forzada" }
+    },
+    {
+      "lado1": { "izquierda": "Tendencia pasajera", "derecha": "Tendencia duradera" },
+      "lado2": { "izquierda": "Moda de los 80", "derecha": "Moda actual" }
+    },
+    {
+      "lado1": { "izquierda": "Meme viejo", "derecha": "Meme nuevo" },
+      "lado2": { "izquierda": "Influencer aburrido", "derecha": "Influencer entretenido" }
+    },
+    {
+      "lado1": { "izquierda": "Youtuber para niños", "derecha": "Youtuber para adultos" },
+      "lado2": { "izquierda": "Podcast aburrido", "derecha": "Podcast interesante" }
+    },
+    {
+      "lado1": { "izquierda": "Noticia buena", "derecha": "Noticia mala" },
+      "lado2": { "izquierda": "Noticia local", "derecha": "Noticia mundial" }
+    },
+    {
+      "lado1": { "izquierda": "Noticia importante", "derecha": "Noticia irrelevante" },
+      "lado2": { "izquierda": "Titular creíble", "derecha": "Titular sensacionalista" }
+    }
+  ]
+}
