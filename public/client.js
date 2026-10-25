@@ -41,7 +41,7 @@
           handlers.onState(msg.state);
         }
         else if (msg.type === 'joined') { localStorage.setItem(PID, msg.playerId); handlers.onJoined && handlers.onJoined(msg.playerId); }
-        else if (msg.type === 'kicked') { api.forget(); handlers.onKicked && handlers.onKicked(); }
+        else if (msg.type === 'kicked') { api.forget(); if (msg.message) alert(msg.message); handlers.onKicked && handlers.onKicked(); }
         else if (msg.type === 'error') alert(msg.message);
       };
       ws.onclose = () => {
