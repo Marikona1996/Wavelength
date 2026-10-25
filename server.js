@@ -440,13 +440,17 @@ function handleInRoom(client, msg) {
     if (!id) {
       // ¿Volvió alguien que perdió el link o cambió de celular? Si entra con el mismo
       // nombre, retoma su lugar (equipo, fila y turno de psíquico) en vez de duplicarse.
+      // Aunque el servidor todavía lo crea conectado (un celular perdido tarda en
+      // soltar la conexión), el lugar pasa al celular nuevo y el viejo recibe aviso.
       const mismo = Object.values(state.players).find(p => p.name.trim().toLowerCase() === name.toLowerCase());
-      if (mismo && mismo.connected) {
-        client.ws.send(JSON.stringify({ type: 'error', message: `Ya hay alguien conectado como "${mismo.name}". Usa otro nombre.` }));
-        return;
+      if (mismo) {
+        for (const c of clients) if (c !== client && c.room === room && c.playerId === mismo.id) {
+          c.playerId = null;
+          c.ws.send(JSON.stringify({ type: 'kicked', message: `Alguien entró como "${mismo.name}" desde otro celular.` }));
+        }
+        log('volvió a entrar:', mismo.name);
       }
       id = mismo ? mismo.id : uid();
-      if (mismo) log('volvió a entrar:', mismo.name);
     }
     if (!state.players[id]) state.players[id] = { id, joinedAt: Date.now() };
     Object.assign(state.players[id], { name, team, connected: true });
@@ -606,6 +610,8 @@ const wss = new WebSocketServer({ server });
 wss.on('connection', ws => {
   const client = { ws, role: 'player', playerId: null, room: null };
   clients.add(client);
+  ws.isAlive = true;
+  ws.on('pong', () => { ws.isAlive = true; });
   ws.on('message', raw => {
     let msg;
     try { msg = JSON.parse(raw); } catch { return; }
@@ -625,10 +631,12 @@ wss.on('connection', ws => {
   });
 });
 
-// latido para limpiar conexiones muertas
+// latido para limpiar conexiones muertas: el celular que no contesta un ping en
+// 15 s se da por desconectado (si no, un celular perdido sigue "conectado" minutos)
 setInterval(() => {
   for (const c of clients) {
-    if (c.ws.readyState !== 1) { clients.delete(c); continue; }
+    if (c.ws.readyState !== 1 || !c.ws.isAlive) { c.ws.terminate(); continue; } // dispara 'close'
+    c.ws.isAlive = false;
     c.ws.ping();
   }
 }, 15000);
