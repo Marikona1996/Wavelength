@@ -264,8 +264,9 @@ function render() {
   if (!dial) dial = createDial($('dialHost'), { wedge: S.wedge });
   $('gTeamA').textContent = A.name; $('gTeamB').textContent = B.name;
   animateNumber($('ptsA'), A.score); animateNumber($('ptsB'), B.score);
-  $('gRosterA').innerHTML = rosterHTML(S.players, 'A', S.psychicId);
-  $('gRosterB').innerHTML = rosterHTML(S.players, 'B', S.psychicId);
+  // ✕ también durante el juego, para quitar a alguien que se fue (si era el psíquico, pasa el turno)
+  $('gRosterA').innerHTML = rosterHTML(S.players, 'A', S.psychicId, true);
+  $('gRosterB').innerHTML = rosterHTML(S.players, 'B', S.psychicId, true);
   $('scoreA').classList.toggle('active', S.turnTeam === 'A');
   $('scoreB').classList.toggle('active', S.turnTeam === 'B');
   $('tagA').textContent = S.turnTeam === 'A' ? 'Adivinando' : (S.phase === 'counter' ? 'Decidiendo' : '');
@@ -281,6 +282,7 @@ function render() {
 
   if (S.phase === 'psychic') {
     status = `<h2>🔮 <span ${tc}>${esc(psychic?.name || '…')}</span> ${S.side ? 'está pensando su pista' : 'está sacando una tarjeta'}</h2><p class="pulse">Cuando tenga su pista, iniciará la ronda…</p>`;
+    if (psychic && !psychic.connected) hint = `⚠ ${psychic.name} está desconectado. Si ya no va a volver, presiona “Saltar turno” o quítalo con la ✕. Si vuelve a entrar con el mismo nombre, retoma su turno.`;
   } else if (S.phase === 'guessing') {
     status = `<h2><span ${tc}>${esc(t.name)}</span> mueve la flecha</h2>` +
       (S.clue ? `<div class="clue pop">${esc(S.clue)}</div>` : `<p>Pista de ${esc(psychic?.name || 'el psíquico')}: ¡escuchen bien!</p>`) +
@@ -357,7 +359,11 @@ document.addEventListener('click', e => {
   const f = e.target.closest('[data-force]');
   if (f && confirm(`¿Registrar que el equipo rival dijo "${f.dataset.force === 'izq' ? 'izquierda' : 'derecha'}"?`)) game.send({ type: 'forceCounter', side: f.dataset.force });
   const k = e.target.closest('[data-kick]');
-  if (k) { e.preventDefault(); game.send({ type: 'kick', playerId: k.dataset.kick }); }
+  if (k) {
+    e.preventDefault();
+    const p = S.players.find(x => x.id === k.dataset.kick);
+    if (S.phase === 'lobby' || confirm(`¿Quitar a ${p ? p.name : 'este jugador'} de la partida?`)) game.send({ type: 'kick', playerId: k.dataset.kick });
+  }
 });
 document.addEventListener('keydown', e => {
   if ((e.key === 'Enter' || e.key === ' ') && S && S.phase === 'reveal' && !/INPUT|SELECT/.test(document.activeElement.tagName)) { e.preventDefault(); game.send({ type: 'next' }); }
