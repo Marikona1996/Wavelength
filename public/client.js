@@ -3,6 +3,7 @@
   // Sala: va en la dirección (?sala=ABCD). La pantalla que no trae una crea la suya.
   const limpia = c => String(c || '').toUpperCase().replace(/[^A-Z0-9]/g, '').slice(0, 8);
   window.salaDeUrl = () => limpia(new URLSearchParams(location.search).get('sala'));
+  window.limpiaSala = limpia;
   function salaNueva() {
     const letras = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789'; // sin 0/O ni 1/I para que no se confundan
     let c = '';

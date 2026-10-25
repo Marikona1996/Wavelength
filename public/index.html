@@ -61,6 +61,16 @@
   .votebars .vb b { display: block; font-size: 2rem; }
   .result-line { font-size: 1.35rem; font-weight: 600; margin: 4px 0; }
   .hint { color: var(--muted); font-size: .85rem; margin-top: 10px; }
+  /* Inicio: crear sala o entrar a una */
+  .inicio { max-width: 920px; margin: 0 auto; text-align: center; }
+  .inicio h1 { margin: 10px 0 4px; font-size: 3.4rem; letter-spacing: .3em; text-indent: .3em; }
+  .inicio .opciones { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-top: 30px; text-align: left; }
+  .inicio .opciones h2 { margin: 0 0 6px; font-size: 1.4rem; }
+  .inicio .opciones p { margin: 0 0 18px; }
+  .inicio .codigo { text-transform: uppercase; text-align: center; letter-spacing: .25em; font-size: 1.5rem; }
+  .inicio .acciones { display: flex; flex-direction: column; gap: 10px; margin-top: 12px; }
+  .inicio .btn { width: 100%; }
+  @media (max-width: 760px) { .inicio .opciones { grid-template-columns: 1fr; } .inicio h1 { font-size: 2.2rem; } }
   .footer-tools { position: fixed; right: 16px; bottom: 12px; display: flex; gap: 8px; opacity: .55; }
   .footer-tools:hover { opacity: 1; }
   .footer-tools .btn { padding: 8px 14px; font-size: .8rem; }
@@ -104,6 +114,29 @@
     <div class="info" id="topInfo"></div>
   </header>
   <main>
+    <!-- INICIO: el enlace que se comparte; cada grupo abre su propia sala -->
+    <section id="inicio" class="inicio hidden">
+      <h1 class="wordmark">Wavelength</h1>
+      <div class="tagline">Un juego de <span class="accent">leer la mente</span> de tu equipo.</div>
+      <div class="bands" style="margin-top:22px"></div>
+      <div class="opciones">
+        <div class="card">
+          <h2>📺 Crear sala nueva</h2>
+          <p class="muted">Ábrela en la pantalla que todos van a ver (TV, proyector o compu). Te da un código y un QR para que tu grupo entre desde sus celulares.</p>
+          <button class="btn big" id="crearSala">Crear sala</button>
+        </div>
+        <div class="card">
+          <h2>📱 Entrar a una sala</h2>
+          <p class="muted">¿Tu grupo ya tiene sala? Escribe el código que aparece en su pantalla.</p>
+          <input id="codigoSala" class="input codigo" placeholder="Código" maxlength="8" autocomplete="off" autocapitalize="characters">
+          <div class="acciones">
+            <button class="btn big" id="entrarJugador">Entrar a jugar</button>
+            <button class="btn ghost" id="abrirPantalla">Abrir la pantalla de esta sala</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
     <!-- LOBBY -->
     <section id="lobby" class="lobby hidden">
       <div>
@@ -140,7 +173,7 @@
         <div class="url" id="joinUrl">…</div>
         <div class="muted">Escanea el QR o escribe la dirección</div>
         <div style="margin-top:10px">Código de sala: <b id="salaCode" style="font-size:1.6rem;letter-spacing:.15em">…</b></div>
-        <div class="muted" style="font-size:.8rem;margin-top:6px">¿Otra partida aparte? Abre <a href="/" style="color:inherit">esta página</a> en otra pestaña o compu: cada una crea su propia sala.</div>
+        <div class="muted" style="font-size:.8rem;margin-top:6px">¿Otra partida aparte? Desde <a href="/" style="color:inherit">la página de inicio</a> se crea otra sala.</div>
       </div>
     </section>
 
@@ -187,7 +220,7 @@
   <button class="btn ghost" id="resetBtn">Reiniciar juego</button>
 </div>
 
-<script src="client.js?v=4"></script>
+<script src="client.js?v=5"></script>
 <script src="dial.js?v=3"></script>
 <script>
 const $ = id => document.getElementById(id);
@@ -206,11 +239,34 @@ function tickTimer() {
 setInterval(tickTimer, 200);
 const esc = s => String(s ?? '').replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 
-const game = connectGame('host', {
+// Sin código en la dirección: pantalla de inicio (crear sala o entrar a una).
+const game = salaDeUrl() ? connectGame('host', {
   onState: s => { S = s; render(); },
   onOpen: () => $('offline').classList.add('hidden'),
   onClose: () => $('offline').classList.remove('hidden'),
-});
+}) : null;
+if (!game) {
+  document.querySelector('.footer-tools').classList.add('hidden');
+  $('inicio').classList.remove('hidden');
+  $('crearSala').onclick = async () => {
+    $('crearSala').disabled = true;
+    try {
+      const { sala } = await fetch('/api/sala-nueva').then(r => r.json());
+      location.search = '?sala=' + sala;
+    } catch (e) {
+      $('crearSala').disabled = false;
+      alert('No se pudo crear la sala. Revisa tu conexión e intenta otra vez.');
+    }
+  };
+  const ir = destino => {
+    const c = limpiaSala($('codigoSala').value);
+    if (!c) { $('codigoSala').focus(); return; }
+    location.href = destino + '?sala=' + c;
+  };
+  $('entrarJugador').onclick = () => ir('/jugar');
+  $('abrirPantalla').onclick = () => ir('/');
+  $('codigoSala').addEventListener('keydown', e => { if (e.key === 'Enter') ir('/jugar'); });
+}
 
 function show(id) {
   for (const sec of ['lobby', 'game', 'final']) $(sec).classList.toggle('hidden', sec !== id);
