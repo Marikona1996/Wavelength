@@ -113,9 +113,9 @@ let state;
 function freshState(keepPlayers) {
   const players = keepPlayers ? state.players : {};
   const teams = {
-    // La fila de psíquicos continúa entre partidas: todos pasan en orden de llegada
-    A: { name: (keepPlayers && state.teams.A.name) || 'Equipo A', score: 0, nextPsychic: (keepPlayers && state.teams.A.nextPsychic) || 0, turnos: 0 },
-    B: { name: (keepPlayers && state.teams.B.name) || 'Equipo B', score: 0, nextPsychic: (keepPlayers && state.teams.B.nextPsychic) || 0, turnos: 0 },
+    // La fila de psíquicos (player.yaPaso) continúa entre partidas: todos pasan en orden de llegada
+    A: { name: (keepPlayers && state.teams.A.name) || 'Equipo A', score: 0, turnos: 0 },
+    B: { name: (keepPlayers && state.teams.B.name) || 'Equipo B', score: 0, turnos: 0 },
   };
   return {
     phase: 'lobby',           // lobby | psychic | guessing | counter | reveal | finished
@@ -217,31 +217,21 @@ function chooseSide(side) {
 const activeSide = () => (state.card && state.side ? state.card[state.side] : null);
 
 // El psíquico rota en el orden en que se conectaron los jugadores del equipo
-// (el primero en entrar es el primer psíquico). Si alguien está desconectado se
-// le salta sin perder su lugar en la fila.
+// (el primero en entrar es el primer psíquico). Nadie repite hasta que todos
+// los de su equipo pasaron; entonces la fila vuelve a empezar. Se respeta el
+// orden aunque el celular esté desconectado (puede estar solo bloqueado); si
+// alguien de verdad no está, la pantalla puede "Saltar turno".
 function pickPsychic(t) {
   const all = teamPlayers(t, false);
-  const team = state.teams[t];
   if (!all.length) return null;
-  for (let k = 0; k < all.length; k++) {
-    const idx = (team.nextPsychic + k) % all.length;
-    if (all[idx].connected) { team.nextPsychic = (idx + 1) % all.length; return all[idx].id; }
-  }
-  // Nadie conectado en este momento: igual respetamos la fila (el celular puede estar bloqueado).
-  const idx = team.nextPsychic % all.length;
-  team.nextPsychic = (idx + 1) % all.length;
-  return all[idx].id;
+  let pendientes = all.filter(p => !p.yaPaso);
+  if (!pendientes.length) { for (const p of all) p.yaPaso = false; pendientes = all; }
+  pendientes[0].yaPaso = true;
+  return pendientes[0].id;
 }
-const llegoALaMeta = () => state.teams.A.score >= state.settings.points || state.teams.B.score >= state.settings.points;
-// Todos tienen que haber sido psíquicos: cada equipo juega al menos tantos turnos como jugadores tiene.
-function todosFueronPsiquicos() {
-  for (const k of ['A', 'B']) {
-    const jugadores = teamPlayers(k, false).length;
-    if (jugadores && (state.teams[k].turnos || 0) < jugadores) return false;
-  }
-  return true;
-}
-const reachedGoal = () => llegoALaMeta() && todosFueronPsiquicos();
+const faltanPorPasar = t => teamPlayers(t, false).filter(p => !p.yaPaso).length;
+// La partida termina en cuanto un equipo llega a los puntos elegidos.
+const reachedGoal = () => state.teams.A.score >= state.settings.points || state.teams.B.score >= state.settings.points;
 
 function startTurn() {
   const t = state.turnTeam;
@@ -342,8 +332,7 @@ function viewFor(client) {
     round: state.round,
     turn: state.turn,
     reached: reachedGoal(),
-    metaAlcanzada: llegoALaMeta(),
-    faltanPsiquicos: ['A', 'B'].map(k => Math.max(0, teamPlayers(k, false).length - (state.teams[k].turnos || 0))).reduce((a, b) => a + b, 0),
+    faltanPsiquicos: faltanPorPasar('A') + faltanPorPasar('B'),
     psychicOrder: { A: teamPlayers('A', false).map(p => p.id), B: teamPlayers('B', false).map(p => p.id) },
     turnTeam: state.turnTeam,
     psychicId: state.psychicId,
@@ -520,6 +509,14 @@ function handle(client, msg) {
   }
   if (type === 'skipTurn' && ['psychic', 'guessing', 'counter'].includes(state.phase)) {
     startTurn(); // mismo equipo, siguiente psíquico, nueva carta
+    return broadcast();
+  }
+  if (type === 'endGame' && ['psychic', 'guessing', 'counter', 'reveal'].includes(state.phase)) {
+    // La pantalla puede terminar la partida cuando quiera; gana quien vaya arriba.
+    clearGuessTimer();
+    state.deadline = null;
+    log('PARTIDA TERMINADA desde la pantalla');
+    finishGame();
     return broadcast();
   }
   if (type === 'kick' && msg.playerId) {
