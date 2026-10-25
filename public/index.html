@@ -132,7 +132,7 @@
           <div style="flex:1"></div>
           <button id="startBtn" class="btn big" disabled>Comenzar juego</button>
         </div>
-        <div class="hint" id="startHint">Se necesita al menos 1 jugador conectado en cada equipo (ideal 2 o más). El psíquico rota en el orden en que entraron (los números) y <b>todos pasan antes de que termine el juego</b>. Empieza el equipo del primero en conectarse. Gana quien llegue a la meta, una vez que todos hayan sido psíquicos.</div>
+        <div class="hint" id="startHint">Se necesita al menos 1 jugador conectado en cada equipo (ideal 2 o más). El psíquico rota en el orden en que entraron (los números) y <b>nadie repite hasta que pasó todo su equipo</b>. Empieza el equipo del primero en conectarse. Gana el primer equipo que llegue a la meta con sus propios puntos.</div>
       </div>
       <div class="card join-box">
         <div class="pill">Entra desde tu celular</div>
@@ -181,6 +181,7 @@
 <div class="footer-tools">
   <button class="btn mustard" id="repeatBtn" title="Vuelve a empezar esta ronda con el mismo psíquico y otra tarjeta (por si alguien se desconectó)">↻ Repetir ronda</button>
   <button class="btn ghost" id="skipBtn" title="Pasa al siguiente psíquico del mismo equipo con otra tarjeta">Saltar turno</button>
+  <button class="btn ghost" id="endBtn" title="Termina la partida ahora y muestra los resultados">🏁 Terminar partida</button>
   <button class="btn ghost" id="resetBtn">Reiniciar juego</button>
 </div>
 
@@ -230,6 +231,7 @@ function render() {
   $('skipBtn').classList.toggle('hidden', !['psychic', 'guessing', 'counter'].includes(S.phase));
   $('repeatBtn').classList.toggle('hidden', !['psychic', 'guessing', 'counter', 'reveal'].includes(S.phase));
   $('resetBtn').classList.toggle('hidden', S.phase === 'lobby' || S.phase === 'finished');
+  $('endBtn').classList.toggle('hidden', S.phase === 'lobby' || S.phase === 'finished');
   if (S.phase === 'lobby') {
     show('lobby');
     if (document.activeElement !== $('teamA') && A.name !== 'Equipo A') $('teamA').value = A.name;
@@ -296,9 +298,7 @@ function render() {
     const last = S.reached;
     if (last) status += `<div class="result-line" style="margin-top:8px">🏆 ¡<span class="team-${S.teams.A.score >= S.teams.B.score ? 'A' : 'B'} team-color">${esc(S.teams.A.score >= S.teams.B.score ? S.teams.A.name : S.teams.B.name)}</span> llegó a ${S.settings.points} puntos!</div>`;
     controls = `<button class="btn big" id="nextBtn">${last ? 'Ver resultados finales' : 'Siguiente ronda ▶'}</button>`;
-    hint = S.metaAlcanzada && !S.reached
-      ? `Ya se alcanzó la meta, pero el juego sigue hasta que todos hayan sido psíquicos (faltan ${S.faltanPsiquicos}).`
-      : 'También puedes presionar Enter o Espacio.';
+    hint = 'También puedes presionar Enter o Espacio.';
   }
   timerEnd = S.remainingMs != null ? Date.now() + S.remainingMs : null;
   if (S.phase !== lastPhase || S.turn !== lastTurn) { $('status').classList.remove('fade-in'); void $('status').offsetWidth; $('status').classList.add('fade-in'); }
@@ -336,6 +336,7 @@ $('points').addEventListener('change', pushSetup);
 $('startBtn').addEventListener('click', () => { pushSetup(); setTimeout(() => game.send({ type: 'start' }), 300); });
 $('againBtn').addEventListener('click', () => game.send({ type: 'reset' }));
 $('resetBtn').addEventListener('click', () => { if (confirm('¿Volver a la pantalla de inicio? Se pierden los puntajes (los jugadores se mantienen).')) game.send({ type: 'reset' }); });
+$('endBtn').addEventListener('click', () => { if (confirm('¿Terminar la partida ahora? Se muestran los resultados con el marcador actual.')) game.send({ type: 'endGame' }); });
 $('skipBtn').addEventListener('click', () => { if (confirm('¿Saltar este turno? Se saca otra tarjeta y pasa al siguiente psíquico del mismo equipo.')) game.send({ type: 'skipTurn' }); });
 $('repeatBtn').addEventListener('click', () => {
   const yaHuboPuntos = S && S.phase === 'reveal';
