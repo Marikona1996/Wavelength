@@ -15,10 +15,10 @@ const DECKS_DIR = path.join(__dirname, 'mazos');
 // La partida en curso, por si se reinicia el servidor. Cada puerto guarda la suya,
 // para que un servidor de pruebas nunca pise la partida real.
 const STATE_FILE = path.join(__dirname, PORT === 3000 ? 'partida.json' : 'partida-' + PORT + '.json');
-const STATE_VERSION = 2;
+const STATE_VERSION = 3;
 const LOG_FILE = path.join(__dirname, 'registro.txt');
 function log(...partes) {
-  const linea = '[' + new Date().toLocaleString('es-MX') + '] ' + partes.join(' ');
+  const linea = '[' + new Date().toLocaleString('es-MX') + '] ' + (room ? '[' + room.code + '] ' : '') + partes.join(' ');
   console.log(linea);
   try { fs.appendFileSync(LOG_FILE, linea + '\n'); } catch (e) {}
 }
@@ -108,8 +108,31 @@ function scoreFor(needle, target) {
   return 0;
 }
 
-// ---------- estado ----------
+// ---------- salas ----------
+// Cada pantalla abre su propia sala (código en la dirección: /?sala=ABCD) y los
+// celulares entran a /jugar?sala=ABCD, así varias partidas no se cruzan.
+// Node atiende un mensaje a la vez: mientras se procesa algo de una sala, `room`
+// y `state` apuntan a ella y todo el código del juego trabaja sobre esa sala.
+const rooms = new Map();   // código -> { code, state, guessTimer, lastSavedPhase, touched }
+let room = null;
 let state;
+const limpiaCodigo = c => String(c || '').toUpperCase().replace(/[^A-Z0-9]/g, '').slice(0, 8);
+function inRoom(r, fn) {
+  const prevRoom = room, prevState = state;
+  room = r; state = r.state;
+  try { return fn(); } finally { r.state = state; r.touched = Date.now(); room = prevRoom; state = prevState; }
+}
+function getRoom(code) {
+  let r = rooms.get(code);
+  if (!r) {
+    r = { code, state: null, guessTimer: null, lastSavedPhase: null, touched: Date.now() };
+    rooms.set(code, r);
+    inRoom(r, () => { state = freshState(false); log('sala nueva'); });
+  }
+  return r;
+}
+
+// ---------- estado ----------
 function freshState(keepPlayers) {
   const players = keepPlayers ? state.players : {};
   const teams = {
@@ -143,43 +166,47 @@ function freshState(keepPlayers) {
   };
 }
 // ---------- guardar / recuperar la partida en curso ----------
-// Si el servidor se reinicia (se cerró la ventana, se cayó, etc.) la partida sigue donde iba.
-let saveTimer = null, lastSavedPhase = null;
+// Si el servidor se reinicia (se cerró la ventana, se cayó, etc.) cada sala sigue donde iba.
+const SALA_VENCE = 12 * 60 * 60 * 1000; // una sala sin movimiento por 12 h se borra
+let saveTimer = null;
 function saveNow() {
+  clearTimeout(saveTimer); saveTimer = null;
+  const salas = {};
+  for (const r of rooms.values()) salas[r.code] = { touched: r.touched, state: r === room ? state : r.state };
   try {
-    fs.writeFileSync(STATE_FILE, JSON.stringify({ v: STATE_VERSION, savedAt: Date.now(), state }));
+    fs.writeFileSync(STATE_FILE, JSON.stringify({ v: STATE_VERSION, rooms: salas }));
   } catch (e) { console.error('No se pudo guardar la partida:', e.message); }
 }
 function saveState() {
   // Un cambio de fase se guarda de inmediato: si el servidor se cae justo ahí, no se pierde.
-  if (state.phase !== lastSavedPhase) {
-    lastSavedPhase = state.phase;
+  if (state.phase !== room.lastSavedPhase) {
+    room.lastSavedPhase = state.phase;
     log('fase ->', state.phase, '| ronda', state.round, '| turno', state.turnTeam,
         '| marcador', state.teams.A.score + '-' + state.teams.B.score);
-    clearTimeout(saveTimer); saveTimer = null;
     return saveNow();
   }
   clearTimeout(saveTimer);
   saveTimer = setTimeout(saveNow, 250);
 }
-function restoreState() {
+function restoreRooms() {
   try {
-    if (!fs.existsSync(STATE_FILE)) return null;
+    if (!fs.existsSync(STATE_FILE)) return;
     const raw = JSON.parse(fs.readFileSync(STATE_FILE, 'utf8'));
-    if (!raw || raw.v !== STATE_VERSION || !raw.state) return null;
-    if (Date.now() - raw.savedAt > 12 * 60 * 60 * 1000) return null; // más de 12 h: empezar de cero
-    const s = raw.state;
-    // Nadie está conectado todavía; cada celular se vuelve a marcar al reconectarse.
-    for (const p of Object.values(s.players || {})) p.connected = false;
-    console.log(`  Partida recuperada (fase: ${s.phase}, ${Object.keys(s.players || {}).length} jugadores)`);
-    return s;
+    if (!raw || raw.v !== STATE_VERSION || !raw.rooms) return;
+    for (const [code, d] of Object.entries(raw.rooms)) {
+      if (!d || !d.state || Date.now() - d.touched > SALA_VENCE) continue;
+      // Nadie está conectado todavía; cada celular se vuelve a marcar al reconectarse.
+      for (const p of Object.values(d.state.players || {})) p.connected = false;
+      rooms.set(code, { code, state: d.state, guessTimer: null, lastSavedPhase: d.state.phase, touched: d.touched });
+    }
+    if (rooms.size) console.log(`  ${rooms.size} sala(s) recuperada(s)`);
   } catch (e) {
     console.error('No se pudo recuperar la partida:', e.message);
-    return null;
   }
 }
-state = restoreState() || freshState(false);
-setImmediate(() => armGuessTimer()); // si se recuperó una ronda a medias, el reloj sigue
+restoreRooms();
+// si se recuperó una ronda a medias, el reloj sigue
+setImmediate(() => { for (const r of rooms.values()) inRoom(r, armGuessTimer); });
 
 const other = t => (t === 'A' ? 'B' : 'A');
 const teamPlayers = (t, onlyConnected = true) =>
@@ -289,8 +316,7 @@ function resolveCounter() {
 }
 
 // ---------- cronómetro de la ronda ----------
-let guessTimer = null;
-function clearGuessTimer() { if (guessTimer) { clearTimeout(guessTimer); guessTimer = null; } }
+function clearGuessTimer() { if (room.guessTimer) { clearTimeout(room.guessTimer); room.guessTimer = null; } }
 function lockAnswer(quien) {
   clearGuessTimer();
   state.deadline = null;
@@ -302,13 +328,14 @@ function armGuessTimer() {
   clearGuessTimer();
   if (state.phase !== 'guessing') return;
   if (!state.deadline) state.deadline = Date.now() + GUESS_SECONDS * 1000;
-  guessTimer = setTimeout(() => {
-    guessTimer = null;
+  const r = room;
+  r.guessTimer = setTimeout(() => inRoom(r, () => {
+    r.guessTimer = null;
     if (state.phase !== 'guessing') return;
     log('  Se acabó el tiempo: la flecha se queda en', state.needle.toFixed(1) + '°');
     lockAnswer('⏱ el tiempo'); // la flecha queda donde esté en ese instante
     broadcast();
-  }, Math.max(0, state.deadline - Date.now()));
+  }), Math.max(0, state.deadline - Date.now()));
 }
 
 function tally() {
@@ -357,7 +384,8 @@ function viewFor(client) {
     remainingMs: state.phase === 'guessing' && state.deadline ? Math.max(0, state.deadline - Date.now()) : null,
     guessSeconds: GUESS_SECONDS,
     boot: BOOT,
-    joinUrl: joinUrlLocal(),
+    sala: room.code,
+    joinUrl: joinUrlLocal() + '?sala=' + room.code,
     me: client.playerId ? state.players[client.playerId] || null : null,
   };
 }
@@ -366,15 +394,23 @@ const clients = new Set();
 function broadcast() {
   saveState();
   for (const c of clients) {
-    if (c.ws.readyState === 1) c.ws.send(JSON.stringify({ type: 'state', state: viewFor(c) }));
+    if (c.room === room && c.ws.readyState === 1) c.ws.send(JSON.stringify({ type: 'state', state: viewFor(c) }));
   }
-}
-function sendOne(c) {
-  if (c.ws.readyState === 1) c.ws.send(JSON.stringify({ type: 'state', state: viewFor(c) }));
 }
 
 // ---------- acciones ----------
 function handle(client, msg) {
+  // Lo primero que manda cada pantalla o celular es 'hello' con el código de su sala.
+  if (msg.type === 'hello') {
+    const code = limpiaCodigo(msg.sala);
+    if (!code) return;
+    client.room = getRoom(code);
+  }
+  if (!client.room) return;
+  inRoom(client.room, () => handleInRoom(client, msg));
+}
+
+function handleInRoom(client, msg) {
   const { type } = msg;
 
   if (type === 'hello') {
@@ -521,7 +557,7 @@ function handle(client, msg) {
   }
   if (type === 'kick' && msg.playerId) {
     delete state.players[msg.playerId];
-    for (const c of clients) if (c.playerId === msg.playerId) { c.playerId = null; c.ws.send(JSON.stringify({ type: 'kicked' })); }
+    for (const c of clients) if (c.room === room && c.playerId === msg.playerId) { c.playerId = null; c.ws.send(JSON.stringify({ type: 'kicked' })); }
     return broadcast();
   }
   if (type === 'reset') {
@@ -539,7 +575,8 @@ app.use(express.static(path.join(__dirname, 'public'), { etag: false, lastModifi
 app.get('/jugar', (_req, res) => res.sendFile(path.join(__dirname, 'public', 'jugar.html')));
 app.get('/api/info', (req, res) => res.json({ ip: IP, port: PORT, joinUrl: joinUrlDe(req) }));
 app.get('/api/qr.svg', async (req, res) => {
-  const svg = await QRCode.toString(joinUrlDe(req), { type: 'svg', margin: 1, color: { dark: '#010625', light: '#ffffff' } });
+  const code = limpiaCodigo(req.query.sala);
+  const svg = await QRCode.toString(joinUrlDe(req) + (code ? '?sala=' + code : ''), { type: 'svg', margin: 1, color: { dark: '#010625', light: '#ffffff' } });
   res.type('image/svg+xml').send(svg);
 });
 
@@ -547,7 +584,7 @@ const server = http.createServer(app);
 const wss = new WebSocketServer({ server });
 
 wss.on('connection', ws => {
-  const client = { ws, role: 'player', playerId: null };
+  const client = { ws, role: 'player', playerId: null, room: null };
   clients.add(client);
   ws.on('message', raw => {
     let msg;
@@ -556,14 +593,16 @@ wss.on('connection', ws => {
   });
   ws.on('close', () => {
     clients.delete(client);
-    if (client.playerId && state.players[client.playerId]) {
-      // ¿queda otra conexión del mismo jugador?
-      const still = [...clients].some(c => c.playerId === client.playerId);
-      if (!still) state.players[client.playerId].connected = false;
-    }
-    broadcast();
+    if (!client.room) return;
+    inRoom(client.room, () => {
+      if (client.playerId && state.players[client.playerId]) {
+        // ¿queda otra conexión del mismo jugador?
+        const still = [...clients].some(c => c.playerId === client.playerId);
+        if (!still) state.players[client.playerId].connected = false;
+      }
+      broadcast();
+    });
   });
-  sendOne(client);
 });
 
 // latido para limpiar conexiones muertas
@@ -573,6 +612,18 @@ setInterval(() => {
     c.ws.ping();
   }
 }, 15000);
+
+// salas abandonadas: nadie conectado y sin movimiento por 12 h
+setInterval(() => {
+  let borradas = 0;
+  for (const r of rooms.values()) {
+    if (Date.now() - r.touched < SALA_VENCE || [...clients].some(c => c.room === r)) continue;
+    if (r.guessTimer) clearTimeout(r.guessTimer);
+    rooms.delete(r.code);
+    borradas++;
+  }
+  if (borradas) saveNow();
+}, 30 * 60 * 1000);
 
 process.on('uncaughtException', e => log('[ERROR NO ATRAPADO]', String(e && e.stack || e)));
 process.on('unhandledRejection', e => log('[PROMESA RECHAZADA]', String(e && e.stack || e)));
