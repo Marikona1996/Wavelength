@@ -76,7 +76,7 @@
   <div class="screen" id="screen"></div>
 </div>
 
-<script src="client.js?v=3"></script>
+<script src="client.js?v=4"></script>
 <script src="dial.js?v=3"></script>
 <script>
 const $ = id => document.getElementById(id);
@@ -107,12 +107,30 @@ $('secretRedraw').addEventListener('click', () => {
   $('secretRedraw').classList.add('hidden');
 });
 
-const game = connectGame('player', {
+// Sin código de sala en la dirección: se pide antes de conectarse.
+const game = salaDeUrl() ? connectGame('player', {
   onState: s => { S = s; timerEnd = s.remainingMs != null ? Date.now() + s.remainingMs : null; render(); tickTimer(); },
   onOpen: () => $('offline').classList.add('hidden'),
   onClose: () => $('offline').classList.remove('hidden'),
   onKicked: () => { view = ''; render(); },
-});
+}) : null;
+if (!game) {
+  $('screen').innerHTML = `
+    <h1 class="wordmark" style="font-size:1.6rem;text-align:center;margin-top:8px">Wavelength</h1>
+    <div class="bands"></div>
+    <div class="stack" style="margin-top:6px">
+      <p class="muted" style="text-align:center;margin:0">Escribe el código de sala que aparece en la pantalla</p>
+      <input id="salaInput" class="input" placeholder="Código (ej. 4KZP)" maxlength="8" autocomplete="off" autocapitalize="characters" style="text-transform:uppercase;text-align:center;letter-spacing:.2em;font-size:1.4rem">
+      <button class="btn big block" id="salaBtn">Entrar a la sala</button>
+    </div>`;
+  const ir = () => {
+    const c = $('salaInput').value.toUpperCase().replace(/[^A-Z0-9]/g, '').slice(0, 8);
+    if (!c) { $('salaInput').focus(); return; }
+    location.search = '?sala=' + c;
+  };
+  $('salaBtn').onclick = ir;
+  $('salaInput').addEventListener('keydown', e => { if (e.key === 'Enter') ir(); });
+}
 
 function screen(html, key) {
   // Re-dibuja solo si cambia la "vista"; si no, actualiza en sitio.
@@ -139,6 +157,7 @@ function render() {
     if (screen(`
       <h1 class="wordmark" style="font-size:1.6rem;text-align:center;margin-top:8px">Wavelength</h1>
       <div class="bands"></div>
+      <p class="muted" style="text-align:center;margin:4px 0 0">Sala <b>${esc(S.sala)}</b> · revisa que sea el mismo código de la pantalla</p>
       <div class="stack" style="margin-top:6px">
         <input id="name" class="input" placeholder="Tu nombre" maxlength="24" autocomplete="off" value="${esc(localStorage.getItem('wl_name') || '')}">
         <div class="team-pick">
@@ -151,7 +170,7 @@ function render() {
         const name = $('name').value.trim();
         if (!name) { $('name').focus(); return; }
         localStorage.setItem('wl_name', name);
-        game.send({ type: 'join', name, team: pickedTeam, playerId: localStorage.getItem('wl_pid') });
+        game.send({ type: 'join', name, team: pickedTeam, playerId: game.pid() });
       };
       $('name').addEventListener('keydown', e => { if (e.key === 'Enter') $('joinBtn').click(); });
       $('pickA').onclick = () => { pickedTeam = 'A'; render(); };
@@ -190,7 +209,7 @@ function render() {
         <span class="link" id="leave">Salir</span>
       </div>`, 'lobby')) {
       $('switchTeam').onclick = () => game.send({ type: 'join', name: me.name, team: otherTeam });
-      $('leave').onclick = () => { game.send({ type: 'leave' }); localStorage.removeItem('wl_pid'); };
+      $('leave').onclick = () => { game.send({ type: 'leave' }); game.forget(); };
     }
     $('lobbyRoster').innerHTML = ['A', 'B'].map(k =>
       `<div><b class="team-${k} team-color">${teamName(k)}:</b> ${S.players.filter(p => p.team === k).map((p, i) => (i + 1) + '. ' + esc(p.name)).join(' · ') || '<span class="muted">—</span>'}</div>`).join('');

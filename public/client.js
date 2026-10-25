@@ -1,17 +1,34 @@
 // Conexión WebSocket compartida + fondo de estrellas
 (function () {
+  // Sala: va en la dirección (?sala=ABCD). La pantalla que no trae una crea la suya.
+  const limpia = c => String(c || '').toUpperCase().replace(/[^A-Z0-9]/g, '').slice(0, 8);
+  window.salaDeUrl = () => limpia(new URLSearchParams(location.search).get('sala'));
+  function salaNueva() {
+    const letras = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789'; // sin 0/O ni 1/I para que no se confundan
+    let c = '';
+    for (let i = 0; i < 4; i++) c += letras[Math.floor(Math.random() * letras.length)];
+    return c;
+  }
+
   window.connectGame = function (role, handlers) {
     let ws, retry = 500;
+    let sala = window.salaDeUrl();
+    if (!sala && role === 'host') { sala = salaNueva(); history.replaceState(null, '', '?sala=' + sala); }
+    // El jugador se recuerda por sala: si entra a otra, no se mezcla.
+    const PID = 'wl_pid_' + sala;
     const api = {
       send(obj) { if (ws && ws.readyState === 1) ws.send(JSON.stringify(obj)); },
       connected: false,
+      sala,
+      pid: () => localStorage.getItem(PID),
+      forget: () => localStorage.removeItem(PID),
     };
     function open() {
       const proto = location.protocol === 'https:' ? 'wss' : 'ws';
       ws = new WebSocket(`${proto}://${location.host}`);
       ws.onopen = () => {
         retry = 500; api.connected = true;
-        api.send({ type: 'hello', role, playerId: localStorage.getItem('wl_pid') || null });
+        api.send({ type: 'hello', role, sala, playerId: api.pid() || null });
         handlers.onOpen && handlers.onOpen();
       };
       ws.onmessage = ev => {
@@ -23,8 +40,8 @@
           }
           handlers.onState(msg.state);
         }
-        else if (msg.type === 'joined') { localStorage.setItem('wl_pid', msg.playerId); handlers.onJoined && handlers.onJoined(msg.playerId); }
-        else if (msg.type === 'kicked') { localStorage.removeItem('wl_pid'); handlers.onKicked && handlers.onKicked(); }
+        else if (msg.type === 'joined') { localStorage.setItem(PID, msg.playerId); handlers.onJoined && handlers.onJoined(msg.playerId); }
+        else if (msg.type === 'kicked') { api.forget(); handlers.onKicked && handlers.onKicked(); }
       };
       ws.onclose = () => {
         api.connected = false;

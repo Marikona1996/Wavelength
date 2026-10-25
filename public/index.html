@@ -136,9 +136,11 @@
       </div>
       <div class="card join-box">
         <div class="pill">Entra desde tu celular</div>
-        <div style="margin-top:14px"><img id="qr" alt="QR para unirse" src="/api/qr.svg"></div>
+        <div style="margin-top:14px"><img id="qr" alt="QR para unirse"></div>
         <div class="url" id="joinUrl">…</div>
-        <div class="muted">Misma red WiFi · escanea el QR o escribe la dirección</div>
+        <div class="muted">Escanea el QR o escribe la dirección</div>
+        <div style="margin-top:10px">Código de sala: <b id="salaCode" style="font-size:1.6rem;letter-spacing:.15em">…</b></div>
+        <div class="muted" style="font-size:.8rem;margin-top:6px">¿Otra partida aparte? Abre <a href="/" style="color:inherit">esta página</a> en otra pestaña o compu: cada una crea su propia sala.</div>
       </div>
     </section>
 
@@ -185,7 +187,7 @@
   <button class="btn ghost" id="resetBtn">Reiniciar juego</button>
 </div>
 
-<script src="client.js?v=3"></script>
+<script src="client.js?v=4"></script>
 <script src="dial.js?v=3"></script>
 <script>
 const $ = id => document.getElementById(id);
@@ -224,9 +226,10 @@ function rosterHTML(players, team, psychicId, withKick) {
 function render() {
   if (!S) return;
   const A = S.teams.A, B = S.teams.B;
-  $('topInfo').innerHTML = S.phase === 'lobby' ? `<span class="pill">Sala abierta</span>` :
+  const salaPill = `<span class="pill">Sala <b>${esc(S.sala)}</b></span> `;
+  $('topInfo').innerHTML = salaPill + (S.phase === 'lobby' ? `<span class="pill">Sala abierta</span>` :
     S.phase === 'finished' ? `<span class="pill">Juego terminado</span>` :
-    `<span class="pill">Ronda ${S.round}</span> <span class="pill">Meta: ${S.settings.points} pts</span> <span>Turno de <b class="team-${S.turnTeam} team-color">${esc(S.teams[S.turnTeam].name)}</b></span>`;
+    `<span class="pill">Ronda ${S.round}</span> <span class="pill">Meta: ${S.settings.points} pts</span> <span>Turno de <b class="team-${S.turnTeam} team-color">${esc(S.teams[S.turnTeam].name)}</b></span>`);
 
   $('skipBtn').classList.toggle('hidden', !['psychic', 'guessing', 'counter'].includes(S.phase));
   $('repeatBtn').classList.toggle('hidden', !['psychic', 'guessing', 'counter', 'reveal'].includes(S.phase));
@@ -242,8 +245,11 @@ function render() {
     $('rosterB').innerHTML = rosterHTML(S.players, 'B', null, true);
     // Si la pantalla se abrió por IP o por un dominio (publicado en internet),
     // esa misma dirección es la que deben usar los celulares.
-    const propia = /^(localhost|127\.0\.0\.1|\[::1\])$/.test(location.hostname) ? null : location.origin + '/jugar';
+    const propia = /^(localhost|127\.0\.0\.1|\[::1\])$/.test(location.hostname) ? null : location.origin + '/jugar?sala=' + S.sala;
     $('joinUrl').textContent = (propia || S.joinUrl).replace(/^https?:\/\//, '');
+    $('salaCode').textContent = S.sala;
+    const qrSrc = '/api/qr.svg?sala=' + encodeURIComponent(S.sala);
+    if ($('qr').getAttribute('src') !== qrSrc) $('qr').setAttribute('src', qrSrc);
     const icons = { '01_basicas': '🃏', '02_spicy': '🌶️' };
     $('deckPick').innerHTML = (S.decks || []).map(d =>
       `<button type="button" data-deck="${d.id}" class="${S.settings.deck === d.id ? 'sel' : ''}"><div class="dn"><span class="badge">${icons[d.id] || '🗂️'}</span>${esc(d.nombre)}</div><div class="dc">${esc(d.descripcion)}</div><span class="dk">${d.tarjetas} tarjetas · ${d.tarjetas * 2} lados</span></button>`
