@@ -34,7 +34,14 @@ function localIP() {
   return 'localhost';
 }
 const IP = localIP();                              // solo para el mensaje de arranque
-const joinUrlLocal = () => `http://${localIP()}:${PORT}/jugar`;  // se recalcula: la IP puede cambiar
+// La IP puede cambiar, pero preguntarla es lento: se revisa como máximo una vez por minuto
+// (antes se preguntaba por cada celular en cada movimiento de la flecha y saturaba el servidor).
+let ipCache = IP, ipCacheAt = Date.now();
+function localIPReciente() {
+  if (Date.now() - ipCacheAt > 60000) { ipCache = localIP(); ipCacheAt = Date.now(); }
+  return ipCache;
+}
+const joinUrlLocal = () => `http://${localIPReciente()}:${PORT}/jugar`;
 const esLocal = h => !h || /^(localhost|127\.0\.0\.1|\[::1\])(:|$)/.test(h);
 function joinUrlDe(req) {
   const host = req && req.headers && req.headers.host;
@@ -598,6 +605,16 @@ app.use((_req, res, next) => { res.set('Cache-Control', 'no-store, no-cache, mus
 app.use(express.static(path.join(__dirname, 'public'), { etag: false, lastModified: false, maxAge: 0 }));
 app.get('/jugar', (_req, res) => res.sendFile(path.join(__dirname, 'public', 'jugar.html')));
 app.get('/api/info', (req, res) => res.json({ ip: IP, port: PORT, joinUrl: joinUrlDe(req) }));
+// Código para una sala nueva que no esté en uso (sin 0/O ni 1/I para que no se confundan)
+app.get('/api/sala-nueva', (_req, res) => {
+  const letras = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+  let code;
+  do {
+    code = '';
+    for (let i = 0; i < 4; i++) code += letras[crypto.randomInt(letras.length)];
+  } while (rooms.has(code));
+  res.json({ sala: code });
+});
 app.get('/api/qr.svg', async (req, res) => {
   const code = limpiaCodigo(req.query.sala);
   const svg = await QRCode.toString(joinUrlDe(req) + (code ? '?sala=' + code : ''), { type: 'svg', margin: 1, color: { dark: '#010625', light: '#ffffff' } });
