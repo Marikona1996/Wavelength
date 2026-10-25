@@ -286,6 +286,15 @@ function startTurn() {
   state.phase = 'psychic';
 }
 
+// Si se va (o se quita) el psíquico mientras saca tarjeta / piensa su pista,
+// el turno pasa al siguiente de su equipo para que la partida no se trabe.
+function quitarJugador(id) {
+  if (!state.players[id]) return;
+  log('salió:', state.players[id].name);
+  delete state.players[id];
+  if (id === state.psychicId && state.phase === 'psychic') startTurn();
+}
+
 function nextTurn() {
   if (reachedGoal()) return finishGame(); // alguien llegó a la meta: se acaba el juego
   state.turn++;
@@ -427,7 +436,18 @@ function handleInRoom(client, msg) {
     const name = String(msg.name || '').trim().slice(0, 24);
     const team = msg.team === 'B' ? 'B' : 'A';
     if (!name) return;
-    let id = client.playerId && state.players[client.playerId] ? client.playerId : (msg.playerId && state.players[msg.playerId] ? msg.playerId : uid());
+    let id = client.playerId && state.players[client.playerId] ? client.playerId : (msg.playerId && state.players[msg.playerId] ? msg.playerId : null);
+    if (!id) {
+      // ¿Volvió alguien que perdió el link o cambió de celular? Si entra con el mismo
+      // nombre, retoma su lugar (equipo, fila y turno de psíquico) en vez de duplicarse.
+      const mismo = Object.values(state.players).find(p => p.name.trim().toLowerCase() === name.toLowerCase());
+      if (mismo && mismo.connected) {
+        client.ws.send(JSON.stringify({ type: 'error', message: `Ya hay alguien conectado como "${mismo.name}". Usa otro nombre.` }));
+        return;
+      }
+      id = mismo ? mismo.id : uid();
+      if (mismo) log('volvió a entrar:', mismo.name);
+    }
     if (!state.players[id]) state.players[id] = { id, joinedAt: Date.now() };
     Object.assign(state.players[id], { name, team, connected: true });
     client.playerId = id;
@@ -436,7 +456,7 @@ function handleInRoom(client, msg) {
   }
 
   if (type === 'leave' && client.playerId) {
-    delete state.players[client.playerId];
+    quitarJugador(client.playerId);
     client.playerId = null;
     return broadcast();
   }
@@ -556,7 +576,7 @@ function handleInRoom(client, msg) {
     return broadcast();
   }
   if (type === 'kick' && msg.playerId) {
-    delete state.players[msg.playerId];
+    quitarJugador(msg.playerId);
     for (const c of clients) if (c.room === room && c.playerId === msg.playerId) { c.playerId = null; c.ws.send(JSON.stringify({ type: 'kicked' })); }
     return broadcast();
   }
