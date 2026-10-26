@@ -1,4 +1,4 @@
-// Wavelength virtual — servidor de juego en tiempo real (Express + WebSocket)
+// Sintonizados — servidor de juego en tiempo real (Express + WebSocket)
 // Pantalla principal: http://localhost:3000   |  Celulares: http://<IP-local>:3000/jugar
 const crypto = require('crypto');
 const express = require('express');
@@ -178,8 +178,10 @@ const SALA_VENCE = 12 * 60 * 60 * 1000; // una sala sin movimiento por 12 h se b
 let saveTimer = null;
 function saveNow() {
   clearTimeout(saveTimer); saveTimer = null;
+  // Sin el mazo pendiente (~30 KB por sala): el archivo se reescribe completo en cada
+  // cambio de fase de cualquier sala. Si el servidor se reinicia, el mazo se vuelve a barajar.
   const salas = {};
-  for (const r of rooms.values()) salas[r.code] = { touched: r.touched, state: r === room ? state : r.state };
+  for (const r of rooms.values()) salas[r.code] = { touched: r.touched, state: { ...(r === room ? state : r.state), deck: [] } };
   try {
     fs.writeFileSync(STATE_FILE, JSON.stringify({ v: STATE_VERSION, rooms: salas }));
   } catch (e) { console.error('No se pudo guardar la partida:', e.message); }
@@ -499,7 +501,12 @@ function handleInRoom(client, msg) {
     const a = Number(msg.angle);
     if (!Number.isFinite(a)) return;
     state.needle = Math.max(0, Math.min(180, Math.round(a * 10) / 10));
-    return broadcast();
+    // Mientras se arrastra solo viaja la posición (~30 bytes) y no el estado completo
+    // (~2 KB por celular): es lo que más carga al servidor.
+    saveState();
+    const aviso = JSON.stringify({ type: 'needle', angle: state.needle });
+    for (const c of clients) if (c.room === room && c.ws.readyState === 1) c.ws.send(aviso);
+    return;
   }
   if (type === 'lock' && state.phase === 'guessing' && isActiveTeam) {
     if (isPsychic && teamPlayers(state.turnTeam).length > 1) return;
@@ -686,7 +693,7 @@ server.on('error', e => {
 });
 server.listen(PORT, '0.0.0.0', () => {
   console.log('');
-  console.log('  WAVELENGTH virtual');
+  console.log('  SINTONIZADOS');
   console.log(`  Pantalla principal:  http://localhost:${PORT}`);
   console.log(`  Celulares (misma WiFi):  ${joinUrlLocal()}`);
   console.log('');
