@@ -3,106 +3,111 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Wavelength — Pantalla</title>
-<link rel="stylesheet" href="style.css?v=3">
+<title>Sintonizados — Pantalla</title>
+<link rel="stylesheet" href="style.css?v=10">
 <style>
   .page { min-height: 100vh; display: flex; flex-direction: column; }
   .topbar {
-    display: flex; align-items: center; justify-content: space-between;
-    padding: 18px 32px; border-bottom: 1px solid var(--line);
+    display: flex; align-items: center; justify-content: space-between; gap: 18px;
+    padding: 14px 32px; border-bottom: 1.5px solid var(--line);
   }
-  .topbar .wordmark { font-size: 1.5rem; }
-  .topbar .info { display: flex; gap: 12px; align-items: center; color: var(--muted); font-weight: 600; }
-  main { flex: 1; padding: 24px 32px 32px; }
+  .topbar .izq { display: flex; align-items: center; gap: 18px; }
+  .topbar .wordmark { font-size: 1.6rem; }
+  .topbar .info { display: flex; gap: 8px; align-items: center; }
+  .footer-tools { display: flex; gap: 6px; flex-wrap: wrap; justify-content: flex-end; }
+  .footer-tools .btn { padding: 6px 13px; font-size: .78rem; font-weight: 600; background: transparent; color: var(--ink-2); border: 1.5px solid rgba(42,38,34,.3); }
+  .footer-tools .btn:hover { color: var(--ink); border-color: var(--ink); box-shadow: none; }
+  main { flex: 1; display: flex; flex-direction: column; padding: 26px 36px 30px; }
+  main > section { width: 100%; }
 
   /* Lobby */
-  .lobby { max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: 1.2fr 1fr; gap: 28px; }
-  .lobby h1 { margin: 0 0 4px; font-size: 3.4rem; letter-spacing: .3em; text-indent: .3em; }
-  .lobby .tagline { font-size: 1.15rem; margin-bottom: 26px; }
-  .field label { display: block; font-weight: 600; color: var(--muted); margin: 0 0 6px 4px; font-size: .9rem; text-transform: uppercase; letter-spacing: .08em; }
+  .lobby { max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: 1.2fr 1fr; gap: 32px; }
+  .lobby h1 { margin: 0 0 6px; font-size: 4rem; }
+  .lobby .tagline { font-size: 1.15rem; margin-bottom: 22px; }
+  .field label { display: block; font-weight: 700; color: var(--ink-2); margin: 0 0 6px 4px; font-size: .78rem; text-transform: uppercase; letter-spacing: .1em; }
   .teams-form { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
-  .team-box { border-top: 5px solid var(--team); }
-  .team-box h3 { margin: 0 0 10px; font-size: 1.3rem; color: var(--team); }
-  .roster { display: flex; flex-wrap: wrap; gap: 8px; min-height: 40px; }
+  .team-box { background: var(--team-soft); }
+  .team-box h3 { margin: 0 0 10px; font-size: 1.3rem; color: var(--team-ink); }
+  .roster { display: flex; flex-wrap: wrap; gap: 6px; min-height: 32px; }
   .roster .empty { color: var(--muted); font-weight: 500; }
-  .deck-pick { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-top: 18px; }
-  .deck-pick button { text-align: left; font: inherit; color: #fff; cursor: pointer; background: var(--panel); border: 3px solid transparent; border-radius: 16px; padding: 14px 16px; transition: border-color .15s, transform .15s; }
-  .deck-pick button:hover { transform: translateY(-2px); }
-  .deck-pick button.sel { border-color: var(--blue); background: color-mix(in srgb, var(--blue) 14%, var(--panel)); }
-  .deck-pick .dn { font-weight: 800; font-size: 1.15rem; display: flex; align-items: center; gap: 8px; }
-  .deck-pick .dc { color: var(--muted); font-size: .85rem; margin-top: 4px; line-height: 1.3; }
-  .deck-pick .dk { display: inline-block; margin-top: 8px; font-size: .75rem; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; color: var(--blue); }
+  .deck-pick { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-top: 4px; }
+  .deck-pick button { text-align: left; font: inherit; color: var(--ink); cursor: pointer; background: var(--paper); border: 2px solid rgba(42,38,34,.3); border-radius: 16px; padding: 14px 16px; transition: border-color .15s, box-shadow .15s, transform .15s; }
+  .deck-pick button:hover { border-color: var(--ink); transform: translateY(-1px); }
+  .deck-pick button.sel { background: var(--mustard-soft); border-color: var(--ink); box-shadow: var(--shadow); }
+  .deck-pick .dn { font-weight: 800; font-size: 1.1rem; display: flex; align-items: center; gap: 8px; }
+  .deck-pick .dc { color: var(--ink-2); font-size: .85rem; margin-top: 4px; line-height: 1.3; }
+  .deck-pick .dk { display: inline-block; margin-top: 8px; font-size: .72rem; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
   .deck-pick .badge { font-size: 1.2rem; }
-  .join-box { text-align: center; }
-  .join-box img { width: 220px; height: 220px; border-radius: 16px; background: #fff; padding: 6px; }
-  .join-box .url { font-size: 1.5rem; font-weight: 800; color: var(--blue); word-break: break-all; margin: 14px 0 4px; }
+  .join-box { text-align: center; background: var(--blue-soft); align-self: start; }
+  .join-box img { width: 220px; height: 220px; border-radius: 16px; background: #fff; padding: 8px; border: 2px solid var(--ink); }
+  .join-box .url { font-size: 1.3rem; font-weight: 800; color: var(--ink); word-break: break-all; margin: 14px 0 4px; }
+  .join-box .muted { color: var(--ink-2); }
 
-  /* Juego */
-  .game { max-width: 1400px; margin: 0 auto; display: grid; grid-template-columns: 260px 1fr 260px; gap: 28px; align-items: start; }
-  .score { text-align: center; border-top: 6px solid var(--team); transition: box-shadow .3s, transform .3s; }
-  .score.active { box-shadow: 0 0 0 3px var(--team), 0 18px 50px rgba(0,0,0,.4); transform: translateY(-4px); }
-  .score h2 { margin: 0; font-size: 1.35rem; color: var(--team); }
-  .score .pts { font-size: 5rem; font-weight: 800; line-height: 1; margin: 10px 0 6px; }
-  .score .roster { justify-content: center; }
-  .score .turn-tag { display: block; margin-top: 8px; font-size: .8rem; letter-spacing: .1em; text-transform: uppercase; color: var(--team); font-weight: 700; min-height: 1em; }
-  .stage { text-align: center; }
-  .stage .status { min-height: 92px; margin-bottom: 8px; }
-  .stage .status h2 { margin: 0 0 6px; font-size: 2rem; }
-  .stage .status p { margin: 0; color: var(--muted); font-size: 1.15rem; font-weight: 500; }
-  .stage .dial-labels { font-size: 1.45rem; padding: 0 12px; }
-  .stage .clue { max-width: 100%; white-space: pre-wrap; overflow-wrap: anywhere; }
-  /* El dial nunca debe empujar los extremos fuera de la pantalla (TVs poco altas) */
-  .stage .dial-wrap { max-width: min(100%, 68vh); margin: 0 auto; }
-  .stage .dial-labels .l, .stage .dial-labels .r { overflow-wrap: anywhere; }
-  .stage .timer { font-size: 2.2rem; padding: 6px 22px; margin-top: 10px; }
-  .controls { margin-top: 18px; display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
-  .votebars { display: flex; gap: 14px; justify-content: center; margin: 10px 0 0; }
-  .votebars .vb { min-width: 150px; padding: 10px 18px; border-radius: 12px; background: var(--panel); font-weight: 700; font-size: 1.2rem; }
-  .votebars .vb b { display: block; font-size: 2rem; }
-  .result-line { font-size: 1.35rem; font-weight: 600; margin: 4px 0; }
-  .hint { color: var(--muted); font-size: .85rem; margin-top: 10px; }
+  /* Juego: franja de marcador arriba, dial a todo lo ancho, controles abajo */
+  .game { flex: 1; display: flex; flex-direction: column; gap: 2.4vh; }
+  .marcador { display: grid; grid-template-columns: minmax(220px, 1fr) minmax(0, 1.8fr) minmax(220px, 1fr); gap: 28px; align-items: start; }
+  /* Cada equipo conserva SIEMPRE su color; el turno se marca con un aro y la etiqueta */
+  .score { display: grid; grid-template-columns: 1fr auto; grid-template-areas: "nombre pts" "gente pts" "tag tag"; column-gap: 14px; row-gap: 10px; align-items: center; background: var(--team-soft); padding: 18px 22px; transition: box-shadow .3s; }
+  .score.active { box-shadow: 0 0 0 4px var(--bg), 0 0 0 7px var(--team), var(--shadow); }
+  .score h2 { grid-area: nombre; margin: 0; font-size: clamp(1.2rem, 1.6vw, 1.7rem); line-height: 1.1; }
+  .score .pts { grid-area: pts; font-size: clamp(3.4rem, 5.6vw, 6rem); font-weight: 800; line-height: .85; letter-spacing: -0.04em; color: var(--team-ink); }
+  .score .roster { grid-area: gente; min-height: 0; }
+  .score .roster .chip { font-size: .78rem; padding: 2px 9px; }
+  .score .turn-tag { grid-area: tag; justify-self: start; display: inline-flex; align-items: center; gap: 6px; padding: 4px 12px; border-radius: 999px; background: var(--team); border: 1.5px solid var(--ink); font-size: .8rem; letter-spacing: .08em; text-transform: uppercase; font-weight: 800; }
+  .score .turn-tag:empty { display: none; }
+  .status { display: flex; flex-direction: column; align-items: center; gap: 12px; text-align: center; min-width: 0; }
+  .status h2 { margin: 0; font-size: clamp(1.6rem, 2.4vw, 2.6rem); line-height: 1.12; letter-spacing: -0.02em; }
+  .status p { margin: 0; color: var(--ink-2); font-size: clamp(1.05rem, 1.3vw, 1.35rem); font-weight: 600; }
+  .status .clue { max-width: 100%; white-space: pre-wrap; overflow-wrap: anywhere; font-size: clamp(1.5rem, 2.3vw, 2.5rem); padding: .28em .9em; }
+  .status .timer { font-size: clamp(1.4rem, 2vw, 2.1rem); }
+  #dialHost { flex: 1; width: 100%; max-width: 1320px; margin: 0 auto; display: flex; flex-direction: column; justify-content: center; }
+  #dialHost .dial-labels { font-size: clamp(1.2rem, 1.8vw, 1.9rem); }
+  .controls { display: flex; gap: 14px; justify-content: center; flex-wrap: wrap; }
+  .controls:empty { display: none; }
+  .controls .btn { font-size: clamp(1rem, 1.2vw, 1.25rem); }
+  .chips-row { display: flex; gap: 8px; justify-content: center; flex-wrap: wrap; }
+  .chips-row .chip { font-size: clamp(.95rem, 1.1vw, 1.15rem); padding: 5px 14px; }
+  .result-line { font-size: clamp(1.2rem, 1.6vw, 1.7rem); font-weight: 700; margin: 0; }
+  .hint { color: var(--ink-2); font-size: clamp(.95rem, 1.05vw, 1.1rem); font-weight: 600; text-align: center; }
+  .hint:empty { display: none; }
+
   /* Inicio: crear sala o entrar a una */
   .inicio { max-width: 920px; margin: 0 auto; text-align: center; }
-  .inicio h1 { margin: 10px 0 4px; font-size: 3.4rem; letter-spacing: .3em; text-indent: .3em; }
+  .inicio h1 { margin: 10px 0 6px; font-size: 4.4rem; }
   .inicio .opciones { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-top: 30px; text-align: left; }
+  .inicio .opciones .card:nth-child(1) { background: var(--blue-soft); }
+  .inicio .opciones .card:nth-child(2) { background: var(--terra-soft); }
+  .inicio .opciones .muted { color: var(--ink-2); }
   .inicio .opciones h2 { margin: 0 0 6px; font-size: 1.4rem; }
   .inicio .opciones p { margin: 0 0 18px; }
   .inicio .codigo { text-transform: uppercase; text-align: center; letter-spacing: .25em; font-size: 1.5rem; }
   .inicio .acciones { display: flex; flex-direction: column; gap: 10px; margin-top: 12px; }
   .inicio .btn { width: 100%; }
-  @media (max-width: 760px) { .inicio .opciones { grid-template-columns: 1fr; } .inicio h1 { font-size: 2.2rem; } }
-  .footer-tools { position: fixed; right: 16px; bottom: 12px; display: flex; gap: 8px; opacity: .55; }
-  .footer-tools:hover { opacity: 1; }
-  .footer-tools .btn { padding: 8px 14px; font-size: .8rem; }
+  @media (max-width: 760px) { .inicio .opciones { grid-template-columns: 1fr; } .inicio h1 { font-size: 2.4rem; } }
 
   /* Final */
-  .final { max-width: 900px; margin: 40px auto 60px; text-align: center; }
-  .final h1 { font-size: 3rem; margin: 6px 0; }
-  .final .winner { font-size: 1.4rem; color: var(--muted); }
-  .final .scores { display: flex; gap: 20px; justify-content: center; margin: 28px 0; }
+  .final { max-width: 900px; margin: 30px auto 60px; text-align: center; }
+  .final h1 { font-size: 3rem; margin: 10px 0 4px; }
+  .final .winner { font-size: 1.3rem; color: var(--ink-2); }
+  .final .scores { display: flex; gap: 20px; justify-content: center; margin: 26px 0; }
   .final .scores .score { min-width: 260px; }
-  .final table { width: 100%; border-collapse: collapse; margin-top: 10px; font-weight: 500; }
-  .final td, .final th { padding: 8px 10px; border-bottom: 1px solid var(--line); text-align: left; }
-  .final th { color: var(--muted); font-size: .8rem; text-transform: uppercase; letter-spacing: .08em; }
+  .final table { width: 100%; border-collapse: collapse; margin-top: 4px; font-weight: 500; }
+  .final td, .final th { padding: 9px 10px; border-bottom: 1px solid var(--line); text-align: left; }
+  .final th { color: var(--muted); font-size: .75rem; text-transform: uppercase; letter-spacing: .1em; }
 
-  .offline { position: fixed; top: 0; left: 0; right: 0; background: var(--coral); color: #fff; text-align: center; padding: 6px; font-weight: 700; z-index: 10; }
+  .offline { position: fixed; top: 0; left: 0; right: 0; background: var(--tomato); color: #fff; text-align: center; padding: 6px; font-weight: 700; z-index: 10; }
   /* Pantallas poco altas (TV 720p, laptops): todo debe caber sin scroll */
   @media (max-height: 820px) {
-    main { padding: 12px 24px 16px; }
-    .stage .status { min-height: 64px; margin-bottom: 4px; }
-    .stage .status h2 { font-size: 1.6rem; }
-    .stage .status p { font-size: 1rem; }
-    .stage .dial-wrap { max-width: min(100%, 74vh); }
-    .stage .dial-labels { font-size: 1.15rem; }
-    .stage .timer { font-size: 1.6rem; padding: 4px 16px; margin-top: 6px; }
-    .clue { font-size: 1.25rem; padding: 6px 16px; }
-    .controls { margin-top: 10px; }
-    .score .pts { font-size: 3.4rem; }
-    .hint { margin-top: 6px; }
+    main { padding: 16px 28px 18px; }
+    .game { gap: 1.6vh; }
+    .score { padding: 14px 18px; }
+    .status { gap: 8px; }
+    #dialHost { max-width: min(1320px, 175vh); }
   }
   @media (max-width: 1000px) {
-    .lobby, .game { grid-template-columns: 1fr; }
-    .lobby h1 { font-size: 2.2rem; }
+    .lobby, .marcador { grid-template-columns: 1fr; }
+    .lobby h1 { font-size: 2.4rem; }
+    .topbar { flex-wrap: wrap; }
   }
 </style>
 </head>
@@ -110,14 +115,19 @@
 <div id="offline" class="offline hidden">Reconectando con el servidor…</div>
 <div class="page">
   <header class="topbar">
-    <div class="wordmark">Wavelength</div>
-    <div class="info" id="topInfo"></div>
+    <div class="izq"><div class="wordmark">sintonizados</div><div class="info" id="topInfo"></div></div>
+    <div class="footer-tools">
+      <button class="btn" id="repeatBtn" title="Vuelve a empezar esta ronda con el mismo psíquico y otra tarjeta (por si alguien se desconectó)">↻ Repetir ronda</button>
+      <button class="btn" id="skipBtn" title="Pasa al siguiente psíquico del mismo equipo con otra tarjeta">Saltar turno</button>
+      <button class="btn" id="endBtn" title="Termina la partida ahora y muestra los resultados">Terminar partida</button>
+      <button class="btn" id="resetBtn">Reiniciar juego</button>
+    </div>
   </header>
   <main>
     <!-- INICIO: el enlace que se comparte; cada grupo abre su propia sala -->
     <section id="inicio" class="inicio hidden">
-      <h1 class="wordmark">Wavelength</h1>
-      <div class="tagline">Un juego de <span class="accent">leer la mente</span> de tu equipo.</div>
+      <h1 class="wordmark">sintonizados</h1>
+      <div class="tagline">¿Qué tan en la <span class="accent">misma frecuencia</span> está tu equipo?</div>
       <div class="bands" style="margin-top:22px"></div>
       <div class="opciones">
         <div class="card">
@@ -140,8 +150,8 @@
     <!-- LOBBY -->
     <section id="lobby" class="lobby hidden">
       <div>
-        <h1 class="wordmark">Wavelength</h1>
-        <div class="tagline">Un juego de <span class="accent">leer la mente</span> de tu equipo.</div>
+        <h1 class="wordmark">sintonizados</h1>
+        <div class="tagline">¿Qué tan en la <span class="accent">misma frecuencia</span> está tu equipo?</div>
         <div class="bands" style="margin-bottom:24px"></div>
         <div class="teams-form">
           <div class="card team-box team-A">
@@ -179,24 +189,24 @@
 
     <!-- JUEGO -->
     <section id="game" class="game hidden">
-      <div class="card score team-A" id="scoreA">
-        <h2 id="gTeamA">Equipo A</h2>
-        <div class="pts" id="ptsA">0</div>
-        <div class="roster" id="gRosterA"></div>
-        <span class="turn-tag" id="tagA"></span>
-      </div>
-      <div class="stage">
+      <div class="marcador">
+        <div class="card score team-A" id="scoreA">
+          <h2 id="gTeamA">Equipo A</h2>
+          <div class="pts" id="ptsA">0</div>
+          <div class="roster" id="gRosterA"></div>
+          <span class="turn-tag" id="tagA"></span>
+        </div>
         <div class="status fade-in" id="status"></div>
-        <div id="dialHost"></div>
-        <div class="controls" id="controls"></div>
-        <div class="hint" id="stageHint"></div>
+        <div class="card score team-B" id="scoreB">
+          <h2 id="gTeamB">Equipo B</h2>
+          <div class="pts" id="ptsB">0</div>
+          <div class="roster" id="gRosterB"></div>
+          <span class="turn-tag" id="tagB"></span>
+        </div>
       </div>
-      <div class="card score team-B" id="scoreB">
-        <h2 id="gTeamB">Equipo B</h2>
-        <div class="pts" id="ptsB">0</div>
-        <div class="roster" id="gRosterB"></div>
-        <span class="turn-tag" id="tagB"></span>
-      </div>
+      <div id="dialHost"></div>
+      <div class="controls" id="controls"></div>
+      <div class="hint" id="stageHint"></div>
     </section>
 
     <!-- FINAL -->
@@ -213,15 +223,9 @@
     </section>
   </main>
 </div>
-<div class="footer-tools">
-  <button class="btn mustard" id="repeatBtn" title="Vuelve a empezar esta ronda con el mismo psíquico y otra tarjeta (por si alguien se desconectó)">↻ Repetir ronda</button>
-  <button class="btn ghost" id="skipBtn" title="Pasa al siguiente psíquico del mismo equipo con otra tarjeta">Saltar turno</button>
-  <button class="btn ghost" id="endBtn" title="Termina la partida ahora y muestra los resultados">🏁 Terminar partida</button>
-  <button class="btn ghost" id="resetBtn">Reiniciar juego</button>
-</div>
 
-<script src="client.js?v=5"></script>
-<script src="dial.js?v=3"></script>
+<script src="client.js?v=9"></script>
+<script src="dial.js?v=9"></script>
 <script>
 const $ = id => document.getElementById(id);
 let S = null, dial = null, lastPhase = null, lastTurn = -1;
@@ -242,6 +246,8 @@ const esc = s => String(s ?? '').replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;
 // Sin código en la dirección: pantalla de inicio (crear sala o entrar a una).
 const game = salaDeUrl() ? connectGame('host', {
   onState: s => { S = s; render(); },
+  // Mientras arrastran la flecha solo llega la posición
+  onNeedle: a => { if (S) S.needle = a; if (dial) dial.set({ needle: a }); },
   onOpen: () => $('offline').classList.add('hidden'),
   onClose: () => $('offline').classList.remove('hidden'),
 }) : null;
@@ -285,7 +291,7 @@ function render() {
   const salaPill = `<span class="pill">Sala <b>${esc(S.sala)}</b></span> `;
   $('topInfo').innerHTML = salaPill + (S.phase === 'lobby' ? `<span class="pill">Sala abierta</span>` :
     S.phase === 'finished' ? `<span class="pill">Juego terminado</span>` :
-    `<span class="pill">Ronda ${S.round}</span> <span class="pill">Meta: ${S.settings.points} pts</span> <span>Turno de <b class="team-${S.turnTeam} team-color">${esc(S.teams[S.turnTeam].name)}</b></span>`);
+    `<span class="pill">Ronda ${S.round}</span> <span class="pill">Meta ${S.settings.points} pts</span>`);
 
   $('skipBtn').classList.toggle('hidden', !['psychic', 'guessing', 'counter'].includes(S.phase));
   $('repeatBtn').classList.toggle('hidden', !['psychic', 'guessing', 'counter', 'reveal'].includes(S.phase));
@@ -325,8 +331,9 @@ function render() {
   $('gRosterB').innerHTML = rosterHTML(S.players, 'B', S.psychicId, true);
   $('scoreA').classList.toggle('active', S.turnTeam === 'A');
   $('scoreB').classList.toggle('active', S.turnTeam === 'B');
-  $('tagA').textContent = S.turnTeam === 'A' ? 'Adivinando' : (S.phase === 'counter' ? 'Decidiendo' : '');
-  $('tagB').textContent = S.turnTeam === 'B' ? 'Adivinando' : (S.phase === 'counter' ? 'Decidiendo' : '');
+  const etiqueta = k => S.turnTeam === k ? '🎯 Su turno' : (S.phase === 'counter' ? '🤔 Decidiendo' : '');
+  $('tagA').textContent = etiqueta('A');
+  $('tagB').textContent = etiqueta('B');
 
   const covered = S.phase !== 'reveal';
   dial.set({ needle: S.needle, target: S.target, covered, left: S.card?.izquierda, right: S.card?.derecha, wedge: S.wedge });
@@ -336,33 +343,33 @@ function render() {
   const tc = `class="team-${S.turnTeam} team-color"`, oc = `class="team-${S.turnTeam === 'A' ? 'B' : 'A'} team-color"`;
   let status = '', controls = '', hint = '';
 
+  // La pista del psíquico se queda visible desde que se da hasta la revelación
+  const pista = S.clue ? `<div class="clue">“${esc(S.clue)}”</div>` : '';
   if (S.phase === 'psychic') {
-    status = `<h2>🔮 <span ${tc}>${esc(psychic?.name || '…')}</span> ${S.side ? 'está pensando su pista' : 'está sacando una tarjeta'}</h2><p class="pulse">Cuando tenga su pista, iniciará la ronda…</p>`;
-    if (psychic && !psychic.connected) hint = `⚠ ${psychic.name} está desconectado. Si ya no va a volver, presiona “Saltar turno” o quítalo con la ✕. Si vuelve a entrar con el mismo nombre, retoma su turno.`;
+    status = `<h2>🔮 <span ${tc}>${esc(psychic?.name || '…')}</span> ${S.side ? 'está pensando su pista' : 'está sacando una tarjeta'}</h2><p class="pulse">Cuando tenga su pista, empieza la ronda</p>`;
+    if (psychic && !psychic.connected) hint = `⚠ ${psychic.name} está desconectado. Si no va a volver, usa “Saltar turno” o quítalo con la ✕.`;
   } else if (S.phase === 'guessing') {
     status = `<h2><span ${tc}>${esc(t.name)}</span> mueve la flecha</h2>` +
-      (S.clue ? `<div class="clue pop">${esc(S.clue)}</div>` : `<p>Pista de ${esc(psychic?.name || 'el psíquico')}: ¡escuchen bien!</p>`) +
-      `<div><span class="timer" id="timer">⏱ <b>--</b></span></div>`;
-    hint = `Tienen ${S.guessSeconds} segundos. Al acabarse el tiempo, la flecha se queda donde esté.`;
+      (pista || `<p>Pista de ${esc(psychic?.name || 'el psíquico')}: ¡escuchen bien!</p>`) +
+      `<span class="timer" id="timer">⏱ <b>--</b></span>`;
   } else if (S.phase === 'counter') {
-    status = `<h2><span ${oc}>${esc(o.name)}</span>: ¿el objetivo está a la izquierda o a la derecha?</h2>` +
-      (S.lockedBy ? `<p>🔒 Flecha bloqueada por <b>${esc(S.lockedBy)}</b></p>` : '') +
-      `<p class="pulse">Que <b>una sola persona</b> del equipo conteste desde su celular.</p>`;
+    const dijo = r => `<span class="chip">${r}</span>`;
+    status = `<h2><span ${oc}>${esc(o.name)}</span>: ¿izquierda o derecha?</h2>` + pista +
+      `<p>¿El objetivo está a la izquierda o a la derecha de la flecha? Contesta <b>una persona</b> desde su celular</p>` +
+      (S.lockedBy ? `<div class="chips-row">${dijo('🔒 Bloqueó <b>' + esc(S.lockedBy) + '</b>')}</div>` : '');
     controls = `<button class="btn ghost" data-force="izq" title="Registrar la respuesta del rival desde la pantalla">◀ Dicen izquierda</button><button class="btn ghost" data-force="der" title="Registrar la respuesta del rival desde la pantalla">Dicen derecha ▶</button>`;
-    hint = 'La primera respuesta decide. Si no tienen el celular a mano, regístrala aquí.';
   } else if (S.phase === 'reveal') {
     const r = S.result;
     const w = r.wedge;
-    status = `<h2 class="pop">${w ? `¡${w} punto${w > 1 ? 's' : ''} para <span ${tc}>${esc(t.name)}</span>!` : `<span ${tc}>${esc(t.name)}</span> no sumó puntos`}</h2>` +
+    const dijoLado = r.correctSide === 'izq' ? (r.counterCorrect ? 'izquierda' : 'derecha') : (r.counterCorrect ? 'derecha' : 'izquierda');
+    status = `<h2 class="pop">${w ? `¡${w} punto${w > 1 ? 's' : ''} para <span ${tc}>${esc(t.name)}</span>!` : `<span ${tc}>${esc(t.name)}</span> no sumó puntos`}</h2>` + pista +
       `<div class="result-line">${w === 4 ? `🎯 ¡Centro exacto! <span ${oc}>${esc(o.name)}</span> no puede sumar.` :
         r.counterCorrect ? `<span ${oc}>${esc(o.name)}</span> acertó (${r.correctSide === 'izq' ? 'izquierda' : 'derecha'}): <b>+1</b>` :
-        `<span ${oc}>${esc(o.name)}</span> falló: el objetivo estaba a la ${r.correctSide === 'izq' ? 'izquierda' : 'derecha'}.`}</div>` +
-      (S.clue ? `<div class="clue" style="font-size:1.1rem;padding:6px 14px;margin-top:6px">${esc(S.clue)}</div>` : '') +
-      `<div class="hint" style="margin-top:6px">${r.lockedBy ? '🔒 Bloqueó <b>' + esc(r.lockedBy) + '</b>' : ''}${r.lockedBy && r.counterBy ? ' · ' : ''}${r.counterBy ? '🗣 <b>' + esc(r.counterBy) + '</b> dijo ' + (r.correctSide === 'izq' ? (r.counterCorrect ? 'izquierda' : 'derecha') : (r.counterCorrect ? 'derecha' : 'izquierda')) : ''}</div>`;
+        `<span ${oc}>${esc(o.name)}</span> falló: estaba a la ${r.correctSide === 'izq' ? 'izquierda' : 'derecha'}`}</div>` +
+      `<div class="chips-row">${r.lockedBy ? `<span class="chip">🔒 Bloqueó <b>${esc(r.lockedBy)}</b></span>` : ''}${r.counterBy ? `<span class="chip">🗣 <b>${esc(r.counterBy)}</b> dijo ${dijoLado}</span>` : ''}</div>`;
     const last = S.reached;
-    if (last) status += `<div class="result-line" style="margin-top:8px">🏆 ¡<span class="team-${S.teams.A.score >= S.teams.B.score ? 'A' : 'B'} team-color">${esc(S.teams.A.score >= S.teams.B.score ? S.teams.A.name : S.teams.B.name)}</span> llegó a ${S.settings.points} puntos!</div>`;
+    if (last) status += `<div class="result-line">🏆 ¡<span class="team-${S.teams.A.score >= S.teams.B.score ? 'A' : 'B'} team-color">${esc(S.teams.A.score >= S.teams.B.score ? S.teams.A.name : S.teams.B.name)}</span> llegó a ${S.settings.points} puntos!</div>`;
     controls = `<button class="btn big" id="nextBtn">${last ? 'Ver resultados finales' : 'Siguiente ronda ▶'}</button>`;
-    hint = 'También puedes presionar Enter o Espacio.';
   }
   timerEnd = S.remainingMs != null ? Date.now() + S.remainingMs : null;
   if (S.phase !== lastPhase || S.turn !== lastTurn) { $('status').classList.remove('fade-in'); void $('status').offsetWidth; $('status').classList.add('fade-in'); }

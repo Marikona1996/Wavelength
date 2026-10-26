@@ -1,146 +1,161 @@
-/* Wavelength virtual — estilos compartidos (pantalla + celular)
-   Paleta: sitio wavelength.zone (fondo #010625, azul #48C7FB) + caja del juego
-   (bandas coral / salmón / crema / lima / verde / celeste / mostaza, tapa turquesa, perilla roja). */
-@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&display=swap');
+/* Sintonizados — estilos compartidos (pantalla + celular)
+   Temática ilustrada: papel crema con grano, bloques de color empolvados y trazo fino de tinta,
+   como de dibujo a mano; los cables de "teléfono de latas" conectan todo. */
+@import url('https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,500;12..96,600;12..96,700;12..96,800&display=swap');
 
 :root {
-  --bg: #010625;
-  --bg-2: #0a1040;
-  --panel: #161a3d;
-  --panel-2: #2b2e4c;
-  --line: rgba(255, 255, 255, 0.12);
-  --white: #ffffff;
-  --muted: rgba(255, 255, 255, 0.62);
-  --blue: #48c7fb;
-  --sky: #5db5e8;
-  --coral: #e85a3a;
-  --salmon: #f6a79a;
-  --cream: #f3e3be;
-  --lime: #b5d97a;
-  --green: #4fa07c;
-  --forest: #3c6b4c;
-  --mustard: #e1a63e;
-  --mauve: #7b5c70;
-  --teal: #3fb3a5;      /* tapa del dispositivo */
-  --red: #d9362b;       /* perilla / flecha */
-  --w2: #f2c94c;        /* cuña 2 pts */
-  --w3: #f08a3e;        /* cuña 3 pts */
-  --w4: #e4402e;        /* cuña 4 pts */
-  --teamA: var(--sky);
-  --teamB: var(--coral);
-  --radius: 18px;
-  --font: 'Outfit', 'GT Walsheim', 'Segoe UI', system-ui, -apple-system, Arial, sans-serif;
+  --bg: #f6efe2;          /* papel */
+  --paper: #fffbf3;       /* tarjetas, barra del dial */
+  --panel: #fffbf3;
+  --panel-2: #efe5d2;
+  --ink: #2a2622;         /* trazo */
+  --ink-2: #5a524a;       /* texto secundario */
+  --line: rgba(42, 38, 34, 0.14);
+  --muted: rgba(42, 38, 34, 0.6);
+  /* paleta empolvada */
+  --blue: #8fb1d9;
+  --blue-soft: #d9e6f3;
+  --terra: #e39a7b;
+  --terra-soft: #f6dccf;
+  --mustard: #e8c46a;
+  --mustard-soft: #f6e7bd;
+  --sage: #a9c9a4;
+  --sage-soft: #dcebd8;
+  --tomato: #d9604f;
+  /* alias que usan las pantallas */
+  --yellow: var(--mustard);
+  --orange: var(--terra);
+  --red: var(--tomato);
+  --green: var(--sage);
+  --cover: #9db8dc;               /* tapa del dial */
+  --extremo-izq: var(--mustard);  /* extremo izquierdo de la tarjeta */
+  --extremo-der: var(--sage);     /* extremo derecho de la tarjeta */
+  --w2: #f2d98f;          /* cuña 2 pts */
+  --w3: #eda672;          /* cuña 3 pts */
+  --w4: #d9604f;          /* cuña 4 pts */
+  --teamA: var(--blue);  --teamA-soft: var(--blue-soft);  --teamA-ink: #2f5f97;
+  --teamB: var(--terra); --teamB-soft: var(--terra-soft); --teamB-ink: #a9492a;
+  --radius: 20px;
+  --stroke: 2px;
+  --shadow: 0 1px 0 rgba(42,38,34,.08), 0 10px 28px -12px rgba(42,38,34,.28);
+  --font: 'Bricolage Grotesque', 'Segoe UI', system-ui, -apple-system, Arial, sans-serif;
 }
 
 * { box-sizing: border-box; }
 html, body { margin: 0; min-height: 100%; }
+/* el grano de papel lo pone client.js en <html> como una imagen chica (un filtro SVG era muy lento) */
+html { background-color: var(--bg); }
 body {
-  background: var(--bg);
-  color: var(--white);
+  min-height: 100vh;
+  color: var(--ink);
   font-family: var(--font);
   -webkit-font-smoothing: antialiased;
   overflow-x: hidden;
   position: relative;
 }
-canvas.stars {
+/* cables decorativos de fondo (los dibuja client.js) */
+svg.cables {
   position: fixed; inset: 0; width: 100%; height: 100%;
-  z-index: 0; pointer-events: none;
+  z-index: 0; pointer-events: none; opacity: .11;
 }
 .page { position: relative; z-index: 1; }
 
 .wordmark {
-  font-weight: 700;
-  letter-spacing: 0.32em;
-  text-transform: uppercase;
-  color: var(--white);
-  text-indent: 0.32em;
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  color: var(--ink);
+  line-height: 1;
 }
-.tagline { color: var(--muted); font-weight: 500; }
-.accent { color: var(--blue); }
+.tagline { color: var(--ink-2); font-weight: 500; }
+.accent { color: var(--tomato); }
 
 /* ---------- componentes ---------- */
 .btn {
-  appearance: none; border: 0; cursor: pointer;
-  font: inherit; font-weight: 700; letter-spacing: 0.04em;
-  padding: 14px 26px; border-radius: 999px;
-  background: var(--blue); color: #021;
-  transition: transform .12s ease, filter .12s ease, opacity .2s;
+  appearance: none; cursor: pointer;
+  font: inherit; font-weight: 700; letter-spacing: 0.01em;
+  padding: 12px 26px; border-radius: 999px;
+  background: var(--ink); color: var(--paper);
+  border: var(--stroke) solid var(--ink);
+  transition: transform .12s ease, box-shadow .15s ease, background .15s, opacity .2s;
   touch-action: manipulation; user-select: none;
 }
-.btn:hover { filter: brightness(1.08); }
-.btn:active { transform: scale(.97); }
-.btn:disabled { opacity: .4; cursor: not-allowed; transform: none; }
-.btn.ghost { background: transparent; color: var(--white); border: 2px solid var(--line); }
-.btn.ghost:hover { border-color: rgba(255,255,255,.35); }
-.btn.coral { background: var(--coral); color: #fff; }
-.btn.red { background: var(--red); color: #fff; }
-.btn.lime { background: var(--lime); color: #12210a; }
-.btn.mustard { background: var(--mustard); color: #221500; }
-.btn.big { font-size: 1.25rem; padding: 18px 34px; }
+.btn:hover { transform: translateY(-1px); box-shadow: 0 6px 16px -8px rgba(42,38,34,.5); }
+.btn:active { transform: translateY(1px); box-shadow: none; }
+.btn:disabled { opacity: .35; cursor: not-allowed; transform: none; box-shadow: none; }
+.btn.ghost { background: transparent; color: var(--ink); }
+.btn.ghost:hover { background: rgba(42,38,34,.05); }
+.btn.coral, .btn.red { background: var(--tomato); border-color: var(--tomato); color: #fff; }
+.btn.lime { background: var(--sage); border-color: var(--ink); color: var(--ink); }
+.btn.mustard { background: var(--mustard); border-color: var(--ink); color: var(--ink); }
+.btn.blue { background: var(--blue); border-color: var(--ink); color: var(--ink); }
+.btn.big { font-size: 1.15rem; padding: 15px 32px; }
 .btn.block { display: block; width: 100%; }
 
 .input {
-  width: 100%; font: inherit; font-weight: 600; color: var(--white);
-  background: var(--panel); border: 2px solid var(--line);
-  border-radius: 14px; padding: 14px 16px; outline: none;
-  transition: border-color .15s;
+  width: 100%; font: inherit; font-weight: 600; color: var(--ink);
+  background: var(--paper); border: var(--stroke) solid rgba(42,38,34,.35);
+  border-radius: 14px; padding: 13px 16px; outline: none;
+  transition: border-color .15s, box-shadow .15s;
 }
-.input:focus { border-color: var(--blue); }
-.input::placeholder { color: rgba(255,255,255,.35); font-weight: 500; }
+.input:focus { border-color: var(--ink); box-shadow: 0 0 0 4px rgba(143,177,217,.45); }
+.input::placeholder { color: rgba(42,38,34,.38); font-weight: 500; }
 select.input { appearance: none; }
 
 .card {
-  background: linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.02));
-  border: 1px solid var(--line);
+  background: var(--paper);
+  border: var(--stroke) solid var(--ink);
   border-radius: var(--radius);
   padding: 20px;
-  backdrop-filter: blur(6px);
+  box-shadow: var(--shadow);
 }
 
 .chip {
   display: inline-flex; align-items: center; gap: 6px;
-  padding: 6px 12px; border-radius: 999px;
-  background: rgba(255,255,255,.08); border: 1px solid var(--line);
-  font-weight: 600; font-size: .9rem;
+  padding: 4px 11px; border-radius: 999px;
+  background: rgba(255,251,243,.75); border: 1.5px solid rgba(42,38,34,.55);
+  font-weight: 600; font-size: .88rem;
 }
-.chip.off { opacity: .4; text-decoration: line-through; }
-.chip .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--lime); }
-.chip.off .dot { background: var(--coral); }
+.chip.off { opacity: .45; text-decoration: line-through; }
+.chip .dot { width: 8px; height: 8px; border-radius: 50%; background: #6aa86b; }
+.chip.off .dot { background: var(--tomato); }
 
-.team-A { --team: var(--teamA); }
-.team-B { --team: var(--teamB); }
-.team-color { color: var(--team); }
+.team-A { --team: var(--teamA); --team-soft: var(--teamA-soft); --team-ink: var(--teamA-ink); }
+.team-B { --team: var(--teamB); --team-soft: var(--teamB-soft); --team-ink: var(--teamB-ink); }
+.team-color { color: var(--team-ink); }
 
-/* Bandas de la caja (motivo decorativo) */
+/* Franja de colores (motivo decorativo) */
 .bands {
-  height: 10px; width: 100%; border-radius: 999px; overflow: hidden;
+  height: 8px; width: 100%; border-radius: 999px; overflow: hidden;
   background: linear-gradient(90deg,
-    var(--coral) 0 12%, var(--salmon) 12% 24%, var(--cream) 24% 36%,
-    var(--lime) 36% 48%, var(--green) 48% 60%, var(--forest) 60% 72%,
-    var(--sky) 72% 84%, var(--mustard) 84% 100%);
+    var(--blue) 0 25%, var(--mustard) 25% 50%, var(--terra) 50% 75%, var(--sage) 75% 100%);
 }
 
-/* ---------- dial ---------- */
+/* ---------- dial (línea) ---------- */
 .dial-wrap { position: relative; width: 100%; }
 .dial-wrap svg { width: 100%; height: auto; display: block; overflow: visible; }
 .dial-wrap.interactive svg { touch-action: none; cursor: grab; }
 .dial-wrap.interactive.dragging svg { cursor: grabbing; }
-.dial-cover {
-  transform-origin: 500px 520px;
-  transition: transform .9s cubic-bezier(.65, 0, .25, 1), opacity .3s .6s;
-}
-.dial-cover.open { transform: rotate(180deg); opacity: 0; }
-.dial-needle { transform-origin: 500px 520px; transition: transform .14s ease-out; }
+.dial-cover { transition: transform .8s cubic-bezier(.65, 0, .25, 1), opacity .35s .5s; }
+.dial-cover.open { transform: translateY(-140px); opacity: 0; }
+.dial-needle { transition: transform .14s ease-out; }
 .dial-wrap.dragging .dial-needle { transition: none; }
-.dial-target { transform-origin: 500px 520px; }
+/* Extremos de la tarjeta: una etiqueta por lado, del color de su extremo */
 .dial-labels {
-  display: flex; justify-content: space-between; gap: 12px;
-  margin-top: 8px; font-weight: 700; font-size: 1.1rem; line-height: 1.15;
+  display: flex; justify-content: space-between; gap: 16px;
+  margin-top: 2px; font-weight: 700; font-size: 1.1rem; line-height: 1.15;
 }
-.dial-labels .l, .dial-labels .r { flex: 1; }
-.dial-labels .l { text-align: left; }
-.dial-labels .r { text-align: right; }
-.dial-labels .arrow { color: var(--blue); }
+.dial-labels .l, .dial-labels .r {
+  display: flex; align-items: center; gap: .45em;
+  max-width: 46%; padding: .45em .9em; border-radius: 14px;
+  border: var(--stroke) solid var(--ink); overflow-wrap: anywhere;
+}
+.dial-labels .l { background: var(--mustard-soft); text-align: left; }
+.dial-labels .r { background: var(--sage-soft); text-align: right; justify-content: flex-end; }
+.dial-labels .l::before, .dial-labels .r::after {
+  content: ''; flex: none; width: .7em; height: .7em; border-radius: 50%; border: var(--stroke) solid var(--ink);
+}
+.dial-labels .l::before { background: var(--extremo-izq); }
+.dial-labels .r::after { background: var(--extremo-der); }
 
 /* ---------- utilidades ---------- */
 .hidden { display: none !important; }
@@ -150,27 +165,31 @@ select.input { appearance: none; }
 .muted { color: var(--muted); }
 .pill {
   display: inline-block; padding: 4px 12px; border-radius: 999px;
-  background: rgba(255,255,255,.08); font-size: .85rem; font-weight: 600; letter-spacing: .06em;
-  text-transform: uppercase;
+  background: rgba(255,251,243,.7); border: 1.5px solid rgba(42,38,34,.5);
+  font-size: .78rem; font-weight: 700; letter-spacing: .06em; text-transform: uppercase;
 }
 .clue {
-  display: inline-block; padding: 10px 22px; border-radius: 14px;
-  background: var(--cream); color: #1a1200; font-weight: 800; font-size: 1.6rem;
+  display: inline-block; padding: 10px 24px; border-radius: 16px;
+  background: var(--paper); color: var(--ink); border: var(--stroke) solid var(--ink);
+  box-shadow: var(--shadow);
+  font-weight: 800; font-size: 1.5rem; letter-spacing: -0.01em;
 }
 /* Cronómetro de la ronda */
 .timer {
   display: inline-flex; align-items: center; gap: 8px;
   font-weight: 800; font-variant-numeric: tabular-nums;
-  padding: 6px 16px; border-radius: 999px;
-  background: rgba(255,255,255,.08); border: 2px solid var(--line);
-  transition: color .2s, border-color .2s, background .2s;
+  padding: 5px 16px; border-radius: 999px;
+  background: rgba(255,251,243,.8); border: 1.5px solid rgba(42,38,34,.5);
+  transition: color .2s, background .2s;
 }
-.timer.low { color: var(--red); border-color: var(--red); background: rgba(217,54,43,.14); animation: pulse 1s ease-in-out infinite; }
+.timer.low { background: var(--tomato); color: #fff; border-color: var(--tomato); animation: pulse 1s ease-in-out infinite; }
 .timer.done { color: var(--muted); }
 
 .pulse { animation: pulse 1.6s ease-in-out infinite; }
 @keyframes pulse { 0%,100% { opacity: 1 } 50% { opacity: .55 } }
 .pop { animation: pop .5s cubic-bezier(.2,1.4,.4,1) both; }
-@keyframes pop { from { transform: scale(.6); opacity: 0 } to { transform: scale(1); opacity: 1 } }
+/* Las animaciones de entrada nunca parten de invisible: si el navegador las pausa
+   (pestaña en segundo plano), el texto igual se ve. */
+@keyframes pop { from { transform: scale(.8) } to { transform: scale(1) } }
 .fade-in { animation: fade .35s ease both; }
-@keyframes fade { from { opacity: 0; transform: translateY(8px) } to { opacity: 1; transform: none } }
+@keyframes fade { from { opacity: .4; transform: translateY(6px) } to { opacity: 1; transform: none } }
