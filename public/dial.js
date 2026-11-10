@@ -1,14 +1,18 @@
-// Dial de Sintonizados en SVG (compartido por pantalla y celular): una línea recta.
+// Dial de Sintonizados en SVG (compartido por pantalla y celular): una escala de radio.
 // La posición sigue midiéndose de 0 (extremo izquierdo) a 180 (extremo derecho),
-// igual que el servidor; aquí solo se dibuja sobre una barra horizontal tipo píldora.
+// igual que el servidor. Arriba van las marcas y las frecuencias (solo decoración);
+// abajo, la franja de la señal donde vive el objetivo, tapada con una persiana de madera.
 (function () {
-  // En celular (pantalla angosta) la barra es más alta y ocupa casi todo el ancho
+  // En celular (pantalla angosta) todo es más grande y hay menos marcas
   const CEL = window.matchMedia('(max-width: 600px)').matches;
-  const X0 = CEL ? 40 : 80, X1 = 1000 - X0, W = X1 - X0;   // barra
-  const Y0 = CEL ? 64 : 58, Y1 = CEL ? 200 : 150, H = Y1 - Y0, YC = (Y0 + Y1) / 2, R = H / 2;
-  const ALTO = CEL ? 290 : 232, LETRA = CEL ? 30 : 15, NUM = CEL ? 34 : 22;
-  const IN = 7;                                     // margen interior (objetivo y tapa)
-  const TINTE = R + 12;                             // franja de color de cada extremo
+  const VW = CEL ? 600 : 1000;                       // ancho del dibujo (en celular, más angosto = todo más grande)
+  const K = CEL ? 1.4 : 1;                           // escala de letras y trazos
+  const P = CEL ? 36 : 60;                           // margen de la escala dentro del vidrio
+  const X0 = P, X1 = VW - P, W = X1 - X0;
+  const Y0 = CEL ? 22 : 20, BH = CEL ? 222 : 200;    // caja de la radio
+  const ALTO = Y0 + BH + 10;
+  const FY = Y0 + (CEL ? 122 : 100), FH = Y0 + BH - 22 - FY;  // franja de la señal
+  const NUM = 30 * K;                                // número de cada cuña
   const NS = 'http://www.w3.org/2000/svg';
   const xDe = a => X0 + (a / 180) * W;
   const porGrado = W / 180;
@@ -26,103 +30,86 @@
     const interactive = !!opts.interactive;
     const wrap = document.createElement('div');
     wrap.className = 'dial-wrap' + (interactive ? ' interactive' : '');
-    const svg = el('svg', { viewBox: `0 0 1000 ${ALTO}`, role: 'img', 'aria-label': 'Dial' }, wrap);
-    const ink = css('--ink');
+    const svg = el('svg', { viewBox: `0 0 ${VW} ${ALTO}`, role: 'img', 'aria-label': 'Dial' }, wrap);
+    const ink = css('--ink'), mostaza = css('--mustard'), papel = css('--bg');
     const id = ++uid;
 
     const defs = el('defs', {}, svg);
-    el('rect', { x: X0, y: Y0, width: W, height: H, rx: R }, el('clipPath', { id: 'barra-' + id }, defs));
-    el('rect', { x: X0 + IN, y: Y0 + IN, width: W - 2 * IN, height: H - 2 * IN, rx: R - IN }, el('clipPath', { id: 'dentro-' + id }, defs));
+    el('rect', { x: 24, y: FY, width: VW - 48, height: FH, rx: 8 }, el('clipPath', { id: 'franja-' + id }, defs));
 
-    // Cablecitos que salen de cada extremo (el "teléfono de latas")
-    const cable = (x, dir) => el('path', {
-      d: `M ${x} ${YC} c ${dir * 18} 0, ${dir * 22} -26, ${dir * 34} -18 s ${dir * 2} 30, ${dir * 18} 22`,
-      fill: 'none', stroke: ink, 'stroke-width': 2, 'stroke-linecap': 'round', opacity: 0.55,
-    }, svg);
-    if (!CEL) { cable(X0, -1); cable(X1, 1); }  // en celular no hay espacio a los lados
+    // Caja y vidrio
+    el('rect', { x: 0, y: Y0, width: VW, height: BH, rx: 20, fill: ink }, svg);
+    el('rect', { x: 12, y: Y0 + 12, width: VW - 24, height: BH - 24, rx: 12, fill: css('--glass') }, svg);
 
-    // Barra
-    el('rect', { x: X0, y: Y0, width: W, height: H, rx: R, fill: css('--paper') }, svg);
-    const barra = el('g', { 'clip-path': `url(#barra-${id})` }, svg);
-    // extremos teñidos con su color
-    el('rect', { x: X0, y: Y0, width: TINTE, height: H, fill: css('--extremo-izq') }, barra);
-    el('rect', { x: X1 - TINTE, y: Y0, width: TINTE, height: H, fill: css('--extremo-der') }, barra);
-    el('line', { x1: X0 + TINTE, y1: Y0, x2: X0 + TINTE, y2: Y1, stroke: ink, 'stroke-width': 1.5, opacity: 0.35 }, barra);
-    el('line', { x1: X1 - TINTE, y1: Y0, x2: X1 - TINTE, y2: Y1, stroke: ink, 'stroke-width': 1.5, opacity: 0.35 }, barra);
-    // rayitas finas de regla
-    for (let a = 10; a < 180; a += 10) {
-      const media = a % 30 === 0;
-      el('line', { x1: xDe(a), y1: Y1 - (media ? 16 : 9), x2: xDe(a), y2: Y1, stroke: ink, 'stroke-width': 1.5, opacity: media ? 0.35 : 0.18 }, barra);
+    // Marcas y frecuencias
+    const n = CEL ? 20 : 40, fuerte = CEL ? 10 : 8, medio = CEL ? 5 : 4;
+    for (let i = 0; i <= n; i++) {
+      const a = i / n * 180, esF = i % fuerte === 0, esM = i % medio === 0;
+      const largo = (esF ? 30 : esM ? 21 : 13) * K;
+      el('line', { x1: xDe(a), y1: Y0 + 22, x2: xDe(a), y2: Y0 + 22 + largo, stroke: mostaza, 'stroke-width': (esF ? 3 : 1.6) * (CEL ? 1.3 : 1), opacity: esF ? 1 : 0.6 }, svg);
+      if (esF) el('text', {
+        x: xDe(a), y: Y0 + 22 + 30 * K + 22 * K, 'text-anchor': 'middle', class: 'dial-freq',
+        'font-size': 16 * K, fill: papel, opacity: 0.85,
+      }, svg).textContent = Math.round(88 + a / 180 * 20);
     }
-    // centro
-    el('line', { x1: xDe(90), y1: Y0, x2: xDe(90), y2: Y1, stroke: ink, 'stroke-width': 1.5, 'stroke-dasharray': '5 6', opacity: 0.4 }, barra);
+    // Centro: triangulito arriba (el rótulo "CENTRO" va abajo, entre los extremos)
+    el('path', { d: `M ${xDe(90) - 9 * K} ${Y0 + 8} L ${xDe(90) + 9 * K} ${Y0 + 8} L ${xDe(90)} ${Y0 + 8 + 12 * K} Z`, fill: mostaza }, svg);
 
-    // Objetivo: 5 cuñas (2-3-4-3-2) dentro de la barra, con separadores finos
-    const dentro = el('g', { 'clip-path': `url(#dentro-${id})` }, svg);
-    const target = el('g', { class: 'dial-target' }, dentro);
+    // Franja de la señal
+    el('rect', { x: 24, y: FY, width: VW - 48, height: FH, rx: 8, fill: css('--strip') }, svg);
+    const franja = el('g', { 'clip-path': `url(#franja-${id})` }, svg);
+    el('line', { x1: xDe(90), y1: FY, x2: xDe(90), y2: FY + FH, stroke: papel, 'stroke-width': 1.5, 'stroke-dasharray': '4 5', opacity: 0.35 }, franja);
+
+    // Objetivo: 5 cuñas (2-3-4-3-2)
+    const target = el('g', { class: 'dial-target' }, franja);
     const wedgeFills = ['--w2', '--w3', '--w4', '--w3', '--w2'];
     const wedgeLabels = ['2', '3', '4', '3', '2'];
     function buildTarget(w) {
       target.innerHTML = '';
       const ancho = w * porGrado, total = ancho * 5;
-      const grupo = el('g', {}, target);
       wedgeFills.forEach((c, i) => {
         const x = -total / 2 + i * ancho;
-        el('rect', { x, y: Y0 + IN, width: ancho, height: H - 2 * IN, fill: css(c) }, grupo);
-        if (i) el('line', { x1: x, y1: Y0 + IN, x2: x, y2: Y1 - IN, stroke: css('--paper'), 'stroke-width': 2 }, grupo);
-        el('text', {
-          x: x + ancho / 2, y: YC, 'text-anchor': 'middle', 'dominant-baseline': 'central',
-          'font-family': 'inherit', 'font-weight': 800, 'font-size': NUM, fill: i === 2 ? '#fff' : ink,
-        }, grupo).textContent = wedgeLabels[i];
+        el('rect', { x, y: FY, width: ancho, height: FH, fill: css(c), stroke: ink, 'stroke-width': 2, class: i === 2 ? 'cuna4' : '' }, target);
+        if (ancho >= NUM * 0.8) el('text', {
+          x: x + ancho / 2, y: FY + FH / 2, 'text-anchor': 'middle', 'dominant-baseline': 'central',
+          'font-family': 'Fraunces, Georgia, serif', 'font-style': 'italic', 'font-weight': 900, 'font-size': NUM,
+          fill: i === 2 ? '#fff8ea' : ink,
+        }, target).textContent = wedgeLabels[i];
       });
-      el('rect', { x: -total / 2, y: Y0 + IN, width: total, height: H - 2 * IN, rx: 10, fill: 'none', stroke: ink, 'stroke-width': 2 }, grupo);
     }
     let wedge = opts.wedge || 7;
     buildTarget(wedge);
 
-    // Tapa: se levanta al revelar
-    const cover = el('g', { class: 'dial-cover' }, svg);
-    el('rect', { x: X0 + TINTE + 4, y: Y0 + IN, width: W - 2 * TINTE - 8, height: H - 2 * IN, rx: R - IN, fill: css('--cover') }, cover);
-    el('path', {
-      d: `M ${X0 + 60} ${YC + 6} C ${X0 + 170} ${Y0 + 10}, ${X0 + 260} ${Y1 - 12}, ${X0 + 350} ${YC - 4}
-          S ${X0 + 440} ${Y0 + 14}, ${X0 + 420} ${YC - 18} S ${X0 + 480} ${Y1 - 18}, ${X0 + 560} ${YC + 2}
-          S ${X0 + 690} ${Y0 + 16}, ${X1 - 60} ${YC + 4}`,
-      fill: 'none', stroke: '#fff', 'stroke-width': 2.2, 'stroke-linecap': 'round', opacity: 0.75,
-    }, cover);
-    el('circle', { cx: X0 + W / 2, cy: YC, r: CEL ? 34 : 22, fill: css('--paper'), stroke: ink, 'stroke-width': 2 }, cover);
+    // Estática que aparece un instante al sintonizar (revelar)
+    if (window.ruidoRadio) el('image', { href: window.ruidoRadio(), x: 24, y: FY, width: VW - 48, height: FH, preserveAspectRatio: 'none', class: 'dial-static' }, franja);
+
+    // Tapa: persiana de madera con el letrero "SEÑAL OCULTA"; baja al revelar
+    const cover = el('g', { class: 'dial-cover' }, franja);
+    cover.style.setProperty('--baja', (FH + 12) + 'px');
+    el('rect', { x: 24, y: FY, width: VW - 48, height: FH, fill: css('--wood') }, cover);
+    for (let y = FY + 8; y < FY + FH; y += 9) el('line', { x1: 24, y1: y, x2: VW - 24, y2: y, stroke: css('--wood-2'), 'stroke-width': 2.5 }, cover);
+    const tw = 190 * K, th = 30 * K;
+    el('rect', { x: VW / 2 - tw / 2, y: FY + FH / 2 - th / 2, width: tw, height: th, rx: th / 2, fill: ink }, cover);
     el('text', {
-      x: X0 + W / 2, y: YC + 1, 'text-anchor': 'middle', 'dominant-baseline': 'central',
-      'font-family': 'inherit', 'font-weight': 800, 'font-size': CEL ? 40 : 26, fill: ink,
-    }, cover).textContent = '?';
+      x: VW / 2, y: FY + FH / 2, 'text-anchor': 'middle', 'dominant-baseline': 'central', class: 'dial-freq',
+      'font-size': 14 * K, 'letter-spacing': 2, fill: mostaza,
+    }, cover).textContent = 'SEÑAL OCULTA';
 
-    // Contorno de la barra
-    el('rect', { x: X0, y: Y0, width: W, height: H, rx: R, fill: 'none', stroke: ink, 'stroke-width': 2.5 }, svg);
-
-    // Escala debajo: extremo – centro – extremo
-    const rotulo = (x, anchor, txt) => el('text', {
-      x, y: Y1 + (CEL ? 78 : 50), 'text-anchor': anchor, 'font-family': 'inherit', 'font-weight': 700, 'font-size': LETRA,
-      'letter-spacing': 2.5, fill: ink, opacity: 0.55,
-    }, svg).textContent = txt;
-    rotulo(X0 + 8, 'start', 'EXTREMO');
-    rotulo(xDe(90), 'middle', 'CENTRO');
-    rotulo(X1 - 8, 'end', 'EXTREMO');
-    el('path', { d: `M ${xDe(90) - 7} ${Y0 - 13} L ${xDe(90) + 7} ${Y0 - 13} L ${xDe(90)} ${Y0 - 4} Z`, fill: ink, opacity: 0.55 }, svg);
-
-    // Flecha: línea delgada con punta arriba y perilla abajo (de ahí se agarra)
+    // Aguja: línea tomate con perilla arriba
     const needle = el('g', { class: 'dial-needle' }, svg);
-    el('line', { x1: 0, y1: Y0 - 22, x2: 0, y2: Y1 + 12, stroke: ink, 'stroke-width': CEL ? 6 : 4, 'stroke-linecap': 'round' }, needle);
-    el('path', { d: `M -11 ${Y0 - 36} L 11 ${Y0 - 36} L 0 ${Y0 - 18} Z`, fill: css('--tomato'), stroke: ink, 'stroke-width': 2, 'stroke-linejoin': 'round' }, needle);
-    el('circle', { cx: 0, cy: Y1 + 26, r: CEL ? 24 : 16, fill: css('--tomato'), stroke: ink, 'stroke-width': 2.5 }, needle);
-    el('circle', { cx: -5, cy: Y1 + 21, r: 4, fill: 'rgba(255,255,255,.65)' }, needle);
+    el('line', { x1: 0, y1: Y0 - 4, x2: 0, y2: Y0 + BH + 4, stroke: ink, 'stroke-width': 10 * (CEL ? 1.3 : 1), 'stroke-linecap': 'round', opacity: 0.55 }, needle);
+    el('line', { x1: 0, y1: Y0 - 4, x2: 0, y2: Y0 + BH + 4, stroke: css('--tomato'), 'stroke-width': 6 * (CEL ? 1.3 : 1), 'stroke-linecap': 'round' }, needle);
+    el('circle', { cx: 0, cy: Y0 - 4, r: 11 * K, fill: css('--tomato'), stroke: ink, 'stroke-width': 3 }, needle);
 
-    // Etiquetas de la tarjeta: una por extremo, con el color de su extremo
+    // Etiquetas de la tarjeta: una por extremo
     const labels = document.createElement('div');
     labels.className = 'dial-labels';
-    labels.innerHTML = '<div class="l"><span class="txt"></span></div><div class="r"><span class="txt"></span></div>';
+    labels.innerHTML = '<div class="l"><span class="txt"></span></div><span class="c">CENTRO</span><div class="r"><span class="txt"></span></div>';
     wrap.appendChild(labels);
     container.appendChild(wrap);
 
     const state = { needle: 90, target: null, covered: true, left: '', right: '' };
+    let tapadoAntes = true, sintTimer;
 
     function render() {
       needle.style.transform = `translateX(${xDe(state.needle)}px)`;
@@ -133,6 +120,14 @@
         target.style.transform = `translateX(${xDe(state.target)}px)`;
       }
       cover.classList.toggle('open', !state.covered);
+      // Al destapar: estática, aguja que tiembla y la cuña de 4 que brilla
+      if (tapadoAntes && !state.covered && state.target != null) {
+        wrap.classList.add('sintonizando', 'revelado');
+        clearTimeout(sintTimer);
+        sintTimer = setTimeout(() => wrap.classList.remove('sintonizando'), 1300);
+      }
+      if (state.covered) wrap.classList.remove('revelado');
+      tapadoAntes = state.covered;
       labels.querySelector('.l .txt').textContent = state.left || '';
       labels.querySelector('.r .txt').textContent = state.right || '';
       labels.classList.toggle('hidden', !state.left && !state.right);
@@ -143,7 +138,7 @@
       let dragging = false;
       const angleFromEvent = e => {
         const rect = svg.getBoundingClientRect();
-        const x = (e.clientX - rect.left) * (1000 / rect.width);
+        const x = (e.clientX - rect.left) * (VW / rect.width);
         return Math.max(0, Math.min(180, (x - X0) / W * 180));
       };
       const move = e => {

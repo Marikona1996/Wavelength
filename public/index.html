@@ -4,261 +4,392 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Sintonizados — Pantalla</title>
-<link rel="stylesheet" href="style.css?v=10">
+<link rel="stylesheet" href="style.css?v=12">
 <style>
-  .page { min-height: 100vh; display: flex; flex-direction: column; }
-  .topbar {
-    display: flex; align-items: center; justify-content: space-between; gap: 18px;
-    padding: 14px 32px; border-bottom: 1.5px solid var(--line);
-  }
-  .topbar .izq { display: flex; align-items: center; gap: 18px; }
-  .topbar .wordmark { font-size: 1.6rem; }
-  .topbar .info { display: flex; gap: 8px; align-items: center; }
-  .footer-tools { display: flex; gap: 6px; flex-wrap: wrap; justify-content: flex-end; }
-  .footer-tools .btn { padding: 6px 13px; font-size: .78rem; font-weight: 600; background: transparent; color: var(--ink-2); border: 1.5px solid rgba(42,38,34,.3); }
-  .footer-tools .btn:hover { color: var(--ink); border-color: var(--ink); box-shadow: none; }
-  main { flex: 1; display: flex; flex-direction: column; padding: 26px 36px 30px; }
-  main > section { width: 100%; }
+  /* La pantalla grande se dibuja como el diseño: un escenario de 1280×720 que se escala
+     para llenar toda la ventana. Si la ventana es más ancha o más alta que 16:9, el
+     escenario se estira hacia ese lado para que no queden franjas vacías. */
+  html.tv, html.tv body { height: 100%; overflow: hidden; }
+  .stage { position: fixed; left: 0; top: 0; width: var(--sw, 1280px); height: var(--sh, 720px); transform-origin: 0 0; transform: scale(var(--k, 1)); }
+  html.fluido .stage { position: relative; width: auto; height: auto; min-height: 100vh; transform: none; }
+  .vista { position: absolute; inset: 0; padding: 26px 40px; display: flex; flex-direction: column; gap: 18px; }
+  html.fluido .vista { position: relative; inset: auto; min-height: 100vh; padding: 20px 16px; }
 
-  /* Lobby */
-  .lobby { max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: 1.2fr 1fr; gap: 32px; }
-  .lobby h1 { margin: 0 0 6px; font-size: 4rem; }
-  .lobby .tagline { font-size: 1.15rem; margin-bottom: 22px; }
-  .field label { display: block; font-weight: 700; color: var(--ink-2); margin: 0 0 6px 4px; font-size: .78rem; text-transform: uppercase; letter-spacing: .1em; }
-  .teams-form { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
-  .team-box { background: var(--team-soft); }
-  .team-box h3 { margin: 0 0 10px; font-size: 1.3rem; color: var(--team-ink); }
-  .roster { display: flex; flex-wrap: wrap; gap: 6px; min-height: 32px; }
-  .roster .empty { color: var(--muted); font-weight: 500; }
-  .deck-pick { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-top: 4px; }
-  .deck-pick button { text-align: left; font: inherit; color: var(--ink); cursor: pointer; background: var(--paper); border: 2px solid rgba(42,38,34,.3); border-radius: 16px; padding: 14px 16px; transition: border-color .15s, box-shadow .15s, transform .15s; }
-  .deck-pick button:hover { border-color: var(--ink); transform: translateY(-1px); }
-  .deck-pick button.sel { background: var(--mustard-soft); border-color: var(--ink); box-shadow: var(--shadow); }
-  .deck-pick .dn { font-weight: 800; font-size: 1.1rem; display: flex; align-items: center; gap: 8px; }
-  .deck-pick .dc { color: var(--ink-2); font-size: .85rem; margin-top: 4px; line-height: 1.3; }
-  .deck-pick .dk { display: inline-block; margin-top: 8px; font-size: .72rem; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
-  .deck-pick .badge { font-size: 1.2rem; }
-  .join-box { text-align: center; background: var(--blue-soft); align-self: start; }
-  .join-box img { width: 220px; height: 220px; border-radius: 16px; background: #fff; padding: 8px; border: 2px solid var(--ink); }
-  .join-box .url { font-size: 1.3rem; font-weight: 800; color: var(--ink); word-break: break-all; margin: 14px 0 4px; }
-  .join-box .muted { color: var(--ink-2); }
+  .mono { font-family: var(--mono); letter-spacing: .06em; }
+  .etq { font-family: var(--mono); font-size: 13px; letter-spacing: .14em; color: var(--ink-2); text-transform: uppercase; }
+  .card { border-radius: 18px; }
+  .btn.fantasma { background: transparent; box-shadow: none; border: 2px solid #b9a685; font-size: 15px; padding: 8px 14px; color: var(--ink-2); border-radius: 14px; }
+  .btn.fantasma:hover { color: var(--ink); border-color: var(--ink); transform: none; }
+  .btn.mediano { font-size: 20px; padding: 14px 26px; }
+  .offline { position: fixed; top: 0; left: 0; right: 0; background: var(--tomato); color: #fff; text-align: center; padding: 6px; font-weight: 700; z-index: 60; }
 
-  /* Juego: franja de marcador arriba, dial a todo lo ancho, controles abajo */
-  .game { flex: 1; display: flex; flex-direction: column; gap: 2.4vh; }
-  .marcador { display: grid; grid-template-columns: minmax(220px, 1fr) minmax(0, 1.8fr) minmax(220px, 1fr); gap: 28px; align-items: start; }
-  /* Cada equipo conserva SIEMPRE su color; el turno se marca con un aro y la etiqueta */
-  .score { display: grid; grid-template-columns: 1fr auto; grid-template-areas: "nombre pts" "gente pts" "tag tag"; column-gap: 14px; row-gap: 10px; align-items: center; background: var(--team-soft); padding: 18px 22px; transition: box-shadow .3s; }
-  .score.active { box-shadow: 0 0 0 4px var(--bg), 0 0 0 7px var(--team), var(--shadow); }
-  .score h2 { grid-area: nombre; margin: 0; font-size: clamp(1.2rem, 1.6vw, 1.7rem); line-height: 1.1; }
-  .score .pts { grid-area: pts; font-size: clamp(3.4rem, 5.6vw, 6rem); font-weight: 800; line-height: .85; letter-spacing: -0.04em; color: var(--team-ink); }
-  .score .roster { grid-area: gente; min-height: 0; }
-  .score .roster .chip { font-size: .78rem; padding: 2px 9px; }
-  .score .turn-tag { grid-area: tag; justify-self: start; display: inline-flex; align-items: center; gap: 6px; padding: 4px 12px; border-radius: 999px; background: var(--team); border: 1.5px solid var(--ink); font-size: .8rem; letter-spacing: .08em; text-transform: uppercase; font-weight: 800; }
-  .score .turn-tag:empty { display: none; }
-  .status { display: flex; flex-direction: column; align-items: center; gap: 12px; text-align: center; min-width: 0; }
-  .status h2 { margin: 0; font-size: clamp(1.6rem, 2.4vw, 2.6rem); line-height: 1.12; letter-spacing: -0.02em; }
-  .status p { margin: 0; color: var(--ink-2); font-size: clamp(1.05rem, 1.3vw, 1.35rem); font-weight: 600; }
-  .status .clue { max-width: 100%; white-space: pre-wrap; overflow-wrap: anywhere; font-size: clamp(1.5rem, 2.3vw, 2.5rem); padding: .28em .9em; }
-  .status .timer { font-size: clamp(1.4rem, 2vw, 2.1rem); }
-  #dialHost { flex: 1; width: 100%; max-width: 1320px; margin: 0 auto; display: flex; flex-direction: column; justify-content: center; }
-  #dialHost .dial-labels { font-size: clamp(1.2rem, 1.8vw, 1.9rem); }
-  .controls { display: flex; gap: 14px; justify-content: center; flex-wrap: wrap; }
-  .controls:empty { display: none; }
-  .controls .btn { font-size: clamp(1rem, 1.2vw, 1.25rem); }
-  .chips-row { display: flex; gap: 8px; justify-content: center; flex-wrap: wrap; }
-  .chips-row .chip { font-size: clamp(.95rem, 1.1vw, 1.15rem); padding: 5px 14px; }
-  .result-line { font-size: clamp(1.2rem, 1.6vw, 1.7rem); font-weight: 700; margin: 0; }
-  .hint { color: var(--ink-2); font-size: clamp(.95rem, 1.05vw, 1.1rem); font-weight: 600; text-align: center; }
-  .hint:empty { display: none; }
+  /* Barra de arriba: logo, información, sala */
+  .barra { display: flex; align-items: center; justify-content: space-between; gap: 20px; }
+  .barra .wordmark { font-size: 34px; }
+  .barra .info { font-family: var(--mono); font-size: 15px; letter-spacing: .06em; color: var(--ink-2); text-transform: uppercase; }
+  .barra .der { display: flex; align-items: center; gap: 10px; }
+  .sala-chip { font-family: var(--mono); font-size: 16px; letter-spacing: .06em; background: var(--ink); color: var(--mustard); padding: 7px 14px; border-radius: 8px; }
+  .icono { background: transparent; border: 2px solid #b9a685; border-radius: 10px; font-size: 16px; padding: 4px 8px; cursor: pointer; }
 
-  /* Inicio: crear sala o entrar a una */
-  .inicio { max-width: 920px; margin: 0 auto; text-align: center; }
-  .inicio h1 { margin: 10px 0 6px; font-size: 4.4rem; }
-  .inicio .opciones { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-top: 30px; text-align: left; }
-  .inicio .opciones .card:nth-child(1) { background: var(--blue-soft); }
-  .inicio .opciones .card:nth-child(2) { background: var(--terra-soft); }
-  .inicio .opciones .muted { color: var(--ink-2); }
-  .inicio .opciones h2 { margin: 0 0 6px; font-size: 1.4rem; }
-  .inicio .opciones p { margin: 0 0 18px; }
-  .inicio .codigo { text-transform: uppercase; text-align: center; letter-spacing: .25em; font-size: 1.5rem; }
-  .inicio .acciones { display: flex; flex-direction: column; gap: 10px; margin-top: 12px; }
-  .inicio .btn { width: 100%; }
-  @media (max-width: 760px) { .inicio .opciones { grid-template-columns: 1fr; } .inicio h1 { font-size: 2.4rem; } }
+  /* ---------- INICIO ---------- */
+  #inicio { align-items: center; gap: 30px; padding: 46px 70px; }
+  #inicio .logo-grande { margin-top: 10px; display: flex; flex-direction: column; align-items: center; gap: 8px; }
+  #inicio .wordmark { font-size: 108px; margin: 0; line-height: 1; }
+  #inicio .bands { width: 560px; }
+  #inicio .lema { font-family: var(--mono); font-size: 19px; letter-spacing: .06em; color: var(--ink-2); }
+  #inicio .opciones { display: flex; gap: 32px; width: 100%; flex: 1; align-items: stretch; }
+  #inicio .opciones .card { flex: 1; padding: 28px 32px; display: flex; flex-direction: column; gap: 12px; }
+  #inicio h2 { margin: 0; font-size: 44px; line-height: 1; }
+  #inicio p { margin: 0; font-size: 19px; color: var(--ink-2); line-height: 1.4; }
+  #inicio .codigo { flex: 1; font-family: var(--mono); font-size: 30px; letter-spacing: .3em; text-align: center; text-transform: uppercase; font-weight: 500; }
+  #inicio .pie { font-family: var(--mono); font-size: 14px; letter-spacing: .06em; color: var(--ink-2); }
+  #inicio .pie a { color: inherit; }
+  html.fluido #inicio { padding: 30px 16px; }
+  html.fluido #inicio .wordmark { font-size: 56px; }
+  html.fluido #inicio .bands { width: 100%; }
+  html.fluido #inicio .lema { font-size: 13px; text-align: center; }
+  html.fluido #inicio .opciones { flex-direction: column; gap: 20px; }
 
-  /* Final */
-  .final { max-width: 900px; margin: 30px auto 60px; text-align: center; }
-  .final h1 { font-size: 3rem; margin: 10px 0 4px; }
-  .final .winner { font-size: 1.3rem; color: var(--ink-2); }
-  .final .scores { display: flex; gap: 20px; justify-content: center; margin: 26px 0; }
-  .final .scores .score { min-width: 260px; }
-  .final table { width: 100%; border-collapse: collapse; margin-top: 4px; font-weight: 500; }
-  .final td, .final th { padding: 9px 10px; border-bottom: 1px solid var(--line); text-align: left; }
-  .final th { color: var(--muted); font-size: .75rem; text-transform: uppercase; letter-spacing: .1em; }
+  /* ---------- SALA DE ESPERA ---------- */
+  .lobby-cuerpo { display: flex; gap: 24px; flex: 1; min-height: 0; }
+  .qr-card { width: 330px; padding: 22px; display: flex; flex-direction: column; align-items: center; gap: 12px; }
+  .qr-card img { width: 214px; height: 214px; border: 3px solid var(--ink); border-radius: 14px; padding: 8px; background: #fffaf0; }
+  .qr-card .codigo-grande { font-family: var(--mono); font-size: 54px; letter-spacing: .18em; line-height: 1; margin-right: -.18em; }
+  .qr-card .url { font-family: var(--mono); font-size: 13px; color: var(--ink-2); text-align: center; word-break: break-all; }
+  .qr-card .otra { font-size: 13px; color: var(--ink-2); text-align: center; margin-top: auto; }
+  .qr-card .otra a { color: inherit; }
+  .lobby-der { flex: 1; display: flex; flex-direction: column; gap: 18px; min-width: 0; }
+  .columnas { display: flex; gap: 18px; flex: 1; min-height: 0; }
+  .col-eq { flex: 1; padding: 20px 22px; display: flex; flex-direction: column; gap: 14px; border-top: 14px solid var(--team); min-width: 0; }
+  .col-eq .cab { display: flex; justify-content: space-between; align-items: baseline; gap: 10px; }
+  .col-eq input.nombre-eq { flex: 1; min-width: 0; font-family: var(--display); font-style: italic; font-weight: 900; font-size: 34px; letter-spacing: -0.02em; color: var(--ink); background: transparent; border: 0; border-bottom: 2px dashed transparent; padding: 0; outline: none; }
+  .col-eq input.nombre-eq:hover, .col-eq input.nombre-eq:focus { border-bottom-color: #b9a685; }
+  .col-eq .cuantos { font-family: var(--mono); font-size: 14px; color: var(--ink-2); white-space: nowrap; }
+  .fichas { display: flex; flex-wrap: wrap; gap: 10px; align-content: flex-start; overflow: auto; }
+  .ficha { display: inline-flex; align-items: center; gap: 8px; padding: 6px 14px 6px 6px; border: 2px solid var(--ink); border-radius: 999px; background: var(--paper); font-weight: 700; font-size: 17px; cursor: pointer; font-family: inherit; color: var(--ink); }
+  .ficha:hover { background: #f6dcd6; border-color: var(--tomato); }
+  .ficha i { width: 30px; height: 30px; border-radius: 50%; border: 2px solid var(--ink); display: inline-flex; align-items: center; justify-content: center; font-style: normal; font-family: var(--display); font-weight: 900; font-size: 15px; background: var(--team); }
+  .ficha.off { opacity: .45; text-decoration: line-through; }
+  .col-eq .nadie { color: var(--muted); font-size: 16px; }
+  .col-eq .ayuda { margin-top: auto; font-size: 15px; color: var(--ink-2); }
+  .ajustes { padding: 16px 22px; display: flex; align-items: center; gap: 22px; }
+  .ajustes .grupo { display: flex; flex-direction: column; gap: 6px; }
+  .seg { display: inline-flex; border: 3px solid var(--ink); border-radius: 14px; overflow: hidden; background: var(--paper); }
+  .seg button { padding: 10px 16px; font-family: var(--mono); font-size: 17px; font-weight: 500; border: 0; border-left: 2px solid var(--ink); background: transparent; color: var(--ink); cursor: pointer; }
+  .seg button:first-child { border-left: 0; }
+  .seg button.si { background: var(--ink); color: var(--mustard); }
+  .ajustes .btn.red { margin-left: auto; font-size: 22px; padding: 16px 28px; }
+  .ajustes .bots { display: flex; flex-direction: column; gap: 6px; }
+  .ajustes .bots .btn.fantasma { padding: 6px 12px; font-size: 14px; }
+  .tag-bot { font-family: var(--mono); font-size: 10px; letter-spacing: .1em; text-transform: uppercase; background: var(--ink); color: var(--mustard); border-radius: 6px; padding: 2px 5px; font-weight: 500; text-decoration: none; display: inline-block; vertical-align: middle; }
+  /* La marca "Creado por Sobremesa" va abajo a la izquierda: se deja aire para que no tape nada */
+  html.tv .vista { padding-bottom: 46px; }
 
-  .offline { position: fixed; top: 0; left: 0; right: 0; background: var(--tomato); color: #fff; text-align: center; padding: 6px; font-weight: 700; z-index: 10; }
-  /* Pantallas poco altas (TV 720p, laptops): todo debe caber sin scroll */
-  @media (max-height: 820px) {
-    main { padding: 16px 28px 18px; }
-    .game { gap: 1.6vh; }
-    .score { padding: 14px 18px; }
-    .status { gap: 8px; }
-    #dialHost { max-width: min(1320px, 175vh); }
-  }
-  @media (max-width: 1000px) {
-    .lobby, .marcador { grid-template-columns: 1fr; }
-    .lobby h1 { font-size: 2.4rem; }
-    .topbar { flex-wrap: wrap; }
-  }
+  /* ---------- QR a media partida ---------- */
+  .qr-capa { position: absolute; inset: 0; background: rgba(43,33,27,.55); display: flex; align-items: center; justify-content: center; z-index: 40; }
+  .qr-caja { display: flex; gap: 28px; padding: 28px 32px; max-width: 920px; width: calc(100% - 80px); max-height: calc(100% - 60px); }
+  .qr-caja .lado-qr { display: flex; flex-direction: column; align-items: center; gap: 10px; flex: none; }
+  .qr-caja img { width: 240px; height: 240px; border: 3px solid var(--ink); border-radius: 14px; padding: 8px; background: #fffaf0; }
+  .qr-caja .codigo-grande { font-family: var(--mono); font-size: 46px; letter-spacing: .18em; line-height: 1; margin-right: -.18em; }
+  .qr-caja .url { font-family: var(--mono); font-size: 13px; color: var(--ink-2); text-align: center; word-break: break-all; max-width: 260px; }
+  .qr-caja .lista { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 10px; overflow: auto; }
+  .qr-caja h2 { margin: 0; font-size: 34px; line-height: 1.05; }
+  .qr-caja p { margin: 0; font-size: 16px; color: var(--ink-2); line-height: 1.35; }
+  .qr-caja .jug { display: flex; align-items: center; gap: 8px; font-size: 18px; font-weight: 700; padding: 4px 0; border-bottom: 1px dashed #c9b796; }
+  .qr-caja .jug .eq { font-family: var(--mono); font-size: 12px; color: var(--ink-2); font-weight: 500; margin-left: auto; }
+  .qr-caja .jug .sin { color: var(--tomato); font-family: var(--mono); font-size: 12px; letter-spacing: .08em; }
+  .qr-caja .jug a { color: var(--tomato); text-decoration: none; font-size: 15px; }
+  .qr-caja .punto { width: 10px; height: 10px; border-radius: 50%; background: var(--mint); border: 2px solid var(--ink); flex: none; }
+  .qr-caja .punto.off { background: var(--tomato); }
+  html.fluido .lobby-cuerpo, html.fluido .columnas, html.fluido .ajustes { flex-direction: column; align-items: stretch; }
+  html.fluido .qr-card { width: auto; }
+
+  /* ---------- JUEGO ---------- */
+  .fila-equipos { display: grid; grid-template-columns: 310px minmax(0, 1fr) 310px; gap: 22px; align-items: center; }
+  .equipo { display: flex; align-items: center; gap: 16px; padding: 14px 20px; border: 2px solid #a8957a; border-radius: 20px; background: var(--paper); opacity: .78; transition: opacity .3s, box-shadow .3s; min-width: 0; }
+  .equipo.on { opacity: 1; border: 3px solid var(--ink); box-shadow: 6px 6px 0 var(--ink); }
+  .equipo.team-B { flex-direction: row-reverse; text-align: right; }
+  .puntos { width: 76px; height: 76px; flex: none; border-radius: 50%; border: 3px solid var(--ink); display: flex; align-items: center; justify-content: center; font-family: var(--display); font-style: italic; font-weight: 900; font-size: 40px; background: var(--team); }
+  .eq-txt { display: flex; flex-direction: column; gap: 3px; min-width: 0; }
+  .eq-nombre { font-size: 24px; font-weight: 700; line-height: 1.1; overflow-wrap: anywhere; }
+  .eq-tag { font-family: var(--mono); font-size: 13px; letter-spacing: .12em; color: #8a7660; }
+  .eq-tag .vota { color: var(--team-ink); }
+  .eq-gente { font-size: 14px; color: var(--ink-2); line-height: 1.35; }
+  .eq-gente .p.off { text-decoration: line-through; opacity: .6; }
+  .eq-gente .p.psi { color: var(--ink); font-weight: 700; }
+  .eq-gente a { color: var(--tomato); text-decoration: none; font-size: 12px; margin-left: 2px; display: none; }
+  .equipo:hover .eq-gente a { display: inline; }
+  .centro-estado { display: flex; flex-direction: column; align-items: center; gap: 10px; text-align: center; min-width: 0; }
+  .centro-estado h2 { margin: 0; font-size: 36px; line-height: 1.05; }
+  .centro-estado p { margin: 0; font-size: 18px; color: var(--ink-2); }
+  .centro-estado .clue { font-size: 32px; max-width: 100%; overflow-wrap: anywhere; padding: 6px 22px; border-radius: 10px; letter-spacing: .04em; }
+  .centro-estado .clue.chica { font-size: 26px; }
+  .timer { display: inline; background: none; border: 0; padding: 0; font-family: var(--mono); font-size: 13px; letter-spacing: .1em; color: var(--ink-2); }
+  .timer.low { background: none; color: var(--tomato); }
+  .zona-radio { flex: 1; min-height: 0; display: flex; flex-direction: column; justify-content: center; gap: 16px; }
+  .consola { background: var(--wood); border-radius: 28px; padding: 18px 22px; display: flex; align-items: center; gap: 20px; box-shadow: inset 0 0 0 4px var(--wood-2), inset 0 -10px 0 var(--wood-2), 0 22px 40px -26px rgba(43,33,27,.8); }
+  .consola .panel { flex: 1; min-width: 0; background: var(--bg); border-radius: 18px; padding: 18px 22px 10px; border: 3px solid var(--wood-2); }
+  .consola .dial-labels { font-size: 29px; }
+  .perilla { display: flex; flex-direction: column; align-items: center; gap: 6px; flex: none; }
+  .perilla svg { width: 80px; height: 80px; }
+  .perilla span { font-family: var(--mono); font-size: 11px; letter-spacing: .16em; color: var(--bg); opacity: .8; }
+  .perilla .ptr { transform-origin: 40px 40px; transition: transform .2s ease-out; }
+  .linea-voto { display: flex; justify-content: center; gap: 16px; align-items: center; font-size: 18px; }
+  .linea-voto:empty { display: none; }
+  .linea-voto .mono { font-size: 16px; color: var(--ink-2); }
+  .linea-voto .sep { width: 6px; height: 6px; border-radius: 50%; background: var(--ink-2); }
+  .pie-host { display: flex; align-items: center; justify-content: space-between; gap: 16px; min-height: 44px; }
+  .pie-host .izq { font-family: var(--mono); font-size: 14px; letter-spacing: .06em; color: var(--ink-2); text-transform: uppercase; }
+  .pie-host .izq.alerta { color: var(--tomato); }
+  .pie-host .herr { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; justify-content: flex-end; }
+  .revela { display: flex; align-items: center; justify-content: center; gap: 22px; text-align: left; }
+  .revela .txt { display: flex; flex-direction: column; gap: 6px; }
+  .revela h2 { font-size: 44px; }
+  .revela .l1 { font-size: 19px; }
+  .revela .l2 { font-size: 16px; color: var(--ink-2); }
+  .sello { width: 120px; height: 120px; flex: none; border-radius: 50%; background: var(--tomato); border: 4px solid var(--ink); box-shadow: 5px 5px 0 var(--ink); display: flex; align-items: center; justify-content: center; transform: rotate(-8deg); font-family: var(--display); font-style: italic; font-weight: 900; color: #fff8ea; font-size: 62px; animation: sello .6s cubic-bezier(.2, 1.6, .4, 1) .9s both; }
+  .sello.cero { background: var(--glass); color: var(--bg); }
+  @keyframes sello { from { transform: rotate(-30deg) scale(1.8) } to { transform: rotate(-8deg) scale(1) } }
+  html.fluido .fila-equipos { grid-template-columns: 1fr; }
+  html.fluido .perilla { display: none; }
+
+  /* ---------- FINAL ---------- */
+  html.oscuro, html.oscuro body { background: var(--ink); }
+  #final { align-items: center; gap: 22px; padding: 40px 70px; background: var(--ink); color: var(--bg); }
+  #final .wordmark { font-size: 34px; }
+  #final .wordmark .marca { color: var(--bg); }
+  #final .fin { font-family: var(--mono); font-size: 16px; color: var(--mustard); letter-spacing: .3em; margin-top: 18px; }
+  #final h1 { font-size: 96px; line-height: 1; margin: 0; text-align: center; }
+  #final h1 .team-color { color: var(--team); }
+  #final .bands { width: 520px; filter: hue-rotate(-110deg) saturate(1.6); }
+  #final .marcador-final { display: flex; gap: 28px; margin-top: 6px; }
+  .fscore { width: 300px; border-radius: 22px; padding: 20px 26px; display: flex; align-items: center; justify-content: space-between; background: #3a2c22; color: var(--bg); border: 3px solid #5a4636; }
+  .fscore.gana { background: var(--team); color: var(--ink); border-color: var(--bg); }
+  .fscore b { font-size: 24px; font-weight: 700; display: block; }
+  .fscore small { font-family: var(--mono); font-size: 13px; opacity: .75; letter-spacing: .06em; }
+  .fscore .n { font-family: var(--display); font-style: italic; font-weight: 900; font-size: 72px; line-height: 1; }
+  #final .botones { display: flex; gap: 18px; margin-top: 40px; }
+  #final .btn.red { border-color: var(--bg); box-shadow: 4px 4px 0 var(--bg); font-size: 22px; }
+  #final .btn.borde { background: transparent; color: var(--bg); border-color: var(--bg); box-shadow: none; font-size: 22px; text-decoration: none; }
+  html.fluido #final h1 { font-size: 48px; }
+  html.fluido #final .marcador-final { flex-direction: column; }
 </style>
 </head>
 <body>
-<div id="offline" class="offline hidden">Reconectando con el servidor…</div>
-<div class="page">
-  <header class="topbar">
-    <div class="izq"><div class="wordmark">sintonizados</div><div class="info" id="topInfo"></div></div>
-    <div class="footer-tools">
-      <button class="btn" id="repeatBtn" title="Vuelve a empezar esta ronda con el mismo psíquico y otra tarjeta (por si alguien se desconectó)">↻ Repetir ronda</button>
-      <button class="btn" id="skipBtn" title="Pasa al siguiente psíquico del mismo equipo con otra tarjeta">Saltar turno</button>
-      <button class="btn" id="endBtn" title="Termina la partida ahora y muestra los resultados">Terminar partida</button>
-      <button class="btn" id="resetBtn">Reiniciar juego</button>
-    </div>
-  </header>
-  <main>
-    <!-- INICIO: el enlace que se comparte; cada grupo abre su propia sala -->
-    <section id="inicio" class="inicio hidden">
-      <h1 class="wordmark">sintonizados</h1>
-      <div class="tagline">¿Qué tan en la <span class="accent">misma frecuencia</span> está tu equipo?</div>
-      <div class="bands" style="margin-top:22px"></div>
-      <div class="opciones">
-        <div class="card">
-          <h2>📺 Crear sala nueva</h2>
-          <p class="muted">Ábrela en la pantalla que todos van a ver (TV, proyector o compu). Te da un código y un QR para que tu grupo entre desde sus celulares.</p>
-          <button class="btn big" id="crearSala">Crear sala</button>
-        </div>
-        <div class="card">
-          <h2>📱 Entrar a una sala</h2>
-          <p class="muted">¿Tu grupo ya tiene sala? Escribe el código que aparece en su pantalla.</p>
-          <input id="codigoSala" class="input codigo" placeholder="Código" maxlength="8" autocomplete="off" autocapitalize="characters">
-          <div class="acciones">
-            <button class="btn big" id="entrarJugador">Entrar a jugar</button>
-            <button class="btn ghost" id="abrirPantalla">Abrir la pantalla de esta sala</button>
-          </div>
-        </div>
-      </div>
-    </section>
+<div id="offline" class="offline hidden">Reconectando…</div>
+<div class="stage" id="stage">
 
-    <!-- LOBBY -->
-    <section id="lobby" class="lobby hidden">
-      <div>
-        <h1 class="wordmark">sintonizados</h1>
-        <div class="tagline">¿Qué tan en la <span class="accent">misma frecuencia</span> está tu equipo?</div>
-        <div class="bands" style="margin-bottom:24px"></div>
-        <div class="teams-form">
-          <div class="card team-box team-A">
-            <div class="field"><label>Equipo 1</label><input id="teamA" class="input" placeholder="Nombre del equipo A" maxlength="30"></div>
-            <h3 id="teamAName" style="margin-top:14px">Equipo A</h3>
-            <div class="roster" id="rosterA"><span class="empty">Nadie todavía…</span></div>
-          </div>
-          <div class="card team-box team-B">
-            <div class="field"><label>Equipo 2</label><input id="teamB" class="input" placeholder="Nombre del equipo B" maxlength="30"></div>
-            <h3 id="teamBName" style="margin-top:14px">Equipo B</h3>
-            <div class="roster" id="rosterB"><span class="empty">Nadie todavía…</span></div>
-          </div>
-        </div>
-        <div class="field" style="margin-top:18px"><label>Tipo de tarjetas</label><div class="deck-pick" id="deckPick"></div></div>
-        <div class="row" style="margin-top:18px; gap:18px">
-          <div class="field" style="width:220px"><label>Jugar hasta (puntos)</label>
-            <select id="points" class="input">
-              <option>5</option><option>8</option><option selected>10</option><option>12</option><option>15</option><option>20</option><option>25</option><option>30</option>
-            </select>
-          </div>
-          <div style="flex:1"></div>
-          <button id="startBtn" class="btn big" disabled>Comenzar juego</button>
-        </div>
-        <div class="hint" id="startHint">Se necesita al menos 1 jugador conectado en cada equipo (ideal 2 o más). El psíquico rota en el orden en que entraron (los números) y <b>nadie repite hasta que pasó todo su equipo</b>. Empieza el equipo del primero en conectarse. Gana el primer equipo que llegue a la meta con sus propios puntos.</div>
-      </div>
-      <div class="card join-box">
-        <div class="pill">Entra desde tu celular</div>
-        <div style="margin-top:14px"><img id="qr" alt="QR para unirse"></div>
-        <div class="url" id="joinUrl">…</div>
-        <div class="muted">Escanea el QR o escribe la dirección</div>
-        <div style="margin-top:10px">Código de sala: <b id="salaCode" style="font-size:1.6rem;letter-spacing:.15em">…</b></div>
-        <div class="muted" style="font-size:.8rem;margin-top:6px">¿Otra partida aparte? Desde <a href="/" style="color:inherit">la página de inicio</a> se crea otra sala.</div>
-      </div>
-    </section>
-
-    <!-- JUEGO -->
-    <section id="game" class="game hidden">
-      <div class="marcador">
-        <div class="card score team-A" id="scoreA">
-          <h2 id="gTeamA">Equipo A</h2>
-          <div class="pts" id="ptsA">0</div>
-          <div class="roster" id="gRosterA"></div>
-          <span class="turn-tag" id="tagA"></span>
-        </div>
-        <div class="status fade-in" id="status"></div>
-        <div class="card score team-B" id="scoreB">
-          <h2 id="gTeamB">Equipo B</h2>
-          <div class="pts" id="ptsB">0</div>
-          <div class="roster" id="gRosterB"></div>
-          <span class="turn-tag" id="tagB"></span>
-        </div>
-      </div>
-      <div id="dialHost"></div>
-      <div class="controls" id="controls"></div>
-      <div class="hint" id="stageHint"></div>
-    </section>
-
-    <!-- FINAL -->
-    <section id="final" class="final hidden">
-      <div class="pill">Fin del juego</div>
-      <h1 id="finalTitle">¡Ganó …!</h1>
-      <div class="winner" id="finalSub"></div>
-      <div class="scores" id="finalScores"></div>
+  <!-- INICIO: el enlace que se comparte; cada grupo abre su propia sala -->
+  <section id="inicio" class="vista hidden">
+    <div class="lineas"></div>
+    <div class="logo-grande">
+      <h1 class="wordmark" data-vivo>sintonizados</h1>
       <div class="bands"></div>
-      <div class="card" style="margin-top:20px; text-align:left">
-        <table id="historyTable"><thead><tr><th>Ronda</th><th>Equipo</th><th>Tarjeta</th><th>Cuña</th><th>Rival</th></tr></thead><tbody></tbody></table>
+      <div class="lema">EL JUEGO DE LEER MENTES EN EQUIPO</div>
+    </div>
+    <div class="opciones">
+      <div class="card">
+        <span class="etq">📺 Para la pantalla grande</span>
+        <h2>Crear sala nueva</h2>
+        <p>Abre esto en la TV o la compu. Te damos un código y un QR para que todos se unan desde el celular.</p>
+        <div style="margin-top:auto"><button class="btn red" id="crearSala" style="font-size:22px;padding:16px 30px">Crear sala ▶</button></div>
       </div>
-      <div class="controls"><button class="btn big" id="againBtn">Jugar de nuevo</button></div>
-    </section>
-  </main>
+      <div class="card">
+        <span class="etq">📱 Ya tengo un código</span>
+        <h2>Entrar a una sala</h2>
+        <p>Escribe el código de 4 letras que aparece en la pantalla.</p>
+        <div style="margin-top:auto;display:flex;gap:14px">
+          <input id="codigoSala" class="input codigo" placeholder="CÓDIGO" maxlength="8" autocomplete="off" autocapitalize="characters">
+          <button class="btn" id="entrarJugador" style="font-size:22px">Entrar</button>
+        </div>
+      </div>
+    </div>
+    <span class="pie">DOS EQUIPOS · SE JUEGA CON EL CELULAR · <a href="#" id="abrirPantalla">ABRIR LA PANTALLA DE UNA SALA</a></span>
+  </section>
+
+  <!-- SALA DE ESPERA -->
+  <section id="lobby" class="vista hidden">
+    <div class="barra">
+      <div class="wordmark">sintonizados</div>
+      <span class="info" id="lobbyInfo">ESPERANDO JUGADORES</span>
+      <div class="der"><button class="icono" data-sonido title="Sonido de radio en esta pantalla">🔊</button><span class="sala-chip" id="lobbySala">SALA …</span></div>
+    </div>
+    <div class="lobby-cuerpo">
+      <div class="card qr-card">
+        <span class="etq">Sintoniza esta sala</span>
+        <img id="qr" alt="QR para unirse">
+        <div class="codigo-grande" id="salaCode">…</div>
+        <span class="url" id="joinUrl">…</span>
+        <span class="otra">¿Otra partida aparte? <a href="#" class="sala-nueva">Abre otra sala</a>.</span>
+      </div>
+      <div class="lobby-der">
+        <div class="columnas">
+          <div class="card col-eq team-A">
+            <div class="cab"><input class="nombre-eq" id="teamA" maxlength="30" placeholder="Equipo A" title="Toca para cambiar el nombre"><span class="cuantos" id="cuantosA">0 JUGADORES</span></div>
+            <div class="fichas" id="rosterA"></div>
+            <span class="ayuda">Toca a un jugador para sacarlo de la sala</span>
+          </div>
+          <div class="card col-eq team-B">
+            <div class="cab"><input class="nombre-eq" id="teamB" maxlength="30" placeholder="Equipo B" title="Toca para cambiar el nombre"><span class="cuantos" id="cuantosB">0 JUGADORES</span></div>
+            <div class="fichas" id="rosterB"></div>
+            <span class="ayuda">Toca a un jugador para sacarlo de la sala</span>
+          </div>
+        </div>
+        <div class="card ajustes">
+          <div class="grupo"><span class="etq">Gana quien llegue a</span><div class="seg" id="segPuntos"></div></div>
+          <div class="grupo"><span class="etq">Mazo</span><div class="seg" id="segMazo"></div></div>
+          <div class="bots">
+            <button class="btn fantasma" id="testBtn" title="Llena los dos equipos con bots y arranca para probar el juego sin celulares">🤖 Partida de prueba</button>
+            <button class="btn fantasma" id="botBtn" title="Agrega un jugador bot al equipo con menos gente">+ Bot</button>
+          </div>
+          <button class="btn red" id="startBtn" disabled title="Se necesita al menos 1 jugador conectado en cada equipo">Empezar ▶</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- JUEGO -->
+  <section id="game" class="vista hidden">
+    <div class="barra">
+      <div class="wordmark">sintonizados</div>
+      <span class="info" id="gameInfo"></span>
+      <div class="der"><button class="icono" id="qrBtn" title="QR y código para entrar o volver a entrar">QR</button><button class="icono" data-sonido title="Sonido de radio en esta pantalla">🔊</button><span class="sala-chip" id="gameSala">SALA …</span></div>
+    </div>
+    <div class="fila-equipos">
+      <div class="equipo team-A" id="scoreA"><div class="puntos" id="ptsA">0</div><div class="eq-txt"><span class="eq-nombre" id="gTeamA"></span><span class="eq-tag" id="tagA"></span><span class="eq-gente" id="gRosterA"></span></div></div>
+      <div class="centro-estado fade-in" id="status"></div>
+      <div class="equipo team-B" id="scoreB"><div class="puntos" id="ptsB">0</div><div class="eq-txt"><span class="eq-nombre" id="gTeamB"></span><span class="eq-tag" id="tagB"></span><span class="eq-gente" id="gRosterB"></span></div></div>
+    </div>
+    <div class="zona-radio">
+      <div class="consola">
+        <div class="perilla" id="perillaVol"><span>VOLUMEN</span></div>
+        <div class="panel"><div id="dialHost"></div></div>
+        <div class="perilla" id="perillaSint"><span>SINTONÍA</span></div>
+      </div>
+      <div class="linea-voto" id="lineaVoto"></div>
+    </div>
+    <div class="pie-host">
+      <span class="izq" id="pieInfo"></span>
+      <div class="herr">
+        <span id="controls" style="display:contents"></span>
+        <button class="btn fantasma" id="repeatBtn" title="Vuelve a empezar esta ronda con el mismo psíquico y otra tarjeta (por si alguien se desconectó)">↻ Repetir ronda</button>
+        <button class="btn fantasma" id="skipBtn" title="Pasa al siguiente psíquico del mismo equipo con otra tarjeta">⏭ Saltar turno</button>
+        <button class="btn fantasma" id="endBtn" title="Termina la partida ahora y muestra los resultados">■ Terminar partida</button>
+        <button class="btn fantasma" id="resetBtn" title="Vuelve a la sala de espera">Reiniciar</button>
+      </div>
+    </div>
+    <!-- QR a media partida: para que alguien entre o vuelva a entrar sin frenar el juego -->
+    <div class="qr-capa hidden" id="qrCapa">
+      <div class="card qr-caja">
+        <div class="lado-qr">
+          <span class="etq">Sintoniza esta sala</span>
+          <img id="qrJuego" alt="QR para entrar o volver a entrar">
+          <div class="codigo-grande" id="qrCodigo">…</div>
+          <span class="url" id="qrUrl">…</span>
+        </div>
+        <div class="lista">
+          <h2>¿Te saliste?</h2>
+          <p>Escanea y escribe <b>tu mismo nombre</b>: recuperas tu equipo, tu lugar en la fila y tus puntos. Si es el mismo celular, entra solo.</p>
+          <div id="qrJugadores"></div>
+          <div style="margin-top:auto;display:flex;justify-content:flex-end"><button class="btn mediano" id="qrCerrar">Cerrar</button></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FINAL -->
+  <section id="final" class="vista hidden">
+    <div class="wordmark">sintonizados</div>
+    <span class="fin">FIN DE LA TRANSMISIÓN</span>
+    <h1 id="finalTitle">¡Ganó …!</h1>
+    <div class="bands"></div>
+    <div class="marcador-final" id="finalScores"></div>
+    <div class="botones">
+      <button class="btn red" id="againBtn">Jugar otra vez</button>
+      <a class="btn borde" href="#" id="salaNuevaBtn">Sala nueva</a>
+    </div>
+  </section>
 </div>
 
-<script src="client.js?v=9"></script>
-<script src="dial.js?v=9"></script>
+<script src="https://cdn.jsdelivr.net/npm/qrcode-generator@1.4.4/qrcode.min.js"></script>
+<script src="sala.js?v=12"></script>
+<script src="mazos.js?v=12"></script>
+<script src="motor.js?v=12"></script>
+<script src="client.js?v=12"></script>
+<script src="dial.js?v=12"></script>
+<script src="sobremesa-marca.js" data-lugar="abajo-izq" data-tono="oscuro"></script>
 <script>
 const $ = id => document.getElementById(id);
 let S = null, dial = null, lastPhase = null, lastTurn = -1;
+const esc = s => String(s ?? '').replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+
+// ----- Escenario de 1280×720 que llena la ventana -----
+function ajustarEscenario() {
+  const w = innerWidth, h = innerHeight, root = document.documentElement, st = $('stage').style;
+  // En celulares (la página de inicio se abre desde ahí) se usa el diseño fluido normal
+  if (w < 900) { root.classList.add('fluido'); root.classList.remove('tv'); return; }
+  root.classList.remove('fluido'); root.classList.add('tv');
+  let k, sw, sh;
+  if (w / h >= 16 / 9) { k = h / 720; sh = 720; sw = w / k; } else { k = w / 1280; sw = 1280; sh = h / k; }
+  st.setProperty('--k', k); st.setProperty('--sw', sw + 'px'); st.setProperty('--sh', sh + 'px');
+}
+addEventListener('resize', ajustarEscenario);
+ajustarEscenario();
+
 // Cronómetro: el servidor manda los milisegundos restantes; aquí solo se descuenta en pantalla.
 let timerEnd = null;
 function tickTimer() {
+  const ep = $('esperaPsi'); // cuenta regresiva del psíquico sin señal
+  if (ep) ep.textContent = Math.max(0, Math.ceil((Number(ep.dataset.fin) - Date.now()) / 1000));
   const el = $('timer');
   if (!el) return;
   if (timerEnd == null) { el.textContent = ''; return; }
   const s = Math.max(0, Math.ceil((timerEnd - Date.now()) / 1000));
-  el.innerHTML = `⏱ <b>${s}</b>s`;
+  el.innerHTML = `· ⏱ <b>${s}</b> s`;
   el.classList.toggle('low', s <= 10 && s > 0);
   el.classList.toggle('done', s === 0);
 }
 setInterval(tickTimer, 200);
-const esc = s => String(s ?? '').replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+
+// Perillas del mueble de la radio: "SINTONÍA" gira con la aguja
+function perillaSVG(giro) {
+  let m = '';
+  for (let i = 0; i < 11; i++) {
+    const a = (-135 + i * 27 - 90) * Math.PI / 180;
+    m += `<line x1="${(40 + Math.cos(a) * 34).toFixed(1)}" y1="${(40 + Math.sin(a) * 34).toFixed(1)}" x2="${(40 + Math.cos(a) * 38).toFixed(1)}" y2="${(40 + Math.sin(a) * 38).toFixed(1)}" stroke="#f1e6cf" stroke-width="2" opacity=".7"/>`;
+  }
+  return `<svg viewBox="0 0 80 80" aria-hidden="true">${m}<circle cx="40" cy="40" r="28" fill="#3f2a1c" stroke="#2b211b" stroke-width="3"/><circle cx="40" cy="40" r="20" fill="#5e3e28"/><g class="ptr" style="transform:rotate(${giro}deg)"><line x1="40" y1="40" x2="40" y2="18" stroke="#e3b04b" stroke-width="4" stroke-linecap="round"/></g></svg>`;
+}
+$('perillaVol').insertAdjacentHTML('afterbegin', perillaSVG(-40));
+$('perillaSint').insertAdjacentHTML('afterbegin', perillaSVG(55));
+const giraPerilla = a => { $('perillaSint').querySelector('.ptr').style.transform = `rotate(${-135 + a / 180 * 270}deg)`; };
+
+// Botón de sonido
+const pintaSonido = () => document.querySelectorAll('[data-sonido]').forEach(b => { b.textContent = sonido.activo() ? '🔊' : '🔇'; });
+pintaSonido();
+document.querySelectorAll('[data-sonido]').forEach(b => b.onclick = () => { sonido.alternar(); pintaSonido(); });
 
 // Sin código en la dirección: pantalla de inicio (crear sala o entrar a una).
-const game = salaDeUrl() ? connectGame('host', {
+const game = connectGame('host', {
   onState: s => { S = s; render(); },
-  // Mientras arrastran la flecha solo llega la posición
-  onNeedle: a => { if (S) S.needle = a; if (dial) dial.set({ needle: a }); },
+  // Mientras arrastran la aguja solo llega la posición: se mueve y suena el dial
+  onNeedle: a => { if (S) S.needle = a; if (dial) dial.set({ needle: a }); giraPerilla(a); sonido.girar(a); },
   onOpen: () => $('offline').classList.add('hidden'),
   onClose: () => $('offline').classList.remove('hidden'),
-}) : null;
+});
+document.querySelectorAll('#salaNuevaBtn, .sala-nueva').forEach(b => b.onclick = e => { e.preventDefault(); try { localStorage.removeItem('sin_tele'); } catch (x) {} location.search = '?sala=' + Sala.codigoNuevo(); });
+// QR dibujado aquí mismo (ya no hay servidor que lo genere)
+function qrDe(url) {
+  if (!window.qrcode) return '';
+  const q = qrcode(0, 'M'); q.addData(url); q.make();
+  return 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(q.createSvgTag({ cellSize: 6, margin: 1, scalable: true }));
+}
 if (!game) {
-  document.querySelector('.footer-tools').classList.add('hidden');
   $('inicio').classList.remove('hidden');
   $('crearSala').onclick = async () => {
     $('crearSala').disabled = true;
     try {
-      const { sala } = await fetch('/api/sala-nueva').then(r => r.json());
-      location.search = '?sala=' + sala;
+      location.search = '?sala=' + Sala.codigoNuevo();
     } catch (e) {
       $('crearSala').disabled = false;
       alert('No se pudo crear la sala. Revisa tu conexión e intenta otra vez.');
@@ -269,53 +400,80 @@ if (!game) {
     if (!c) { $('codigoSala').focus(); return; }
     location.href = destino + '?sala=' + c;
   };
-  $('entrarJugador').onclick = () => ir('/jugar');
-  $('abrirPantalla').onclick = () => ir('/');
-  $('codigoSala').addEventListener('keydown', e => { if (e.key === 'Enter') ir('/jugar'); });
+  $('entrarJugador').onclick = () => ir('jugar.html');
+  $('abrirPantalla').onclick = e => { e.preventDefault(); ir('index.html'); };
+  $('codigoSala').addEventListener('keydown', e => { if (e.key === 'Enter') ir('jugar.html'); });
 }
 
 function show(id) {
   for (const sec of ['lobby', 'game', 'final']) $(sec).classList.toggle('hidden', sec !== id);
+  document.documentElement.classList.toggle('oscuro', id === 'final');
 }
-function rosterHTML(players, team, psychicId, withKick) {
-  const list = players.filter(p => p.team === team);
-  if (!list.length) return '<span class="empty">Nadie todavía…</span>';
-  return list.map((p, i) =>
-    `<span class="chip ${p.connected ? '' : 'off'}"><span class="dot"></span><span class="muted" style="font-size:.75rem">${i + 1}.</span> ${p.id === psychicId ? '🔮 ' : ''}${esc(p.name)}${withKick ? ` <a href="#" data-kick="${p.id}" title="Quitar" style="color:var(--muted);text-decoration:none">✕</a>` : ''}</span>`
-  ).join('');
+const conectados = () => S.players.filter(p => p.connected).length;
+
+// Fichas de la sala de espera: tocar una saca al jugador
+function fichasHTML(team) {
+  const list = S.players.filter(p => p.team === team);
+  if (!list.length) return '<span class="nadie">Nadie todavía…</span>';
+  return list.map(p => `<button type="button" class="ficha ${p.connected ? '' : 'off'}" data-kick="${p.id}" title="Sacar a ${esc(p.name)}"><i>${p.bot ? '🤖' : esc((p.name.trim()[0] || '?').toUpperCase())}</i>${esc(p.name)}${p.bot ? ' <span class="tag-bot">bot</span>' : ''}</button>`).join('');
+}
+// Nombres de cada equipo durante el juego, como en el diseño: "Mari · Pau · Leo"
+function genteHTML(team) {
+  return S.players.filter(p => p.team === team).map(p =>
+    `<span class="p ${p.connected ? '' : 'off'} ${p.id === S.psychicId ? 'psi' : ''}">${p.id === S.psychicId ? '🔮 ' : ''}${esc(p.name)}${p.bot ? ' <span class="tag-bot">bot</span>' : ''}<a href="#" data-kick="${p.id}" title="Quitar">✕</a></span>`).join(' · ');
+}
+// Capa del QR a media partida: QR, código y quién está sin señal
+let qrAbierto = false;
+function renderQR() {
+  $('qrCapa').classList.toggle('hidden', !qrAbierto);
+  if (!qrAbierto || !S) return;
+  $('qrUrl').textContent = S.joinUrl.replace(/^https?:\/\//, '');
+  $('qrCodigo').textContent = S.sala;
+  const qrSrc = qrDe(S.joinUrl);
+  if ($('qrJuego').getAttribute('src') !== qrSrc) $('qrJuego').setAttribute('src', qrSrc);
+  $('qrJugadores').innerHTML = S.players.map(p =>
+    `<div class="jug"><span class="punto ${p.connected ? '' : 'off'}"></span>${esc(p.name)}${p.bot ? ' <span class="tag-bot">bot</span>' : ''}` +
+    `${p.connected ? '' : ' <span class="sin">SIN SEÑAL</span>'}<span class="eq">${esc(S.teams[p.team].name)}</span>` +
+    `<a href="#" data-kick="${p.id}" title="Sacar a ${esc(p.name)}">✕</a></div>`).join('') || '<p>Nadie todavía…</p>';
 }
 
+// Efectos al cambiar de fase: estática en pantalla y sonido de radio
+function efectos(prev) {
+  if (prev == null) return;
+  estatica(S.phase === 'reveal' ? 520 : 360);
+  if (S.phase === 'reveal') { sonido.sintonizar(); sonido.puntos(S.result ? S.result.wedge : 0); }
+  else sonido.estatica();
+}
+
+const PUNTOS = [5, 8, 10, 15, 20];
 function render() {
   if (!S) return;
   const A = S.teams.A, B = S.teams.B;
-  const salaPill = `<span class="pill">Sala <b>${esc(S.sala)}</b></span> `;
-  $('topInfo').innerHTML = salaPill + (S.phase === 'lobby' ? `<span class="pill">Sala abierta</span>` :
-    S.phase === 'finished' ? `<span class="pill">Juego terminado</span>` :
-    `<span class="pill">Ronda ${S.round}</span> <span class="pill">Meta ${S.settings.points} pts</span>`);
+  if (S.phase !== lastPhase && (S.phase === 'lobby' || S.phase === 'finished')) { efectos(lastPhase); lastPhase = S.phase; }
 
-  $('skipBtn').classList.toggle('hidden', !['psychic', 'guessing', 'counter'].includes(S.phase));
-  $('repeatBtn').classList.toggle('hidden', !['psychic', 'guessing', 'counter', 'reveal'].includes(S.phase));
-  $('resetBtn').classList.toggle('hidden', S.phase === 'lobby' || S.phase === 'finished');
-  $('endBtn').classList.toggle('hidden', S.phase === 'lobby' || S.phase === 'finished');
+  if (S.phase !== 'lobby' && S.phase !== 'finished') renderQR();
+  else if (qrAbierto) { qrAbierto = false; renderQR(); }
   if (S.phase === 'lobby') {
     show('lobby');
-    if (document.activeElement !== $('teamA') && A.name !== 'Equipo A') $('teamA').value = A.name;
-    if (document.activeElement !== $('teamB') && B.name !== 'Equipo B') $('teamB').value = B.name;
-    if (document.activeElement !== $('points')) $('points').value = String(S.settings.points);
-    $('teamAName').textContent = A.name; $('teamBName').textContent = B.name;
-    $('rosterA').innerHTML = rosterHTML(S.players, 'A', null, true);
-    $('rosterB').innerHTML = rosterHTML(S.players, 'B', null, true);
+    $('lobbySala').textContent = 'SALA ' + S.sala;
+    $('lobbyInfo').textContent = `ESPERANDO JUGADORES · ${conectados()} CONECTADO${conectados() === 1 ? '' : 'S'}`;
+    if (document.activeElement !== $('teamA')) $('teamA').value = A.name;
+    if (document.activeElement !== $('teamB')) $('teamB').value = B.name;
+    for (const k of ['A', 'B']) {
+      const n = S.players.filter(p => p.team === k).length;
+      $('cuantos' + k).textContent = `${n} JUGADOR${n === 1 ? '' : 'ES'}`;
+      $('roster' + k).innerHTML = fichasHTML(k);
+    }
     // Si la pantalla se abrió por IP o por un dominio (publicado en internet),
     // esa misma dirección es la que deben usar los celulares.
-    const propia = /^(localhost|127\.0\.0\.1|\[::1\])$/.test(location.hostname) ? null : location.origin + '/jugar?sala=' + S.sala;
-    $('joinUrl').textContent = (propia || S.joinUrl).replace(/^https?:\/\//, '');
+    $('joinUrl').textContent = S.joinUrl.replace(/^https?:\/\//, '');
     $('salaCode').textContent = S.sala;
-    const qrSrc = '/api/qr.svg?sala=' + encodeURIComponent(S.sala);
+    const qrSrc = qrDe(S.joinUrl);
     if ($('qr').getAttribute('src') !== qrSrc) $('qr').setAttribute('src', qrSrc);
-    const icons = { '01_basicas': '🃏', '02_spicy': '🌶️' };
-    $('deckPick').innerHTML = (S.decks || []).map(d =>
-      `<button type="button" data-deck="${d.id}" class="${S.settings.deck === d.id ? 'sel' : ''}"><div class="dn"><span class="badge">${icons[d.id] || '🗂️'}</span>${esc(d.nombre)}</div><div class="dc">${esc(d.descripcion)}</div><span class="dk">${d.tarjetas} tarjetas · ${d.tarjetas * 2} lados</span></button>`
-    ).join('') || '<span class="muted">No hay mazos en la carpeta mazos/</span>';
+    const pts = PUNTOS.includes(S.settings.points) ? PUNTOS : [...PUNTOS, S.settings.points].sort((a, b) => a - b);
+    $('segPuntos').innerHTML = pts.map(v => `<button type="button" data-puntos="${v}" class="${S.settings.points === v ? 'si' : ''}">${v}</button>`).join('');
+    const nombreMazo = d => d.id === '02_spicy' ? 'Spicy 🌶' : esc(d.nombre);
+    $('segMazo').innerHTML = (S.decks || []).map(d => `<button type="button" data-deck="${d.id}" title="${esc(d.descripcion)}" class="${S.settings.deck === d.id ? 'si' : ''}">${nombreMazo(d)}</button>`).join('');
     const okA = S.players.some(p => p.team === 'A' && p.connected), okB = S.players.some(p => p.team === 'B' && p.connected);
     $('startBtn').disabled = !(okA && okB);
     return;
@@ -324,59 +482,83 @@ function render() {
 
   show('game');
   if (!dial) dial = createDial($('dialHost'), { wedge: S.wedge });
+  $('gameSala').textContent = 'SALA ' + S.sala;
+  $('gameInfo').textContent = `RONDA ${S.round} · GANA QUIEN LLEGUE A ${S.settings.points}`;
   $('gTeamA').textContent = A.name; $('gTeamB').textContent = B.name;
   animateNumber($('ptsA'), A.score); animateNumber($('ptsB'), B.score);
-  // ✕ también durante el juego, para quitar a alguien que se fue (si era el psíquico, pasa el turno)
-  $('gRosterA').innerHTML = rosterHTML(S.players, 'A', S.psychicId, true);
-  $('gRosterB').innerHTML = rosterHTML(S.players, 'B', S.psychicId, true);
-  $('scoreA').classList.toggle('active', S.turnTeam === 'A');
-  $('scoreB').classList.toggle('active', S.turnTeam === 'B');
-  const etiqueta = k => S.turnTeam === k ? '🎯 Su turno' : (S.phase === 'counter' ? '🤔 Decidiendo' : '');
-  $('tagA').textContent = etiqueta('A');
-  $('tagB').textContent = etiqueta('B');
+  $('gRosterA').innerHTML = genteHTML('A');
+  $('gRosterB').innerHTML = genteHTML('B');
+  // Mientras el rival vota, la sombra pasa al equipo que está decidiendo
+  const activo = k => S.phase === 'counter' ? S.turnTeam !== k : S.turnTeam === k;
+  $('scoreA').classList.toggle('on', activo('A'));
+  $('scoreB').classList.toggle('on', activo('B'));
+  const etiqueta = k => S.phase === 'counter' ? (S.turnTeam === k ? '🔒 BLOQUEADO' : '<span class="vota">◆ VOTA</span>')
+    : S.turnTeam === k ? '<span class="al-aire">AL AIRE</span>' : 'EN ESPERA';
+  $('tagA').innerHTML = etiqueta('A');
+  $('tagB').innerHTML = etiqueta('B');
 
   const covered = S.phase !== 'reveal';
   dial.set({ needle: S.needle, target: S.target, covered, left: S.card?.izquierda, right: S.card?.derecha, wedge: S.wedge });
+  giraPerilla(S.needle);
 
   const t = S.teams[S.turnTeam], o = S.teams[S.turnTeam === 'A' ? 'B' : 'A'];
   const psychic = S.players.find(p => p.id === S.psychicId);
   const tc = `class="team-${S.turnTeam} team-color"`, oc = `class="team-${S.turnTeam === 'A' ? 'B' : 'A'} team-color"`;
-  let status = '', controls = '', hint = '';
+  const psiNombre = esc(psychic?.name || 'el psíquico');
+  const pistaCls = S.clue && S.clue.length > 28 ? 'clue chica' : 'clue';
+  let status = '', controls = '', pie = `PSÍQUICO: ${psiNombre}`, alerta = false, voto = '';
 
-  // La pista del psíquico se queda visible desde que se da hasta la revelación
-  const pista = S.clue ? `<div class="clue">“${esc(S.clue)}”</div>` : '';
   if (S.phase === 'psychic') {
-    status = `<h2>🔮 <span ${tc}>${esc(psychic?.name || '…')}</span> ${S.side ? 'está pensando su pista' : 'está sacando una tarjeta'}</h2><p class="pulse">Cuando tenga su pista, empieza la ronda</p>`;
-    if (psychic && !psychic.connected) hint = `⚠ ${psychic.name} está desconectado. Si no va a volver, usa “Saltar turno” o quítalo con la ✕.`;
+    status = `<h2>🔮 <span ${tc}>${psiNombre}</span> ${S.side ? 'está pensando su pista' : 'está sacando una tarjeta'}</h2><p class="pulse">Sintonizando… cuando tenga su pista, empieza la ronda</p>`;
+    if (psychic && !psychic.connected) {
+      const seg = S.esperaPsiquicoMs != null ? Math.ceil(S.esperaPsiquicoMs / 1000) : null;
+      pie = `⚠ ${psiNombre} está sin señal${seg != null ? ` · pasa el siguiente en <span id="esperaPsi" data-fin="${Date.now() + S.esperaPsiquicoMs}">${seg}</span> s` : ''}`;
+      alerta = true;
+      controls = `<button class="btn fantasma" id="seguirBtn" title="Pasa al siguiente psíquico del mismo equipo sin esperar">⏭ Seguir sin esperar</button>`;
+    }
   } else if (S.phase === 'guessing') {
-    status = `<h2><span ${tc}>${esc(t.name)}</span> mueve la flecha</h2>` +
-      (pista || `<p>Pista de ${esc(psychic?.name || 'el psíquico')}: ¡escuchen bien!</p>`) +
-      `<span class="timer" id="timer">⏱ <b>--</b></span>`;
+    status = `<h2><span ${tc}>${esc(t.name)}</span> mueve la aguja</h2>` +
+      `<span class="etq">La pista de ${psiNombre} <span class="timer" id="timer"></span></span>` +
+      (S.clue ? `<span class="${pistaCls}">“${esc(S.clue)}”</span>` : `<p>¡Escuchen bien la pista!</p>`);
   } else if (S.phase === 'counter') {
-    const dijo = r => `<span class="chip">${r}</span>`;
-    status = `<h2><span ${oc}>${esc(o.name)}</span>: ¿izquierda o derecha?</h2>` + pista +
-      `<p>¿El objetivo está a la izquierda o a la derecha de la flecha? Contesta <b>una persona</b> desde su celular</p>` +
-      (S.lockedBy ? `<div class="chips-row">${dijo('🔒 Bloqueó <b>' + esc(S.lockedBy) + '</b>')}</div>` : '');
-    controls = `<button class="btn ghost" data-force="izq" title="Registrar la respuesta del rival desde la pantalla">◀ Dicen izquierda</button><button class="btn ghost" data-force="der" title="Registrar la respuesta del rival desde la pantalla">Dicen derecha ▶</button>`;
+    status = `<h2><span ${oc}>${esc(o.name)}</span>: ¿izquierda o derecha?</h2>` +
+      (S.clue ? `<span class="${pistaCls}">“${esc(S.clue)}”</span>` : '');
+    voto = (S.lockedBy ? `<span class="mono">🔒 AGUJA BLOQUEADA POR ${esc(S.lockedBy).toUpperCase()}</span><span class="sep"></span>` : '') +
+      `<span>¿El objetivo está a la <b>izquierda</b> o a la <b>derecha</b> de la aguja? Si aciertan: <b>+1</b></span>`;
+    pie = `ESPERANDO A ${esc(o.name)}…`;
+    if (!S.players.some(p => p.team === (S.turnTeam === 'A' ? 'B' : 'A') && p.connected)) { pie = `⚠ NADIE DE ${esc(o.name)} TIENE SEÑAL: REGISTRA SU RESPUESTA AQUÍ →`; alerta = true; }
+    controls = `<button class="btn fantasma" data-force="izq" title="Registrar la respuesta del rival desde la pantalla">◀ Dicen izquierda</button><button class="btn fantasma" data-force="der" title="Registrar la respuesta del rival desde la pantalla">Dicen derecha ▶</button>`;
   } else if (S.phase === 'reveal') {
-    const r = S.result;
-    const w = r.wedge;
+    const r = S.result, w = r.wedge;
     const dijoLado = r.correctSide === 'izq' ? (r.counterCorrect ? 'izquierda' : 'derecha') : (r.counterCorrect ? 'derecha' : 'izquierda');
-    status = `<h2 class="pop">${w ? `¡${w} punto${w > 1 ? 's' : ''} para <span ${tc}>${esc(t.name)}</span>!` : `<span ${tc}>${esc(t.name)}</span> no sumó puntos`}</h2>` + pista +
-      `<div class="result-line">${w === 4 ? `🎯 ¡Centro exacto! <span ${oc}>${esc(o.name)}</span> no puede sumar.` :
-        r.counterCorrect ? `<span ${oc}>${esc(o.name)}</span> acertó (${r.correctSide === 'izq' ? 'izquierda' : 'derecha'}): <b>+1</b>` :
-        `<span ${oc}>${esc(o.name)}</span> falló: estaba a la ${r.correctSide === 'izq' ? 'izquierda' : 'derecha'}`}</div>` +
-      `<div class="chips-row">${r.lockedBy ? `<span class="chip">🔒 Bloqueó <b>${esc(r.lockedBy)}</b></span>` : ''}${r.counterBy ? `<span class="chip">🗣 <b>${esc(r.counterBy)}</b> dijo ${dijoLado}</span>` : ''}</div>`;
-    const last = S.reached;
-    if (last) status += `<div class="result-line">🏆 ¡<span class="team-${S.teams.A.score >= S.teams.B.score ? 'A' : 'B'} team-color">${esc(S.teams.A.score >= S.teams.B.score ? S.teams.A.name : S.teams.B.name)}</span> llegó a ${S.settings.points} puntos!</div>`;
-    controls = `<button class="btn big" id="nextBtn">${last ? 'Ver resultados finales' : 'Siguiente ronda ▶'}</button>`;
+    const titulo = w === 4 ? '¡En la frecuencia!' : w === 3 ? '¡Casi en la frecuencia!' : w === 2 ? 'Se oye algo…' : 'Pura estática';
+    status = `<div class="revela"><div class="sello ${w ? '' : 'cero'}">+${w}</div><div class="txt">` +
+      `<h2 class="pop">${titulo}</h2>` +
+      `<span class="l1">${w ? `${w} punto${w > 1 ? 's' : ''} para <span ${tc}>${esc(t.name)}</span>` : `<span ${tc}>${esc(t.name)}</span> no sumó puntos`}</span>` +
+      `<span class="l2">${w === 4 ? `🎯 Centro exacto: <span ${oc}>${esc(o.name)}</span> no puede sumar` :
+        r.counterCorrect ? `<span ${oc}>${esc(o.name)}</span> dijeron <b>${dijoLado}</b> y acertaron: <b>+1</b>` :
+        `<span ${oc}>${esc(o.name)}</span> dijeron <b>${dijoLado}</b> y fallaron`}</span>` +
+      `</div></div>`;
+    pie = [r.lockedBy ? `🔒 BLOQUEÓ ${esc(r.lockedBy)}` : '', r.counterBy ? `🗣 ${esc(r.counterBy)} DIJO ${dijoLado}` : ''].filter(Boolean).join(' · ');
+    if (S.reached) {
+      const g = S.teams.A.score >= S.teams.B.score ? 'A' : 'B';
+      pie = `🏆 ${esc(S.teams[g].name)} LLEGÓ A ${S.settings.points} PUNTOS`;
+    }
+    controls = `<button class="btn red mediano" id="nextBtn">${S.reached ? 'Ver resultados ▶' : 'Siguiente ronda ▶'}</button>`;
   }
   timerEnd = S.remainingMs != null ? Date.now() + S.remainingMs : null;
-  if (S.phase !== lastPhase || S.turn !== lastTurn) { $('status').classList.remove('fade-in'); void $('status').offsetWidth; $('status').classList.add('fade-in'); }
+  if (S.phase !== lastPhase || S.turn !== lastTurn) {
+    efectos(lastPhase);
+    $('status').classList.remove('fade-in'); void $('status').offsetWidth; $('status').classList.add('fade-in');
+  }
   lastPhase = S.phase; lastTurn = S.turn;
-  $('status').innerHTML = status; $('controls').innerHTML = controls; $('stageHint').textContent = hint;
-  tickTimer();
+  $('status').innerHTML = status;
+  $('controls').innerHTML = controls;
+  $('lineaVoto').innerHTML = voto;
+  $('pieInfo').innerHTML = pie;
+  $('pieInfo').classList.toggle('alerta', alerta);
   $('skipBtn').classList.toggle('hidden', !['psychic', 'guessing', 'counter'].includes(S.phase));
+  tickTimer();
 }
 
 function renderFinal() {
@@ -384,11 +566,7 @@ function renderFinal() {
   const tie = A.score === B.score;
   const win = A.score > B.score ? 'A' : 'B';
   $('finalTitle').innerHTML = tie ? '¡Empate!' : `¡Ganó <span class="team-${win} team-color">${esc(S.teams[win].name)}</span>!`;
-  $('finalSub').textContent = tie ? `${A.score} a ${B.score}` : `${S.teams[win].score} a ${S.teams[win === 'A' ? 'B' : 'A'].score}`;
-  $('finalScores').innerHTML = ['A', 'B'].map(k => `<div class="card score team-${k} ${!tie && win === k ? 'active' : ''}"><h2>${esc(S.teams[k].name)}</h2><div class="pts">${S.teams[k].score}</div></div>`).join('');
-  $('historyTable').querySelector('tbody').innerHTML = S.history.map(h =>
-    `<tr><td>${h.round}</td><td class="team-${h.team} team-color">${esc(S.teams[h.team].name)}</td><td>${esc(h.card.izquierda)} ↔ ${esc(h.card.derecha)}</td><td>${h.wedge} pts</td><td>${h.wedge === 4 ? '—' : h.counterCorrect ? '+1' : '0'}</td></tr>`
-  ).join('');
+  $('finalScores').innerHTML = ['A', 'B'].map(k => `<div class="fscore team-${k} ${!tie && win === k ? 'gana' : ''}"><div><b>${esc(S.teams[k].name)}</b><small>${!tie && win === k ? '🏆 GANADOR' : tie ? 'EMPATE' : 'BUENA SEÑAL'}</small></div><span class="n">${S.teams[k].score}</span></div>`).join('');
 }
 
 function animateNumber(el, v) {
@@ -397,16 +575,16 @@ function animateNumber(el, v) {
 
 // ----- eventos -----
 let setupTimer;
-function pushSetup() {
+function pushNombres() {
   clearTimeout(setupTimer);
-  setupTimer = setTimeout(() => game.send({ type: 'setup', teamA: $('teamA').value || 'Equipo A', teamB: $('teamB').value || 'Equipo B', points: $('points').value }), 250);
+  setupTimer = setTimeout(() => game.send({ type: 'setup', teamA: $('teamA').value || 'Equipo A', teamB: $('teamB').value || 'Equipo B' }), 250);
 }
-$('teamA').addEventListener('input', pushSetup);
-$('teamB').addEventListener('input', pushSetup);
-$('points').addEventListener('change', pushSetup);
-$('startBtn').addEventListener('click', () => { pushSetup(); setTimeout(() => game.send({ type: 'start' }), 300); });
+$('teamA').addEventListener('input', pushNombres);
+$('teamB').addEventListener('input', pushNombres);
+for (const id of ['teamA', 'teamB']) $(id).addEventListener('keydown', e => { if (e.key === 'Enter') e.target.blur(); });
+$('startBtn').addEventListener('click', () => { pushNombres(); setTimeout(() => game.send({ type: 'start' }), 300); });
 $('againBtn').addEventListener('click', () => game.send({ type: 'reset' }));
-$('resetBtn').addEventListener('click', () => { if (confirm('¿Volver a la pantalla de inicio? Se pierden los puntajes (los jugadores se mantienen).')) game.send({ type: 'reset' }); });
+$('resetBtn').addEventListener('click', () => { if (confirm('¿Volver a la sala de espera? Se pierden los puntajes (los jugadores se mantienen).')) game.send({ type: 'reset' }); });
 $('endBtn').addEventListener('click', () => { if (confirm('¿Terminar la partida ahora? Se muestran los resultados con el marcador actual.')) game.send({ type: 'endGame' }); });
 $('skipBtn').addEventListener('click', () => { if (confirm('¿Saltar este turno? Se saca otra tarjeta y pasa al siguiente psíquico del mismo equipo.')) game.send({ type: 'skipTurn' }); });
 $('repeatBtn').addEventListener('click', () => {
@@ -415,8 +593,17 @@ $('repeatBtn').addEventListener('click', () => {
     (yaHuboPuntos ? '\nSe quitan los puntos que se acaban de dar.' : '');
   if (confirm(aviso)) game.send({ type: 'repeatTurn' });
 });
+$('testBtn').addEventListener('click', () => { pushNombres(); setTimeout(() => game.send({ type: 'testGame' }), 300); });
+$('botBtn').addEventListener('click', () => game.send({ type: 'addBot' }));
+$('qrBtn').addEventListener('click', () => { qrAbierto = !qrAbierto; renderQR(); });
+$('qrCerrar').addEventListener('click', () => { qrAbierto = false; renderQR(); });
+$('qrCapa').addEventListener('click', e => { if (e.target.id === 'qrCapa') { qrAbierto = false; renderQR(); } });
 document.addEventListener('click', e => {
+  if (!game) return;
   if (e.target.id === 'nextBtn') game.send({ type: 'next' });
+  if (e.target.id === 'seguirBtn') game.send({ type: 'skipTurn' });
+  const pt = e.target.closest('[data-puntos]');
+  if (pt) game.send({ type: 'setup', points: Number(pt.dataset.puntos) });
   const dk = e.target.closest('[data-deck]');
   if (dk) game.send({ type: 'setup', deck: dk.dataset.deck });
   const f = e.target.closest('[data-force]');
@@ -425,10 +612,11 @@ document.addEventListener('click', e => {
   if (k) {
     e.preventDefault();
     const p = S.players.find(x => x.id === k.dataset.kick);
-    if (S.phase === 'lobby' || confirm(`¿Quitar a ${p ? p.name : 'este jugador'} de la partida?`)) game.send({ type: 'kick', playerId: k.dataset.kick });
+    if (confirm(`¿Sacar a ${p ? p.name : 'este jugador'} de la ${S.phase === 'lobby' ? 'sala' : 'partida'}?`)) game.send({ type: 'kick', playerId: k.dataset.kick });
   }
 });
 document.addEventListener('keydown', e => {
+  if (e.key === 'Escape' && qrAbierto) { qrAbierto = false; renderQR(); }
   if ((e.key === 'Enter' || e.key === ' ') && S && S.phase === 'reveal' && !/INPUT|SELECT/.test(document.activeElement.tagName)) { e.preventDefault(); game.send({ type: 'next' }); }
 });
 </script>
