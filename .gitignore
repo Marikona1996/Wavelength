@@ -1,0 +1,4 @@
+node_modules/
+partida.json
+partida-*.json
+registro.txt

@@ -1,15 +1,11 @@
 {
-  "name": "wavelength-publico",
-  "version": "1.0.0",
-  "description": "Wavelength virtual: pantalla principal + celulares en tiempo real",
-  "main": "server.js",
+  "name": "sintonizados",
+  "private": true,
+  "type": "module",
   "scripts": {
-    "start": "node server.js"
-  },
-  "dependencies": {
-    "express": "^4.19.2",
-    "qrcode": "^1.5.4",
-    "ws": "^8.18.0"
+    "start": "node servidor-local.mjs",
+    "local": "node servidor-local.mjs",
+    "mazos": "node armar-mazos.mjs"
   },
   "engines": {
     "node": ">=18"
