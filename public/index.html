@@ -315,7 +315,7 @@
 <script src="sala.js?v=12"></script>
 <script src="mazos.js?v=12"></script>
 <script src="motor.js?v=12"></script>
-<script src="client.js?v=12"></script>
+<script src="client.js?v=13"></script>
 <script src="dial.js?v=12"></script>
 <script src="sobremesa-marca.js" data-lugar="abajo-izq" data-tono="oscuro"></script>
 <script>
@@ -386,6 +386,13 @@ function qrDe(url) {
 }
 if (!game) {
   $('inicio').classList.remove('hidden');
+  // Si esta pantalla tenía una sala abierta hace poco, se ofrece volver a ella
+  try {
+    const g = JSON.parse(localStorage.getItem('sin_tele'));
+    if (g && g.code && Date.now() - g.touched < 12 * 3600e3) {
+      $('inicio').querySelector('.pie').insertAdjacentHTML('beforeend', ` · <a href="?sala=${encodeURIComponent(limpiaSala(g.code))}">VOLVER A MI SALA ${esc(limpiaSala(g.code))}</a>`);
+    }
+  } catch (x) {}
   $('crearSala').onclick = async () => {
     $('crearSala').disabled = true;
     try {

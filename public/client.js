@@ -30,7 +30,10 @@
   window.connectGame = function (role, handlers) {
     let sala = window.salaDeUrl();
     if (!sala && role === 'host') {
-      // La tele sin código en la dirección retoma su última sala (si es reciente) o abre una nueva
+      // Sin código en la dirección: portada para crear o entrar a una sala (el link que se comparte).
+      // Solo con ?crear (así la abre la plataforma de Sobremesa) la tele abre su sala directo.
+      if (!new URLSearchParams(location.search).has('crear')) return null;
+      // La tele retoma su última sala (si es reciente) o abre una nueva
       try { const g = JSON.parse(leer('sin_tele')); if (g && g.code && Date.now() - g.touched < 12 * 3600e3) sala = g.code; } catch (e) {}
       sala = sala || salaNueva();
       history.replaceState(null, '', '?sala=' + sala);
