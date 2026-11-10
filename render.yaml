@@ -2,7 +2,7 @@
 # Usa servidor-local.mjs: sirve public/ y hace de puente en tiempo real (SSE) entre la tele y los celulares.
 services:
   - type: web
-    name: sintonizados
+    name: wavelength
     runtime: node
     plan: free
     buildCommand: npm install
