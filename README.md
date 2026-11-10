@@ -5,7 +5,8 @@ Juego de leer mentes en equipo para jugar con una pantalla principal (TV / proye
 ## Cómo arrancar
 
 Ya **no necesita servidor propio** (2026-11-05): funciona como los demás juegos de Sobremesa.
-- **Desde la plataforma**: "Abrir Sintonizados" abre `public/index.html` y la tele crea su sala sola.
+- **Link sin código** (`index.html` o la dirección de Render): muestra la portada para **crear una sala** (tele) o **entrar con código** (celular); si esa pantalla tenía una sala abierta hace poco, ofrece "Volver a mi sala".
+- **Desde la plataforma**: "Entrar a la sala" abre `public/index.html?crear` y la tele crea (o retoma) su sala sola.
 - **La tele lleva el juego** (`public/motor.js`: las reglas que antes estaban en `server.js`, bots y cronómetro incluidos) y guarda la partida en el navegador: si se recarga, sigue donde iba.
 - **Conexión con los celulares** por `public/sala.js` (igual que Hilo Mental): con `servidor-local.mjs` → celulares reales en la misma Wi-Fi; en `localhost` sin ese servidor → pestañas del mismo navegador (`jugar.html?sala=CODIGO&yo=1`, `&yo=2`…); publicado → Ably (pendiente: Netlify + `ABLY_API_KEY`).
 - **Celulares reales en la misma Wi-Fi**: `node servidor-local.mjs` → http://localhost:8771 (el QR usa la IP de la red).
